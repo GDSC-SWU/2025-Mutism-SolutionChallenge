@@ -1,26 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_weight="1"
     android:orientation="vertical"
     android:gravity="center"
     android:padding="0dp"
     android:layout_marginBottom="10dp">
 
-    <com.google.android.material.card.MaterialCardView
+    <!-- 프레임 구성: SVG + 아이콘 배경 -->
+    <FrameLayout
         android:layout_width="88dp"
         android:layout_height="88dp"
-        app:cardCornerRadius="20dp"
-        app:strokeWidth="0dp"
-        app:cardElevation="3dp"
-        android:layout_margin="5dp"
-        app:useCompatPadding="true">
+        android:layout_margin="5dp">
 
+        <!-- SVG 테두리 (외부 stroke) -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="" />
+
+        <!-- 안쪽 내용 (배경 + 아이콘) -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="4dp"
             android:background="@drawable/item_noise_bg"
             android:gravity="center">
 
@@ -31,8 +36,9 @@
                 android:layout_gravity="center"
                 android:src="@drawable/noise_car" />
         </FrameLayout>
-    </com.google.android.material.card.MaterialCardView>
+    </FrameLayout>
 
+    <!-- 라벨 -->
     <TextView
         android:id="@+id/label"
         android:layout_width="wrap_content"
