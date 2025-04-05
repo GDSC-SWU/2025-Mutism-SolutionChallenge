@@ -28,6 +28,8 @@ class NoiseActivity : AppCompatActivity() {
             val selected = noiseList.filter { it.isSelected }
             Toast.makeText(this,"선택된 항목: ${selected.joinToString { it.name }}",Toast.LENGTH_SHORT).show()
         }
+
+        binding.btnBack.setOnClickListener { finish() }
     }
 
     private fun initRecyclerView(){
