@@ -20,49 +20,49 @@
 15-->[androidx.core:core:1.15.0] /Users/sieun/.gradle/caches/8.11.1/transforms/350d5ddf270a6141e3bd1b1db6b775e2/transformed/core-1.15.0/AndroidManifest.xml:26:22-94
 16
 17    <application
-17-->/Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:5:5-27:19
+17-->/Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:5:5-27:19
 18        android:allowBackup="true"
-18-->/Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:6:9-35
+18-->/Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:6:9-35
 19        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
 19-->[androidx.core:core:1.15.0] /Users/sieun/.gradle/caches/8.11.1/transforms/350d5ddf270a6141e3bd1b1db6b775e2/transformed/core-1.15.0/AndroidManifest.xml:28:18-86
 20        android:dataExtractionRules="@xml/data_extraction_rules"
-20-->/Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:7:9-65
+20-->/Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:7:9-65
 21        android:debuggable="true"
 22        android:extractNativeLibs="false"
 23        android:fullBackupContent="@xml/backup_rules"
-23-->/Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:8:9-54
+23-->/Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:8:9-54
 24        android:icon="@mipmap/ic_launcher"
-24-->/Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:9:9-43
+24-->/Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:9:9-43
 25        android:label="@string/app_name"
-25-->/Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:10:9-41
+25-->/Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:10:9-41
 26        android:roundIcon="@mipmap/ic_launcher_round"
-26-->/Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:11:9-54
+26-->/Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:11:9-54
 27        android:supportsRtl="true"
-27-->/Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:12:9-35
+27-->/Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:12:9-35
 28        android:testOnly="true"
 29        android:theme="@style/Theme.Mutism" >
-29-->/Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:13:9-44
+29-->/Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:13:9-44
 30        <activity
-30-->/Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:15:9-17:40
+30-->/Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:15:9-17:40
 31            android:name="com.example.mutism.NoiseActivity"
-31-->/Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:16:13-42
+31-->/Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:16:13-42
 32            android:exported="false" />
-32-->/Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:17:13-37
+32-->/Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:17:13-37
 33        <activity
-33-->/Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:18:9-26:20
+33-->/Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:18:9-26:20
 34            android:name="com.example.mutism.MainActivity"
-34-->/Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:19:13-41
+34-->/Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:19:13-41
 35            android:exported="true" >
-35-->/Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:20:13-36
+35-->/Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:20:13-36
 36            <intent-filter>
-36-->/Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:21:13-25:29
+36-->/Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:21:13-25:29
 37                <action android:name="android.intent.action.MAIN" />
-37-->/Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:22:17-69
-37-->/Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:22:25-66
+37-->/Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:22:17-69
+37-->/Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:22:25-66
 38
 39                <category android:name="android.intent.category.LAUNCHER" />
-39-->/Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:24:17-77
-39-->/Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:24:27-74
+39-->/Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:24:17-77
+39-->/Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:24:27-74
 40            </intent-filter>
 41        </activity>
 42

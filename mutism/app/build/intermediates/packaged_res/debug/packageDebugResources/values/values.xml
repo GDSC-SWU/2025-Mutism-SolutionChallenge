@@ -9,8 +9,7 @@
     <string name="car">car</string>
     <string name="noise_tv_question">What is the sound\nyour patient doesn\'t like?</string>
     <style name="Base.Theme.Mutism" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-
-    
+        
         
     </style>
     <style name="Theme.Mutism" parent="Base.Theme.Mutism"/>

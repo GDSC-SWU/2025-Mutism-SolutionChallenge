@@ -20,12 +20,12 @@
         "source": "/Users/sieun/.gradle/daemon/8.11.1/com.example.mutism.app-main-35:/mipmap-mdpi/ic_launcher.webp"
     },
     {
-        "merged": "/Users/sieun/.gradle/daemon/8.11.1/com.example.mutism.app-debug-33:/drawable_arrow.xml.flat",
-        "source": "/Users/sieun/.gradle/daemon/8.11.1/com.example.mutism.app-main-35:/drawable/arrow.xml"
-    },
-    {
         "merged": "/Users/sieun/.gradle/daemon/8.11.1/com.example.mutism.app-debug-33:/mipmap-xhdpi_ic_launcher_round.webp.flat",
         "source": "/Users/sieun/.gradle/daemon/8.11.1/com.example.mutism.app-main-35:/mipmap-xhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "/Users/sieun/.gradle/daemon/8.11.1/com.example.mutism.app-debug-33:/drawable_arrow.xml.flat",
+        "source": "/Users/sieun/.gradle/daemon/8.11.1/com.example.mutism.app-main-35:/drawable/arrow.xml"
     },
     {
         "merged": "/Users/sieun/.gradle/daemon/8.11.1/com.example.mutism.app-debug-33:/mipmap-anydpi-v26_ic_launcher.xml.flat",

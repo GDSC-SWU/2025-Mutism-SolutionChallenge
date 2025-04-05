@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:2:1-29:12
-INJECTED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:2:1-29:12
-INJECTED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:2:1-29:12
-INJECTED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:2:1-29:12
+ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:2:1-29:12
+INJECTED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:2:1-29:12
+INJECTED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:2:1-29:12
+INJECTED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:2:1-29:12
 MERGED from [androidx.databinding:viewbinding:8.9.0] /Users/sieun/.gradle/caches/8.11.1/transforms/5ae283183cfe3239cc6d0c3ab17e4597/transformed/viewbinding-8.9.0/AndroidManifest.xml:2:1-7:12
 MERGED from [com.google.android.material:material:1.12.0] /Users/sieun/.gradle/caches/8.11.1/transforms/5870126cda639edf6bde3487a720145d/transformed/material-1.12.0/AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.2.1] /Users/sieun/.gradle/caches/8.11.1/transforms/55e5f017b59b77c228deac6355f84af0/transformed/constraintlayout-2.2.1/AndroidManifest.xml:2:1-9:12
@@ -48,18 +48,18 @@ MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] /Users/
 MERGED from [androidx.print:print:1.0.0] /Users/sieun/.gradle/caches/8.11.1/transforms/4a0aad3c8a798f72898314c9f39e8909/transformed/print-1.0.0/AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.annotation:annotation-experimental:1.4.1] /Users/sieun/.gradle/caches/8.11.1/transforms/8faa516b1e6147c27cee216f2f2b2a81/transformed/annotation-experimental-1.4.1/AndroidManifest.xml:2:1-7:12
 	package
-		INJECTED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml
 	android:versionName
-		INJECTED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml
 	xmlns:tools
-		ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:3:5-51
+		ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:3:5-51
 	android:versionCode
-		INJECTED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml
 	xmlns:android
-		ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:2:11-69
+		ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:2:11-69
 application
-ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:5:5-27:19
-INJECTED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:5:5-27:19
+ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:5:5-27:19
+INJECTED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:5:5-27:19
 MERGED from [com.google.android.material:material:1.12.0] /Users/sieun/.gradle/caches/8.11.1/transforms/5870126cda639edf6bde3487a720145d/transformed/material-1.12.0/AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.12.0] /Users/sieun/.gradle/caches/8.11.1/transforms/5870126cda639edf6bde3487a720145d/transformed/material-1.12.0/AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.2.1] /Users/sieun/.gradle/caches/8.11.1/transforms/55e5f017b59b77c228deac6355f84af0/transformed/constraintlayout-2.2.1/AndroidManifest.xml:7:5-20
@@ -77,53 +77,53 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] /Users/sieun/.gradle/caches
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/sieun/.gradle/caches/8.11.1/transforms/1ac12714cccce07c9f9ed749e0a7d9b5/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:24:5-25:19
 MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] /Users/sieun/.gradle/caches/8.11.1/transforms/1ac12714cccce07c9f9ed749e0a7d9b5/transformed/versionedparcelable-1.1.1/AndroidManifest.xml:24:5-25:19
 	android:extractNativeLibs
-		INJECTED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.15.0] /Users/sieun/.gradle/caches/8.11.1/transforms/350d5ddf270a6141e3bd1b1db6b775e2/transformed/core-1.15.0/AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:12:9-35
+		ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:12:9-35
 	android:label
-		ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:10:9-41
+		ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:10:9-41
 	android:fullBackupContent
-		ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:8:9-54
+		ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:8:9-54
 	android:roundIcon
-		ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:11:9-54
+		ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:11:9-54
 	tools:targetApi
-		ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:14:9-29
+		ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:14:9-29
 	android:icon
-		ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:9:9-43
+		ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:9:9-43
 	android:allowBackup
-		ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:6:9-35
+		ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:6:9-35
 	android:theme
-		ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:13:9-44
+		ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:13:9-44
 	android:dataExtractionRules
-		ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:7:9-65
+		ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:7:9-65
 activity#com.example.mutism.NoiseActivity
-ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:15:9-17:40
+ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:15:9-17:40
 	android:exported
-		ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:17:13-37
+		ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:17:13-37
 	android:name
-		ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:16:13-42
+		ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:16:13-42
 activity#com.example.mutism.MainActivity
-ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:18:9-26:20
+ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:18:9-26:20
 	android:exported
-		ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:20:13-36
+		ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:20:13-36
 	android:name
-		ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:19:13-41
+		ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:19:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:21:13-25:29
+ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:21:13-25:29
 action#android.intent.action.MAIN
-ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:22:17-69
+ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:22:17-69
 	android:name
-		ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:22:25-66
+		ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:22:25-66
 category#android.intent.category.LAUNCHER
-ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:24:17-77
+ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:24:17-77
 	android:name
-		ADDED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml:24:27-74
+		ADDED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml:24:27-74
 uses-sdk
-INJECTED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml
-INJECTED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml
+INJECTED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml
+INJECTED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml
 MERGED from [androidx.databinding:viewbinding:8.9.0] /Users/sieun/.gradle/caches/8.11.1/transforms/5ae283183cfe3239cc6d0c3ab17e4597/transformed/viewbinding-8.9.0/AndroidManifest.xml:5:5-44
 MERGED from [androidx.databinding:viewbinding:8.9.0] /Users/sieun/.gradle/caches/8.11.1/transforms/5ae283183cfe3239cc6d0c3ab17e4597/transformed/viewbinding-8.9.0/AndroidManifest.xml:5:5-44
 MERGED from [com.google.android.material:material:1.12.0] /Users/sieun/.gradle/caches/8.11.1/transforms/5870126cda639edf6bde3487a720145d/transformed/material-1.12.0/AndroidManifest.xml:20:5-44
@@ -211,9 +211,9 @@ MERGED from [androidx.print:print:1.0.0] /Users/sieun/.gradle/caches/8.11.1/tran
 MERGED from [androidx.annotation:annotation-experimental:1.4.1] /Users/sieun/.gradle/caches/8.11.1/transforms/8faa516b1e6147c27cee216f2f2b2a81/transformed/annotation-experimental-1.4.1/AndroidManifest.xml:5:5-44
 MERGED from [androidx.annotation:annotation-experimental:1.4.1] /Users/sieun/.gradle/caches/8.11.1/transforms/8faa516b1e6147c27cee216f2f2b2a81/transformed/annotation-experimental-1.4.1/AndroidManifest.xml:5:5-44
 	android:targetSdkVersion
-		INJECTED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from /Users/sieun/GitHub/2025-Mutism-Solutionchallenge/mutism/app/src/main/AndroidManifest.xml
+		INJECTED from /Users/sieun/AndroidStudioProjects/mutism/app/src/main/AndroidManifest.xml
 provider#androidx.startup.InitializationProvider
 ADDED from [androidx.emoji2:emoji2:1.3.0] /Users/sieun/.gradle/caches/8.11.1/transforms/ff7c9d9054a1a23532a57ff230018e05/transformed/emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
 MERGED from [androidx.lifecycle:lifecycle-process:2.6.2] /Users/sieun/.gradle/caches/8.11.1/transforms/6f093cd032681cfff357bea70328eabc/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:24:9-32:20
