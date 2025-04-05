@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "/Users/sieun/.gradle/daemon/8.11.1/com.example.mutism.app-mergeDebugResources-32:/layout/activity_main.xml",
+        "source": "/Users/sieun/.gradle/daemon/8.11.1/com.example.mutism.app-main-35:/layout/activity_main.xml"
+    },
+    {
+        "merged": "/Users/sieun/.gradle/daemon/8.11.1/com.example.mutism.app-mergeDebugResources-32:/layout/item_noise.xml",
+        "source": "/Users/sieun/.gradle/daemon/8.11.1/com.example.mutism.app-main-35:/layout/item_noise.xml"
+    },
+    {
+        "merged": "/Users/sieun/.gradle/daemon/8.11.1/com.example.mutism.app-mergeDebugResources-32:/layout/activity_noise.xml",
+        "source": "/Users/sieun/.gradle/daemon/8.11.1/com.example.mutism.app-main-35:/layout/activity_noise.xml"
+    },
+    {
+        "merged": "com.example.mutism.app-mergeDebugResources-32:/layout/activity_main.xml",
+        "source": "com.example.mutism.app-main-35:/layout/activity_main.xml"
+    }
+]
