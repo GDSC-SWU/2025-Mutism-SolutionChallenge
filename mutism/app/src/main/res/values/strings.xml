@@ -4,4 +4,7 @@
     <string name="btn_select">Select</string>
     <string name="car">car</string>
     <string name="white_noise_tv_question">What sounds does your patient like?</string>
+    <string name="main_tv_welcome">Let's start\n a safe day today :)</string>
+    <string name="main_tv_explain">Press the button to start</string>
+    <string name="btn_SOS">SOS</string>
 </resources>
