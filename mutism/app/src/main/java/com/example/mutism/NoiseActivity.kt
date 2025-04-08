@@ -8,6 +8,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.mutism.databinding.ActivityNoiseBinding
+import com.example.mutism.model.NoiseData
 import com.example.mutism.model.NoiseItem
 
 class NoiseActivity : AppCompatActivity() {
@@ -47,23 +48,7 @@ class NoiseActivity : AppCompatActivity() {
     }
 
     private fun loadNoises(){
-        noiseList = mutableListOf(
-            NoiseItem("car",R.drawable.noise_car),
-            NoiseItem("horn",R.drawable.noise_car),
-            NoiseItem("coffee\n" + "machine",R.drawable.noise_car),
-            NoiseItem("dog bark",R.drawable.noise_car),
-            NoiseItem("vacuum\n" + "cleaner",R.drawable.noise_car),
-            NoiseItem("phone\n" + "ringing",R.drawable.noise_car),
-            NoiseItem("clock\n" + "ticking",R.drawable.noise_car),
-            NoiseItem("door\n" + "opening",R.drawable.noise_car),
-            NoiseItem("air conditioner\n" + "/ heater",R.drawable.noise_car),
-            NoiseItem("fan",R.drawable.noise_car),
-            NoiseItem("kitchen\n" + "appliance",R.drawable.noise_car),
-            NoiseItem("talking in\n" + "restaurants",R.drawable.noise_car)
-
-
-
-        )
+        noiseList = NoiseData.list.toMutableList()
         adapter.submitList(noiseList.toList())
     }
 

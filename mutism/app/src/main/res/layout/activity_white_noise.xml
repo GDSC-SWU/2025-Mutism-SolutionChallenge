@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/noise"
+    android:id="@+id/white_noise"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="40dp"
@@ -23,13 +23,15 @@
         android:id="@+id/tv_question"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/noise_tv_question"
+        android:text="@string/white_noise_tv_question"
         android:textSize="18sp"
         android:textColor="@android:color/white"
         android:layout_marginBottom="16dp" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView_noises"
+        android:id="@+id/recyclerView_white_noises"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="100dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
