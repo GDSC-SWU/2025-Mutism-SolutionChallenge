@@ -3,4 +3,5 @@
     <string name="noise_tv_question">What is the sound\nyour patient doesn\'t like?</string>
     <string name="btn_select">Select</string>
     <string name="car">car</string>
+    <string name="white_noise_tv_question">What sounds does your patient like?</string>
 </resources>
