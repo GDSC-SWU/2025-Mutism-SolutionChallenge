@@ -79,22 +79,4 @@
             android:textSize="26sp" />
     </FrameLayout>
 
-    <Button
-        android:id="@+id/btn_to_noise_page"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="select noise"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="20dp"/>
-
-    <Button
-        android:id="@+id/btn_to_white_noise_page"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="select white noise"
-        app:layout_constraintTop_toBottomOf="@+id/btn_to_noise_page"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="20dp"/>
-
 </LinearLayout>
