@@ -4,7 +4,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="noise_bg">#86B9EF</color>
     <color name="noise_item_bg">#ACCFF4</color>
-    <color name="main_text_color">#65A9F3</color>
+    <color name="main_color1">#65A9F3</color>
     <color name="main_bg">#EDEDED</color>
-    <color name="main_SOS_btn_color">#3992EF</color>
+    <color name="main_color2">#3992EF</color>
+    <color name="main_color3">#2869B0</color>
 </resources>

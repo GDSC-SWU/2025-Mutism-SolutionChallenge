@@ -2,10 +2,7 @@ package com.example.mutism
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.mutism.databinding.ActivityNoiseBinding
 import com.example.mutism.model.NoiseData
