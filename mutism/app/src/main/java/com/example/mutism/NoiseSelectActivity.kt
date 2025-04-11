@@ -13,28 +13,30 @@ import com.google.android.material.chip.ChipGroup
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-class NoiseSelectActivity : AppCompatActivity(),TagSelectionListener {
-    private lateinit var binding : ActivityNoiseSelectBinding
+class NoiseSelectActivity :
+    AppCompatActivity(),
+    TagSelectionListener {
+    private lateinit var binding: ActivityNoiseSelectBinding
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager: ViewPager2
     private lateinit var selectedTagChipGroup: ChipGroup
-    private val selectedTags = mutableSetOf<String>()  // 중복 방지
+    private val selectedTags = mutableSetOf<String>() // 중복 방지
 
+    private val tabTitles = List(10) { i -> "Tab ${i + 1}" }
 
-    private val tabTitles = List(10){ i -> "Tab ${i+1}" }
-
-    val tagContents = listOf(
-        listOf("Speech", "Whispering", "Shout", "Narration", "Conversation"),
-        listOf("Laughter", "Crying", "Screaming", "Sigh", "Groan", "Moan"),
-        listOf("Baby cry", "Babbling", "Child speech"),
-        listOf("Whispering", "Whispering", "Shout", "Narration", "Conversation"),
-        listOf("Shout", "Crying", "Screaming", "Sigh", "Groan", "Moan"),
-        listOf("Groan cry", "Babbling", "Child speech"),
-        listOf("Sigh", "Whispering", "Shout", "Narration", "Conversation"),
-        listOf("Narration", "Crying", "Screaming", "Sigh", "Groan", "Moan"),
-        listOf("Moan cry", "Babbling", "Child speech"),
-        listOf("Conversation", "Whispering", "Shout", "Narration", "Conversation"),
-    )
+    val tagContents =
+        listOf(
+            listOf("Speech", "Whispering", "Shout", "Narration", "Conversation"),
+            listOf("Laughter", "Crying", "Screaming", "Sigh", "Groan", "Moan"),
+            listOf("Baby cry", "Babbling", "Child speech"),
+            listOf("Whispering", "Whispering", "Shout", "Narration", "Conversation"),
+            listOf("Shout", "Crying", "Screaming", "Sigh", "Groan", "Moan"),
+            listOf("Groan cry", "Babbling", "Child speech"),
+            listOf("Sigh", "Whispering", "Shout", "Narration", "Conversation"),
+            listOf("Narration", "Crying", "Screaming", "Sigh", "Groan", "Moan"),
+            listOf("Moan cry", "Babbling", "Child speech"),
+            listOf("Conversation", "Whispering", "Shout", "Narration", "Conversation"),
+        )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,14 +51,13 @@ class NoiseSelectActivity : AppCompatActivity(),TagSelectionListener {
 
         viewPager.adapter = NoiseViewPagerAdapter(this, tabTitles, tagContents)
 
-        TabLayoutMediator(tabLayout,viewPager){tab, position ->
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = tabTitles[position]
         }.attach()
 
         binding.btnSearch.setOnClickListener {
-            Toast.makeText(this, "선택된 태그: $selectedTags",Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "선택된 태그: $selectedTags", Toast.LENGTH_SHORT).show()
         }
-
 
         //
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
@@ -68,14 +69,15 @@ class NoiseSelectActivity : AppCompatActivity(),TagSelectionListener {
 
     override fun onTagSelected(tag: String) {
         if (selectedTags.add(tag)) {
-            val chip = Chip(this).apply {
-                text = tag
-                isCloseIconVisible = true
-                setOnCloseIconClickListener {
-                    selectedTags.remove(tag)
-                    selectedTagChipGroup.removeView(this)
+            val chip =
+                Chip(this).apply {
+                    text = tag
+                    isCloseIconVisible = true
+                    setOnCloseIconClickListener {
+                        selectedTags.remove(tag)
+                        selectedTagChipGroup.removeView(this)
+                    }
                 }
-            }
             selectedTagChipGroup.addView(chip)
         }
     }
@@ -90,6 +92,4 @@ class NoiseSelectActivity : AppCompatActivity(),TagSelectionListener {
             }
         }
     }
-
-
 }

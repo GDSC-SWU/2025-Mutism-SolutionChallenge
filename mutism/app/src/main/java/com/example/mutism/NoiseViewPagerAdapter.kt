@@ -6,12 +6,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 
 class NoiseViewPagerAdapter(
     fragmentActivity: FragmentActivity,
-    private val tabTitles : List<String>,
-    private val tagContents:List<List<String>>
-) :FragmentStateAdapter(fragmentActivity){
+    private val tabTitles: List<String>,
+    private val tagContents: List<List<String>>,
+) : FragmentStateAdapter(fragmentActivity) {
     override fun getItemCount(): Int = tabTitles.size
 
-    override fun createFragment(position: Int): Fragment {
-        return NoiseSelectTabFragment.newInstance(tabTitles[position],tagContents[position])
-    }
+    override fun createFragment(position: Int): Fragment = NoiseSelectTabFragment.newInstance(tabTitles[position], tagContents[position])
 }

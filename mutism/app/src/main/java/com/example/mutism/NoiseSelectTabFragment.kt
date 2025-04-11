@@ -7,25 +7,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.material.chip.Chip
 
-
 class NoiseSelectTabFragment : Fragment() {
+    private var listener: TagSelectionListener? = null
 
-    private var listener : TagSelectionListener? = null
-
-    companion object{
+    companion object {
         private const val ARG_TITLE = "title"
         private const val ARG_TAGS = "tags"
 
-        fun newInstance(title:String, tags:List<String>): NoiseSelectTabFragment{
+        fun newInstance(
+            title: String,
+            tags: List<String>,
+        ): NoiseSelectTabFragment {
             val fragment = NoiseSelectTabFragment()
-            val args = Bundle().apply {
-                putString(ARG_TITLE, title)
-                putStringArrayList(ARG_TAGS, ArrayList(tags))
-            }
+            val args =
+                Bundle().apply {
+                    putString(ARG_TITLE, title)
+                    putStringArrayList(ARG_TAGS, ArrayList(tags))
+                }
             fragment.arguments = args
             return fragment
         }
@@ -33,7 +34,7 @@ class NoiseSelectTabFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if(context is TagSelectionListener){
+        if (context is TagSelectionListener) {
             listener = context
             Log.d("NoiseSelectTab", "✅ listener 연결됨")
         }
@@ -42,26 +43,27 @@ class NoiseSelectTabFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         val view = inflater.inflate(R.layout.fragment_tab, container, false)
         val tagContainer = view.findViewById<LinearLayout>(R.id.tagContainer)
 
         val tags = arguments?.getStringArrayList(ARG_TAGS) ?: emptyList<String>()
         for (tag in tags) {
-            val chip = Chip(requireContext()).apply {
-                text = tag
-                isClickable = true
-                isCheckable = true
-                setOnClickListener{
-                    Log.d("NoiseSelectTab", "Clicked: $tag, isChecked=$isChecked")
-                    if(isChecked){
-                        listener?.onTagSelected(tag)
-                    }else{
-                        listener?.onTagDeselected(tag)
+            val chip =
+                Chip(requireContext()).apply {
+                    text = tag
+                    isClickable = true
+                    isCheckable = true
+                    setOnClickListener {
+                        Log.d("NoiseSelectTab", "Clicked: $tag, isChecked=$isChecked")
+                        if (isChecked) {
+                            listener?.onTagSelected(tag)
+                        } else {
+                            listener?.onTagDeselected(tag)
+                        }
                     }
                 }
-            }
             tagContainer.addView(chip)
         }
 
