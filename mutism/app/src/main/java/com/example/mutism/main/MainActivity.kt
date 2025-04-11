@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
                 binding.tvRecording.visibility = View.VISIBLE
                 binding.spaceBetween.visibility = View.GONE
                 binding.tvNowHear.visibility = View.VISIBLE
-                binding.mainTvExplain.text = getString(R.string.main_tv_stop)
+                binding.mainTvExplain.text = getString(R.string.text_main_stop)
             } else {
                 // Revert to original state
                 binding.btnStart.setImageResource(R.drawable.btn_start)
@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
                 binding.tvRecording.visibility = View.GONE
                 binding.spaceBetween.visibility = View.VISIBLE
                 binding.tvNowHear.visibility = View.GONE
-                binding.mainTvExplain.text = getString(R.string.main_tv_start)
+                binding.mainTvExplain.text = getString(R.string.text_main_start)
             }
 
             isRecording = !isRecording
