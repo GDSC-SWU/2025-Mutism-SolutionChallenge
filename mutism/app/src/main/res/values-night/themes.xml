@@ -3,5 +3,7 @@
     <style name="Base.Theme.Mutism" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="chipStyle">@style/CustomChip</item>
+
     </style>
 </resources>

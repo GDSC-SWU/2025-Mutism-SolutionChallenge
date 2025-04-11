@@ -1,9 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
     <style name="Base.Theme.Mutism" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/noise_bg</item> <!-- 기본 앱 색상 -->
+        <item name="chipStyle">@style/CustomChip</item>
     </style>
-
     <style name="Theme.Mutism" parent="Base.Theme.Mutism" />
 </resources>

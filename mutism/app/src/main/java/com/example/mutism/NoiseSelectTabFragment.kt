@@ -8,10 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.chip.Chip
 
 class NoiseSelectTabFragment : Fragment() {
     private var listener: TagSelectionListener? = null
+    private var chipMap: MutableMap<String, Chip> = mutableMapOf()
+
+    private lateinit var tagViewModel: TagViewModel
 
     companion object {
         private const val ARG_TITLE = "title"
@@ -34,9 +38,12 @@ class NoiseSelectTabFragment : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+
+        tagViewModel = ViewModelProvider(requireActivity())[TagViewModel::class.java]
+
         if (context is TagSelectionListener) {
             listener = context
-            Log.d("NoiseSelectTab", "✅ listener 연결됨")
+            Log.d("NoiseSelectTab", "listener 연결됨")
         }
     }
 
@@ -48,26 +55,38 @@ class NoiseSelectTabFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_tab, container, false)
         val tagContainer = view.findViewById<LinearLayout>(R.id.tagContainer)
 
+        tagViewModel.selectedTags.observe(viewLifecycleOwner) { selected ->
+            refreshSelection(selected)
+        }
+
         val tags = arguments?.getStringArrayList(ARG_TAGS) ?: emptyList<String>()
         for (tag in tags) {
             val chip =
-                Chip(requireContext()).apply {
-                    text = tag
-                    isClickable = true
-                    isCheckable = true
-                    setOnClickListener {
-                        Log.d("NoiseSelectTab", "Clicked: $tag, isChecked=$isChecked")
-                        if (isChecked) {
-                            listener?.onTagSelected(tag)
-                        } else {
-                            listener?.onTagDeselected(tag)
-                        }
-                    }
+                LayoutInflater
+                    .from(requireContext())
+                    .inflate(R.layout.view_custom_chip, tagContainer, false) as Chip
+            chip.text = tag
+            chip.setOnClickListener {
+                Log.d("NoiseSelectTab", "Clicked: $tag, isChecked=${chip.isChecked}")
+                if (chip.isChecked) {
+                    tagViewModel.selectTag(tag)
+                } else {
+                    tagViewModel.deselectTag(tag)
                 }
+            }
+            chipMap[tag] = chip
             tagContainer.addView(chip)
         }
 
         return view
+    }
+
+    fun refreshSelection(selectedTags: Set<String>) {
+        chipMap.forEach { (tag, chip) ->
+            chip.isChecked = selectedTags.contains(tag)
+            chip.jumpDrawablesToCurrentState()
+            chip.invalidate()
+        }
     }
 
     override fun onDetach() {
