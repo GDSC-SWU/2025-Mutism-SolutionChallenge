@@ -1,15 +1,12 @@
 package com.example.mutism.main
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.mutism.NoiseActivity
 import com.example.mutism.R
-import com.example.mutism.WhiteNoiseActivity
 import com.example.mutism.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -48,16 +45,6 @@ class MainActivity : AppCompatActivity() {
             }
 
             isRecording = !isRecording
-        }
-
-        binding.btnToNoisePage.setOnClickListener {
-            val intent = Intent(this, NoiseActivity::class.java)
-            startActivity(intent)
-        }
-
-        binding.btnToWhiteNoisePage.setOnClickListener {
-            val intent = Intent(this, WhiteNoiseActivity::class.java)
-            startActivity(intent)
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
