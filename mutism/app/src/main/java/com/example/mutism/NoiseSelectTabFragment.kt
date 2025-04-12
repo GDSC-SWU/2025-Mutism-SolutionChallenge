@@ -7,34 +7,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.mutism.model.TagSection
 import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 
 class NoiseSelectTabFragment : Fragment() {
     private var listener: TagSelectionListener? = null
-    private var chipMap: MutableMap<String, Chip> = mutableMapOf()
-
     private lateinit var tagViewModel: TagViewModel
-
-    companion object {
-        private const val ARG_TITLE = "title"
-        private const val ARG_TAGS = "tags"
-
-        fun newInstance(
-            title: String,
-            tags: List<String>,
-        ): NoiseSelectTabFragment {
-            val fragment = NoiseSelectTabFragment()
-            val args =
-                Bundle().apply {
-                    putString(ARG_TITLE, title)
-                    putStringArrayList(ARG_TAGS, ArrayList(tags))
-                }
-            fragment.arguments = args
-            return fragment
-        }
-    }
+    private lateinit var chipMap: MutableMap<String, Chip>
+    private lateinit var categoryContainer: LinearLayout
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -53,21 +37,42 @@ class NoiseSelectTabFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         val view = inflater.inflate(R.layout.fragment_tab, container, false)
-        val tagContainer = view.findViewById<LinearLayout>(R.id.tagContainer)
+        categoryContainer = view.findViewById<LinearLayout>(R.id.categoryContainer)
+        chipMap = mutableMapOf()
 
         tagViewModel.selectedTags.observe(viewLifecycleOwner) { selected ->
             refreshSelection(selected)
         }
 
-        val tags = arguments?.getStringArrayList(ARG_TAGS) ?: emptyList<String>()
+        val sections = arguments?.getParcelableArrayList<Bundle>(ARG_SECTIONS)
+        sections?.forEach { sectionBundle ->
+            val category = sectionBundle.getString("category") ?: return@forEach
+            val tags = sectionBundle.getStringArrayList("tags") ?: return@forEach
+            addCategorySection(category, tags, inflater)
+        }
+        return view
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
+    }
+
+    private fun addCategorySection(
+        category: String,
+        tags: List<String>,
+        inflater: LayoutInflater,
+    ) {
+        val sectionView = inflater.inflate(R.layout.view_chip_section, categoryContainer, false)
+        val titleTextView = sectionView.findViewById<TextView>(R.id.categoryTitle)
+        val chipGroup = sectionView.findViewById<ChipGroup>(R.id.chipGroup)
+
+        titleTextView.text = category
+
         for (tag in tags) {
-            val chip =
-                LayoutInflater
-                    .from(requireContext())
-                    .inflate(R.layout.view_custom_chip, tagContainer, false) as Chip
+            val chip = inflater.inflate(R.layout.view_custom_chip, chipGroup, false) as Chip
             chip.text = tag
             chip.setOnClickListener {
-                Log.d("NoiseSelectTab", "Clicked: $tag, isChecked=${chip.isChecked}")
                 if (chip.isChecked) {
                     tagViewModel.selectTag(tag)
                 } else {
@@ -75,10 +80,10 @@ class NoiseSelectTabFragment : Fragment() {
                 }
             }
             chipMap[tag] = chip
-            tagContainer.addView(chip)
+            chipGroup.addView(chip)
         }
 
-        return view
+        categoryContainer.addView(sectionView)
     }
 
     fun refreshSelection(selectedTags: Set<String>) {
@@ -89,8 +94,31 @@ class NoiseSelectTabFragment : Fragment() {
         }
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
+    companion object {
+        private const val ARG_SECTIONS = "sections"
+
+        fun newInstance(
+            title: String,
+            sections: List<TagSection>,
+        ): NoiseSelectTabFragment {
+            val fragment = NoiseSelectTabFragment()
+            val args =
+                Bundle().apply {
+                    putString("title", title)
+                    putParcelableArrayList(
+                        ARG_SECTIONS,
+                        ArrayList(
+                            sections.map {
+                                Bundle().apply {
+                                    putString("category", it.category)
+                                    putStringArrayList("tags", ArrayList(it.tags))
+                                }
+                            },
+                        ),
+                    )
+                }
+            fragment.arguments = args
+            return fragment
+        }
     }
 }

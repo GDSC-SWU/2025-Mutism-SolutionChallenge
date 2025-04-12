@@ -104,7 +104,7 @@
                 android:text="@string/noise_tv_empty_tag_message"
                 android:visibility="visible"
                 android:textSize="14sp"
-                android:textColor="@color/tab_unselected"
+                android:textColor="@color/white"
                 android:layout_marginBottom="10dp"/>
 
             <com.google.android.material.chip.ChipGroup
@@ -127,21 +127,22 @@
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnSearch"
+        app:layout_constraintBottom_toTopOf="@+id/btnSelect"
         app:layout_constraintTop_toBottomOf="@id/selectedTagScrollView" />
 
-    <!-- 하단 검색 버튼 -->
-    <Button
-        android:id="@+id/btnSearch"
-        android:layout_width="0dp"
+    <FrameLayout
+        android:id="@+id/btnSelect"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/main_bg"
-        android:padding="15dp"
-        android:text="@string/btn_select"
-        android:textColor="@android:color/black"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="30dp"
+        android:layout_gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@drawable/btn_unselect_noise"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
+        app:layout_constraintStart_toStartOf="parent">
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

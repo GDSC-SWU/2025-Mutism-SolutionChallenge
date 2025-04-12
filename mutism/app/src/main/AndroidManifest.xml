@@ -25,9 +25,6 @@
             android:name=".WhiteNoiseActivity"
             android:exported="false" />
         <activity
-            android:name=".NoiseActivity"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:exported="false">
 
