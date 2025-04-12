@@ -9,4 +9,5 @@
     <string name="btn_SOS">SOS</string>
     <string name="noise_tv_empty_tag_message">Please select the sounds your patient dislikes.</string>
     <string name="noise_tv_selected_tag_label">Selected:</string>
+    <string name="noise_tv_title">Noises</string>
 </resources>

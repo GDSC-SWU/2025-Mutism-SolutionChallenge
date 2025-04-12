@@ -1,6 +1,6 @@
 <resources>
     <style name="CustomChip" parent="@style/Widget.MaterialComponents.Chip.Filter">
-        <item name="chipBackgroundColor">@color/chip_bg_state_list</item>
+        <item name="chipBackgroundColor">@color/chip_bg_color_selector</item>
         <item name="chipStrokeColor">@color/chip_stroke_selector</item>
         <item name="chipStrokeWidth">1dp</item>
 
