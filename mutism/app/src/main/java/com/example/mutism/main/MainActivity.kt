@@ -34,9 +34,9 @@ class MainActivity : AppCompatActivity() {
                 binding.mainTvExplain.text = getString(R.string.text_main_stop)
             } else {
                 // Revert to original state
-                binding.btnStart.setImageResource(R.drawable.btn_start)
+                binding.btnStart.setImageResource(R.drawable.btn_start1)
                 val rootLayout = findViewById<View>(R.id.main)
-                rootLayout.setBackgroundResource(R.drawable.bg_main)
+                rootLayout.setBackgroundResource(R.drawable.bg_main1)
                 binding.tvWelcome.visibility = View.VISIBLE
                 binding.tvRecording.visibility = View.GONE
                 binding.spaceBetween.visibility = View.VISIBLE

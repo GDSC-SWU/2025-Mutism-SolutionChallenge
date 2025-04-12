@@ -46,7 +46,7 @@
         android:layout_gravity="center"
         android:clickable="true"
         android:focusable="true"
-        android:background="@drawable/select_button">
+        android:background="@drawable/btn_unselect_noise">
     </FrameLayout>
 
 
