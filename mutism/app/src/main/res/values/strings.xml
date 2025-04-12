@@ -10,4 +10,7 @@
     <string name="text_main_stop">Press the button to stop</string>
     <string name="text_current_noise_label">Now you hear :</string>
     <string name="button_sos">SOS</string>
+    <string name="text_noise_title">Noises</string>
+    <string name="text_noise_selected_tab_label">Selected :</string>
+    <string name="text_noise_empty_tag_message">Please select the sounds your patient dislikes.</string>
 </resources>

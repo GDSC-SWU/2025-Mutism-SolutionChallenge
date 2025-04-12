@@ -15,7 +15,6 @@
         <activity
             android:name=".NoiseSelectActivity"
             android:exported="false">
-
         </activity>
         <activity
             android:name=".WhiteNoiseActivity"
