@@ -17,7 +17,7 @@
     <!-- 안쪽 투명한 배경: 테두리를 남기기 위해 padding으로 밀어줌 -->
     <item android:left="2dp" android:top="2dp" android:right="2dp" android:bottom="2dp">
         <shape android:shape="rectangle">
-            <solid android:color="@color/noise_item_bg" />
+            <solid android:color="@color/color_noise_item_bg" />
             <corners android:radius="20dp" />
         </shape>
     </item>

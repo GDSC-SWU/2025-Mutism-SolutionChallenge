@@ -1,82 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/main"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@drawable/bg_radial_gradient"
+    android:background="@drawable/bg_main"
     android:clipChildren="false"
     android:clipToPadding="false"
-    >
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/btn_my_page"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/btn_my_page"
+        android:layout_gravity="end"
         android:layout_marginTop="27dp"
         android:layout_marginEnd="27dp"
-        android:layout_gravity="end" />
+        android:src="@drawable/btn_my_page" />
 
     <TextView
         android:id="@+id/tv_welcome"
         android:layout_width="238dp"
         android:layout_height="78dp"
-        android:text="@string/main_tv_welcome"
-        android:textSize="28sp"
-        android:textColor="@color/main_text_color"
+        android:layout_marginStart="27dp"
         android:layout_marginTop="82dp"
-        android:layout_marginStart="27dp" />
+        android:text="@string/text_main_welcome"
+        android:textColor="@color/color_primary_light"
+        android:textSize="28sp" />
 
-    <FrameLayout
-        android:id="@+id/btn_start_container"
-        android:layout_width="158dp"
-        android:layout_height="158dp"
-        android:background="@drawable/bg_circle_white"
-        android:layout_marginTop="53dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_gravity="center">
+    <TextView
+        android:id="@+id/tv_recording"
+        android:layout_width="208dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="24dp"
+        android:layout_marginTop="135dp"
+        android:visibility="gone"
+        android:text="@string/text_main_recording"
+        android:textColor="@color/color_primary"
+        android:textSize="24sp" />
 
-        <ImageView
-            android:id="@+id/btn_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/btn_start"
-            android:layout_gravity="center"/>
-    </FrameLayout>
+    <Space
+        android:id="@+id/space_between"
+        android:layout_width="match_parent"
+        android:layout_height="31dp"/>
+
+    <ImageView
+        android:id="@+id/btn_start"
+        android:layout_width="202dp"
+        android:layout_height="202dp"
+        android:layout_gravity="center"
+        android:src="@drawable/btn_start" />
 
     <TextView
         android:id="@+id/main_tv_explain"
         android:layout_width="222dp"
         android:layout_height="24dp"
-        android:text="@string/main_tv_explain"
-        android:textSize="20sp"
-        android:textColor="@color/main_text_color"
-        android:layout_marginTop="72dp"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:text="@string/text_main_start"
+        android:textColor="@color/color_primary_light"
+        android:textSize="20sp" />
 
     <FrameLayout
         android:id="@+id/btn_select"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="72dp"
         android:layout_gravity="center"
+        android:layout_marginTop="72dp"
+        android:background="@drawable/btn_sos_bg"
         android:clickable="true"
-        android:focusable="true"
-        android:background="@drawable/btn_sos_bg">
+        android:focusable="true">
 
         <TextView
             android:id="@+id/tv_select"
             android:layout_width="124dp"
             android:layout_height="66dp"
             android:gravity="center"
-            android:text="@string/btn_SOS"
+            android:text="@string/button_sos"
             android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="26sp" />
+            android:textSize="26sp"
+            android:textStyle="bold" />
     </FrameLayout>
 
+    <TextView
+        android:id="@+id/tv_now_hear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="30dp"
+        android:text="@string/text_current_noise_label"
+        android:textColor="@color/color_primary_dark"
+        android:textSize="20sp"
+        android:visibility="gone" />
 </LinearLayout>
