@@ -12,6 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mutism"
         tools:targetApi="31">
+        <activity android:name=".myPage.MyPageActivity" />
         <activity
             android:name=".NoiseSelectActivity"
             android:exported="false">

@@ -13,4 +13,10 @@
     <string name="text_noise_title">Noises</string>
     <string name="text_noise_selected_tab_label">Selected :</string>
     <string name="text_noise_empty_tag_message">Please select the sounds your patient dislikes.</string>
+    <string name="text_my_page_noise">Selected Noises</string>
+    <string name="text_my_page_white_noises">Selected White Noises</string>
+    <string name="text_my_page_autism">Autism Functional Level</string>
+    <string name="text_my_page_gender">Gender</string>
+    <string name="text_my_page_age">Age</string>
+    <string name="text_my_page_opinion">Caregive Opinion</string>
 </resources>
