@@ -1,5 +1,6 @@
 package com.example.mutism.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
@@ -8,6 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.mutism.R
 import com.example.mutism.databinding.ActivityMainBinding
+import com.example.mutism.myPage.MyPageActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -45,6 +47,11 @@ class MainActivity : AppCompatActivity() {
             }
 
             isRecording = !isRecording
+        }
+
+        binding.btnMyPage.setOnClickListener {
+            val intent = Intent(this, MyPageActivity::class.java)
+            startActivity(intent)
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
