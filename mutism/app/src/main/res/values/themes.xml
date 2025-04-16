@@ -1,7 +1,0 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Base.Theme.Mutism" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/color_noise_bg</item> <!-- 기본 앱 색상 -->
-        <item name="chipStyle">@style/CustomChip</item>
-    </style>
-    <style name="Theme.Mutism" parent="Base.Theme.Mutism" />
-</resources>
