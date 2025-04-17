@@ -16,10 +16,11 @@
 
         <!-- 안쪽 내용 (배경 + 아이콘) -->
         <FrameLayout
+            android:id="@+id/icon_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="4dp"
-            android:background="@drawable/item_noise_bg"
+            android:background="@drawable/item_noise_unselect_bg"
             android:gravity="center">
 
             <ImageView

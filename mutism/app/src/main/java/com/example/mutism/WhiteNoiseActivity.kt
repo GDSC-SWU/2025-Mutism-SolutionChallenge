@@ -44,6 +44,8 @@ class WhiteNoiseActivity : AppCompatActivity() {
                         }.toMutableList()
 
                 adapter.submitList(whiteNoiseList.toList())
+
+                updateSelectButtonState()
             }
 
         binding.recyclerViewWhiteNoises.layoutManager = GridLayoutManager(this, 3)
@@ -53,5 +55,19 @@ class WhiteNoiseActivity : AppCompatActivity() {
     private fun loadNoises() {
         whiteNoiseList = WhiteNoiseData.list.toMutableList()
         adapter.submitList(whiteNoiseList.toList())
+    }
+
+    private fun updateSelectButtonState() {
+        val hasSelection = whiteNoiseList.any { it.isSelected }
+
+        binding.btnSelect.apply {
+            isEnabled = hasSelection
+            background =
+                if (hasSelection) {
+                    getDrawable(R.drawable.btn_selected_noise)
+                } else {
+                    getDrawable(R.drawable.btn_unselect_noise)
+                }
+        }
     }
 }
