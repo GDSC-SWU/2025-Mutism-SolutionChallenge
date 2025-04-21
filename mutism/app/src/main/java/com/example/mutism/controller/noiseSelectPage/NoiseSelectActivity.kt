@@ -1,4 +1,4 @@
-package com.example.mutism
+package com.example.mutism.controller.noiseSelectPage
 
 import android.os.Bundle
 import android.view.View
@@ -11,9 +11,11 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
+import com.example.mutism.R
 import com.example.mutism.databinding.ActivityNoiseSelectBinding
 import com.example.mutism.model.tagContents
 import com.example.mutism.model.tagTabTitles
+import com.example.mutism.viewmodel.TagViewModel
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.tabs.TabLayout

@@ -1,4 +1,4 @@
-package com.example.mutism
+package com.example.mutism.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

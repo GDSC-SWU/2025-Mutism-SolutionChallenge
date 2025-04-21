@@ -1,4 +1,4 @@
-package com.example.mutism
+package com.example.mutism.controller.noiseSelectPage
 
 interface TagSelectionListener {
     fun onTagSelected(tag: String)

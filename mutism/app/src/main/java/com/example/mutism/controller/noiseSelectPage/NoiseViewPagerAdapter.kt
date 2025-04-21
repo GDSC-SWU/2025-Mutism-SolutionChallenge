@@ -1,4 +1,4 @@
-package com.example.mutism
+package com.example.mutism.controller.noiseSelectPage
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

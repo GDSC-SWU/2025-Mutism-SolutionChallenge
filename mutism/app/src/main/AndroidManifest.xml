@@ -14,16 +14,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Mutism"
         tools:targetApi="31">
-        <activity android:name=".myPage.MyPageActivity" />
+        <activity android:name=".controller.myPage.MyPageActivity" />
         <activity
-            android:name=".NoiseSelectActivity"
+            android:name=".controller.noiseSelectPage.NoiseSelectActivity"
             android:exported="false">
         </activity>
         <activity
-            android:name=".WhiteNoiseActivity"
+            android:name=".controller.whiteNoisePage.WhiteNoiseActivity"
             android:exported="false" />
         <activity
-            android:name=".main.MainActivity"
+            android:name=".controller.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
