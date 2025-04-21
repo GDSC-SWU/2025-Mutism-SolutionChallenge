@@ -62,7 +62,7 @@
         android:textSize="20sp" />
 
     <FrameLayout
-        android:id="@+id/btn_select"
+        android:id="@+id/btn_sos_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -72,7 +72,7 @@
         android:focusable="true">
 
         <TextView
-            android:id="@+id/tv_select"
+            android:id="@+id/btn_sos"
             android:layout_width="124dp"
             android:layout_height="66dp"
             android:gravity="center"
