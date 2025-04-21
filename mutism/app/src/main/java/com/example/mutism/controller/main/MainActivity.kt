@@ -1,4 +1,4 @@
-package com.example.mutism.main
+package com.example.mutism.controller.main
 
 import android.Manifest
 import android.content.Intent
@@ -14,8 +14,8 @@ import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.mutism.R
+import com.example.mutism.controller.myPage.MyPageActivity
 import com.example.mutism.databinding.ActivityMainBinding
-import com.example.mutism.myPage.MyPageActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

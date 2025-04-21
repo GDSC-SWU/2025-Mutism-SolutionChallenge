@@ -1,9 +1,10 @@
-package com.example.mutism
+package com.example.mutism.controller.whiteNoisePage
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.mutism.R
 import com.example.mutism.databinding.ActivityWhiteNoiseBinding
 import com.example.mutism.model.WhiteNoiseData
 import com.example.mutism.model.WhiteNoiseItem

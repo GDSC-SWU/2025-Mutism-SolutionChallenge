@@ -1,4 +1,4 @@
-package com.example.mutism
+package com.example.mutism.controller.whiteNoisePage
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mutism.R
 import com.example.mutism.databinding.ItemWhiteNoiseBinding
 import com.example.mutism.model.WhiteNoiseItem
 

@@ -1,4 +1,4 @@
-package com.example.mutism
+package com.example.mutism.controller.noiseSelectPage
 
 import android.content.Context
 import android.os.Bundle
@@ -10,7 +10,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.mutism.R
 import com.example.mutism.model.TagSection
+import com.example.mutism.viewmodel.TagViewModel
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 

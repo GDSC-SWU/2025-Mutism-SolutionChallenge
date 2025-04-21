@@ -1,11 +1,11 @@
-package com.example.mutism.myPage
+package com.example.mutism.controller.myPage
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.example.mutism.NoiseSelectActivity
-import com.example.mutism.WhiteNoiseActivity
+import com.example.mutism.controller.noiseSelectPage.NoiseSelectActivity
+import com.example.mutism.controller.whiteNoisePage.WhiteNoiseActivity
 import com.example.mutism.databinding.ActivityMyPageBinding
 
 class MyPageActivity : AppCompatActivity() {
