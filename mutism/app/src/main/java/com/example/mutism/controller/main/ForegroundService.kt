@@ -90,16 +90,30 @@ class ForegroundService : Service() {
                         audioTensor.load(record)
                         val output = classifier.classify(audioTensor)
 
-                        // Process results
+                        // Measure decibel
+                        val bufferSize =
+                            AudioRecord.getMinBufferSize(
+                                audioRecord!!.sampleRate,
+                                audioRecord!!.channelConfiguration,
+                                audioRecord!!.audioFormat,
+                            )
+                        val buffer = ShortArray(bufferSize)
+                        val readSize = record.read(buffer, 0, buffer.size)
+                        val decibel = calculateDecibel(buffer, readSize)
+
+                        // Filter categories
                         val filtered =
                             output[0]
                                 .categories
-                                .filter {
-                                    it.score > MainActivity.MINIMUM_DISPLAY_THRESHOLD
-                                }.sortedBy { -it.score }
+                                .filter { it.score > MainActivity.MINIMUM_DISPLAY_THRESHOLD }
+                                .sortedByDescending { it.score }
 
+                        // Log formatted output
                         for (category in filtered) {
-                            Log.d("ForegroundService", "${category.label} : ${category.score}")
+                            Log.d(
+                                "ForegroundService",
+                                "db: %.2f, category: %s (%.2f)".format(decibel, category.label, category.score),
+                            )
                         }
 
                         handler?.postDelayed(this, classificationInterval)
@@ -111,6 +125,21 @@ class ForegroundService : Service() {
             Log.e("ForegroundService", "Error in audio classification", e)
             stopSelf()
         }
+    }
+
+    private fun calculateDecibel(
+        buffer: ShortArray,
+        readSize: Int,
+    ): Double {
+        if (readSize == 0) return -100.0 // Handle case where there is no data
+
+        var sum: Long = 0
+        for (i in 0 until readSize) {
+            sum += buffer[i] * buffer[i]
+        }
+
+        val rms = Math.sqrt(sum.toDouble() / readSize)
+        return if (rms > 0) 20 * Math.log10(rms) else -100.0 // If rms is 0, return -100
     }
 
     private fun stopAudioClassification() {

@@ -33,15 +33,18 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnStart.setOnClickListener {
             updateRecordingUI()
+
             if (ForegroundService.isRunning) {
+                // Stop the foreground service if it is currently running
                 stopService(Intent(this, ForegroundService::class.java))
-                Toast.makeText(this, "음성인식 중지", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Stop recording", Toast.LENGTH_SHORT).show()
             } else {
-                if (hasRecordPermission()) { // 마이크 권한이 있을 때
+                if (hasRecordPermission()) { // If microphone permission is granted
                     startForegroundService()
-                    Toast.makeText(this, "음성인식 시작", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Start recording", Toast.LENGTH_SHORT).show()
                 } else {
-                    requestPermissions( // 마이크 권한 요청
+                    // Request microphone permission if not already granted
+                    requestPermissions(
                         arrayOf(Manifest.permission.RECORD_AUDIO),
                         REQUEST_RECORD_AUDIO,
                     )
@@ -113,7 +116,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // 마이크 권한 요청
+    // request permission
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -125,7 +128,7 @@ class MainActivity : AppCompatActivity() {
                 Log.i(TAG, "Audio permission granted :)")
                 startForegroundService()
             } else {
-                Toast.makeText(this, "마이크 권한이 필요합니다", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Microphone permission is required", Toast.LENGTH_SHORT).show()
                 Log.e(TAG, "Audio permission not granted :(")
             }
         }
@@ -139,10 +142,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun startForegroundService() {
         val intent = Intent(this, ForegroundService::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { // 안드로이드 버전 8.0 이상인 경우 foregroundService()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(intent)
         } else {
-            startService(intent) // 안드로이드 버전 8.0 미만인 경우 startService()
+            startService(intent)
         }
     }
 
