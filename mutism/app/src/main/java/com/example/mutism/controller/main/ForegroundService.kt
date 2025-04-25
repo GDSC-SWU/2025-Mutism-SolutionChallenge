@@ -23,6 +23,7 @@ class ForegroundService : Service() {
     private var audioRecord: AudioRecord? = null
     private var handler: Handler? = null
     private val classificationInterval = 500L
+    private var lastLabel: String? = null
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -109,11 +110,15 @@ class ForegroundService : Service() {
                                 .sortedByDescending { it.score }
 
                         // Log formatted output
-                        for (category in filtered) {
-                            Log.d(
-                                "ForegroundService",
-                                "db: %.2f, category: %s (%.2f)".format(decibel, category.label, category.score),
-                            )
+                        val topCategory = filtered.firstOrNull()
+                        topCategory?.let { category ->
+                            Log.d("ForegroundService", "db: %.2f, category: %s (%.2f)".format(decibel, category.label, category.score))
+
+                            // ✅ 이전 결과와 다를 경우에만 보내기
+                            if (category.label != lastLabel) {
+                                sendToMainActivity(category.label)
+                                lastLabel = category.label
+                            }
                         }
 
                         handler?.postDelayed(this, classificationInterval)
@@ -140,6 +145,13 @@ class ForegroundService : Service() {
 
         val rms = Math.sqrt(sum.toDouble() / readSize)
         return if (rms > 0) 20 * Math.log10(rms) else -100.0 // If rms is 0, return -100
+    }
+
+    fun sendToMainActivity(newText: String) {
+        val intent = Intent("com.mutism.UPDATE_LIST")
+        intent.putExtra("new_text", newText)
+        sendBroadcast(intent)
+        Log.d("foregroundService", newText)
     }
 
     private fun stopAudioClassification() {

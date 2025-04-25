@@ -1,13 +1,19 @@
 package com.example.mutism.controller.main
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -22,12 +28,40 @@ import com.example.mutism.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var listContainer: LinearLayout
+    private lateinit var receiver: BroadcastReceiver
+
+    private val updateListReceiver =
+        object : BroadcastReceiver() {
+            override fun onReceive(
+                context: Context?,
+                intent: Intent?,
+            ) {
+                Log.d("mainActivity", "BroadcastReceiver received")
+                val newText = intent?.getStringExtra("new_text") ?: return
+                Log.d("mainActivity", newText)
+                addTextItem(newText)
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        listContainer = binding.listContainer
+
+        receiver =
+            object : BroadcastReceiver() {
+                override fun onReceive(
+                    context: Context,
+                    intent: Intent,
+                ) {
+                    if (intent.action == "com.mutism.UPDATE_LIST") {
+                        // 원하는 작업 수행
+                    }
+                }
+            }
 
         binding.tvRecording.visibility = View.GONE
 
@@ -81,6 +115,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    override fun onStart() {
+        super.onStart()
+        val filter = IntentFilter("com.mutism.UPDATE_LIST")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(updateListReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(updateListReceiver, filter)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(updateListReceiver)
+    }
+
     private fun updateRecordingUI() {
         val rootLayout = findViewById<View>(R.id.main)
         if (!ForegroundService.isRunning) {
@@ -115,6 +165,36 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Call failed: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
+
+    fun addTextItem(newText: String) {
+        val count = listContainer.childCount
+        if (count < 3) {
+            val textView = createTextView(newText)
+            listContainer.addView(textView)
+        } else {
+            listContainer.removeAllViews()
+            val textView = createTextView(newText)
+            listContainer.addView(textView)
+        }
+    }
+
+    private fun createTextView(text: String): TextView =
+        TextView(this).apply {
+            this.text = text
+            setTextColor(ContextCompat.getColor(context, R.color.color_primary_light))
+            textSize = 18f
+            setPadding(16, 16, 16, 16)
+            background = ContextCompat.getDrawable(context, R.drawable.bg_classified_sound)
+            layoutParams =
+                LinearLayout
+                    .LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                    ).apply {
+                        topMargin = 8
+                    }
+        }
+    // MARK: - Voice Recording Functions
 
     // request permission
     override fun onRequestPermissionsResult(
