@@ -1,9 +1,12 @@
 package com.example.mutism.controller.main
 
 import android.Manifest
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -19,7 +22,6 @@ import com.example.mutism.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private var isRecording = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +32,22 @@ class MainActivity : AppCompatActivity() {
         binding.tvRecording.visibility = View.GONE
 
         binding.btnStart.setOnClickListener {
-            isRecording = !isRecording
-            updateRecordingUI(isRecording)
+            updateRecordingUI()
+            if (ForegroundService.isRunning) {
+                stopService(Intent(this, ForegroundService::class.java))
+                Toast.makeText(this, "음성인식 중지", Toast.LENGTH_SHORT).show()
+            } else {
+                if (hasRecordPermission()) { // 마이크 권한이 있을 때
+                    startForegroundService()
+                    Toast.makeText(this, "음성인식 시작", Toast.LENGTH_SHORT).show()
+                } else {
+                    requestPermissions( // 마이크 권한 요청
+                        arrayOf(Manifest.permission.RECORD_AUDIO),
+                        REQUEST_RECORD_AUDIO,
+                    )
+                }
+            }
+            updateRecordingUI()
         }
 
         binding.btnMyPage.setOnClickListener {
@@ -62,9 +78,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateRecordingUI(isRecording: Boolean) {
+    private fun updateRecordingUI() {
         val rootLayout = findViewById<View>(R.id.main)
-        if (isRecording) {
+        if (!ForegroundService.isRunning) {
             binding.btnStart.setImageResource(R.drawable.btn_stop)
             rootLayout.setBackgroundResource(R.drawable.bg_main2)
             binding.tvWelcome.visibility = View.GONE
@@ -97,23 +113,44 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // 마이크 권한 요청
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_CALL_PERMISSION) {
+        if (requestCode == REQUEST_RECORD_AUDIO) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                makeEmergencyCall()
+                Log.i(TAG, "Audio permission granted :)")
+                startForegroundService()
             } else {
-                Toast.makeText(this, "Phone call permission is required.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "마이크 권한이 필요합니다", Toast.LENGTH_SHORT).show()
+                Log.e(TAG, "Audio permission not granted :(")
             }
+        }
+    }
+
+    private fun hasRecordPermission(): Boolean =
+        ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.RECORD_AUDIO,
+        ) == PackageManager.PERMISSION_GRANTED
+
+    private fun startForegroundService() {
+        val intent = Intent(this, ForegroundService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { // 안드로이드 버전 8.0 이상인 경우 foregroundService()
+            startForegroundService(intent)
+        } else {
+            startService(intent) // 안드로이드 버전 8.0 미만인 경우 startService()
         }
     }
 
     companion object {
         const val REQUEST_CALL_PERMISSION = 100
         const val EMERGENCY_NUMBER = "112"
+        const val REQUEST_RECORD_AUDIO = 1337
+        const val MODEL_FILE = "yamnet.tflite"
+        const val MINIMUM_DISPLAY_THRESHOLD: Float = 0.3f
     }
 }
