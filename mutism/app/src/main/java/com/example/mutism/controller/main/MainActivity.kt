@@ -11,6 +11,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -141,6 +142,7 @@ class MainActivity : AppCompatActivity() {
             binding.spaceBetween.visibility = View.GONE
             binding.tvNowHear.visibility = View.VISIBLE
             binding.mainTvExplain.text = getString(R.string.text_main_stop)
+            binding.listContainer.visibility = View.VISIBLE
         } else {
             binding.btnStart.setImageResource(R.drawable.btn_start1)
             rootLayout.setBackgroundResource(R.drawable.bg_main1)
@@ -149,6 +151,7 @@ class MainActivity : AppCompatActivity() {
             binding.spaceBetween.visibility = View.VISIBLE
             binding.tvNowHear.visibility = View.GONE
             binding.mainTvExplain.text = getString(R.string.text_main_start)
+            binding.listContainer.visibility = View.GONE
         }
     }
 
@@ -181,17 +184,18 @@ class MainActivity : AppCompatActivity() {
     private fun createTextView(text: String): TextView =
         TextView(this).apply {
             this.text = text
-            setTextColor(ContextCompat.getColor(context, R.color.color_primary_light))
-            textSize = 18f
-            setPadding(16, 16, 16, 16)
+            setTextColor(ContextCompat.getColor(context, R.color.color_noise_bg))
+            textSize = 24f
+            setPadding(13, 6, 6, 13)
             background = ContextCompat.getDrawable(context, R.drawable.bg_classified_sound)
             layoutParams =
                 LinearLayout
                     .LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                     ).apply {
                         topMargin = 8
+                        gravity = Gravity.CENTER
                     }
         }
     // MARK: - Voice Recording Functions
