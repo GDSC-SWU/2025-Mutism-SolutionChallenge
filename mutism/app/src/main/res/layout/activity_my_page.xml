@@ -4,82 +4,99 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/my_page"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/bg_my_page">
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="@drawable/default_page_bg">
 
     <ImageView
         android:id="@+id/btn_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:src="@drawable/arrow"
-        android:layout_marginLeft="26dp"
-        android:layout_marginTop="53dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="33dp"
+        android:layout_marginBottom="40dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <TextView
-        android:id="@+id/tv_selected_noises"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/selected_noise_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/text_my_page_noise"
-        android:textSize="20sp"
-        android:textColor="@color/color_primary_dark"
-        android:layout_marginLeft="38dp"
-        android:layout_marginTop="63dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btn_back" />
+        android:orientation="horizontal"
+        android:clickable="false"
+        android:focusable="false"
+        android:layout_marginTop="55dp"
+        app:layout_constraintTop_toBottomOf="@+id/btn_back">
 
-    <ImageView
-        android:id="@+id/btn_select_noise"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/arrow2"
-        android:layout_marginEnd="43dp"
-        android:layout_marginTop="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_selected_noises"/>
+        <TextView
+            android:id="@+id/tv_selected_noises"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/text_my_page_noise"
+            android:paddingStart="20dp"
+            android:textSize="16sp"
+            android:textColor="@color/color_primary_dark" />
 
-    <TextView
-        android:id="@+id/tv_selected_white_noises"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_my_page_white_noises"
-        android:textSize="20sp"
-        android:textColor="@color/color_primary_dark"
-        android:layout_marginLeft="38dp"
-        android:layout_marginTop="97dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_selected_noises" />
+        <ImageView
+            android:id="@+id/btn_select_noise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingEnd="15dp"
+            android:src="@drawable/arrow2" />
+    </LinearLayout>
 
-    <ImageView
-        android:id="@+id/btn_select_white_noise"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/white_noise_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/arrow2"
-        android:layout_marginEnd="43dp"
-        android:layout_marginTop="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_selected_white_noises"/>
+        android:orientation="horizontal"
+
+        android:layout_marginTop="40dp"
+        app:layout_constraintTop_toBottomOf="@+id/selected_noise_container">
+
+        <TextView
+            android:id="@+id/tv_selected_white_noises"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingStart="20dp"
+            android:text="@string/text_my_page_white_noises"
+            android:textSize="16sp"
+            android:textColor="@color/color_primary_dark" />
+
+        <ImageView
+            android:id="@+id/btn_select_white_noise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingEnd="15dp"
+            android:src="@drawable/arrow2" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_autism_level"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/text_my_page_autism"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textColor="@color/color_primary_dark"
-        android:layout_marginLeft="38dp"
-        android:layout_marginTop="97dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="100dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_selected_white_noises" />
+        app:layout_constraintTop_toBottomOf= "@+id/white_noise_container" />
 
-    <TextView
+    <EditText
         android:id="@+id/tv_autism_level_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Level 2"
-        android:textSize="16sp"
-        android:textColor="@color/color_primary_light2"
+        android:hint="Level 2"
+        android:textSize="14sp"
+        android:textColorHint="@color/color_primary_light2"
+        android:backgroundTint="@color/color_primary_light2"
         android:layout_marginEnd="45dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tv_autism_level"/>
@@ -89,20 +106,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/text_my_page_gender"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textColor="@color/color_primary_dark"
-        android:layout_marginLeft="38dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="30dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_autism_level" />
 
-    <TextView
+    <EditText
         android:id="@+id/tv_gender_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Female"
-        android:textSize="16sp"
-        android:textColor="@color/color_primary_light2"
+        android:hint="Female"
+        android:textSize="14sp"
+        android:textColorHint="@color/color_primary_light2"
+        android:backgroundTint="@color/color_primary_light2"
         android:layout_marginEnd="45dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tv_gender"/>
@@ -112,20 +130,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/text_my_page_age"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textColor="@color/color_primary_dark"
-        android:layout_marginLeft="38dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="30dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_gender" />
 
-    <TextView
+    <EditText
         android:id="@+id/tv_age_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="13"
-        android:textSize="16sp"
-        android:textColor="@color/color_primary_light2"
+        android:hint="13"
+        android:textSize="14sp"
+        android:textColorHint="@color/color_primary_light2"
+        android:backgroundTint="@color/color_primary_light2"
         android:layout_marginEnd="45dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tv_age"/>
@@ -134,27 +153,49 @@
         android:id="@+id/tv_opinion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/text_my_page_opinion"
-        android:textSize="16sp"
+        android:text="@string/text_my_page_Method"
+        android:textSize="14sp"
         android:textColor="@color/color_primary_dark"
-        android:layout_marginLeft="38dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="30dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_age" />
 
-    <FrameLayout
-        android:id="@+id/opinion_box"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/crv_method_container"
+        android:layout_width="330dp"
+        android:layout_height="130dp"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:layout_gravity="center"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="@drawable/opinion_box"
+        android:backgroundTint="@color/color_primary_light3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:cardCornerRadius="15dp"
         app:layout_constraintTop_toBottomOf="@+id/tv_opinion">
-    </FrameLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="@string/my_page_relax_method_text"
+            android:layout_gravity="center"/>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/btn_save"
+        android:layout_width="280dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="35dp"
+        app:cardCornerRadius="20dp"
+        android:backgroundTint="@color/color_primary_light2"
+        app:layout_constraintTop_toBottomOf="@+id/crv_method_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/my_page_btn_save"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:layout_gravity="center"/>
+    </com.google.android.material.card.MaterialCardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

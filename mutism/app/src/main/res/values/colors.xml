@@ -6,6 +6,7 @@
     <color name="color_primary">#3992EF</color>
     <color name="color_primary_dark">#2869B0</color>
     <color name="color_primary_light2">#83B6ED</color>
+    <color name="color_primary_light3">#C1E0FB</color>
     <color name="color_main_bg">#EDEDED</color>
     <color name="color_noise_bg">#86B9EF</color>
     <color name="color_noise_item_bg">#ACCFF4</color>

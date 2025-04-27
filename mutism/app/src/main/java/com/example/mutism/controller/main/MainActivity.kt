@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -15,11 +16,17 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.mutism.R
 import com.example.mutism.controller.myPage.MyPageActivity
+import com.example.mutism.controller.noiseSelectPage.NoiseSelectActivity
 import com.example.mutism.databinding.ActivityMainBinding
+import com.example.mutism.dialog.SelectNoiseDialog
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var isRecording = false
+    private var selectNoiseDialog: SelectNoiseDialog? = null
+
+    // ActivityResultLauncher
+    private val noiseSelectLauncher = registerNoiseSelectLauncher()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +37,23 @@ class MainActivity : AppCompatActivity() {
         binding.tvRecording.visibility = View.GONE
 
         binding.btnStart.setOnClickListener {
-            isRecording = !isRecording
-            updateRecordingUI(isRecording)
+            val sharedPrefs = getSharedPreferences("NoiseSelectPrefs", MODE_PRIVATE)
+            val selectedNoiseTags = sharedPrefs.getStringSet(KEY_SELECTED_NOISE_TAGS, emptySet())
+
+            if (selectedNoiseTags.isNullOrEmpty()) {
+                if (selectNoiseDialog?.isShowing != true) {
+                    selectNoiseDialog =
+                        SelectNoiseDialog(this) {
+                            // 이 콜백 안에서 NoiseSelectActivity 띄우기
+                            val intent = Intent(this, NoiseSelectActivity::class.java)
+                            noiseSelectLauncher.launch(intent)
+                        }
+                    selectNoiseDialog?.show()
+                }
+            } else {
+                isRecording = !isRecording
+                updateRecordingUI(isRecording)
+            }
         }
 
         binding.btnMyPage.setOnClickListener {
@@ -66,18 +88,16 @@ class MainActivity : AppCompatActivity() {
         val rootLayout = findViewById<View>(R.id.main)
         if (isRecording) {
             binding.btnStart.setImageResource(R.drawable.btn_stop)
-            rootLayout.setBackgroundResource(R.drawable.bg_main2)
             binding.tvWelcome.visibility = View.GONE
             binding.tvRecording.visibility = View.VISIBLE
-            binding.spaceBetween.visibility = View.GONE
+
             binding.tvNowHear.visibility = View.VISIBLE
             binding.mainTvExplain.text = getString(R.string.text_main_stop)
         } else {
             binding.btnStart.setImageResource(R.drawable.btn_start1)
-            rootLayout.setBackgroundResource(R.drawable.bg_main1)
             binding.tvWelcome.visibility = View.VISIBLE
             binding.tvRecording.visibility = View.GONE
-            binding.spaceBetween.visibility = View.VISIBLE
+
             binding.tvNowHear.visibility = View.GONE
             binding.mainTvExplain.text = getString(R.string.text_main_start)
         }
@@ -112,8 +132,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun registerNoiseSelectLauncher() =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                Toast.makeText(this, "소음 선택이 완료되었습니다.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     companion object {
         const val REQUEST_CALL_PERMISSION = 100
         const val EMERGENCY_NUMBER = "112"
+        private const val KEY_SELECTED_NOISE_TAGS = "selected_noise_tags"
     }
 }
