@@ -3,10 +3,9 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/default_page_bg"
+    android:background="@drawable/bg_main2"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:padding="20dp"
     android:orientation="vertical">
 
     <ImageView
@@ -30,30 +29,35 @@
 
     <TextView
         android:id="@+id/tv_recording"
-        android:layout_width="208dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="24dp"
-        android:layout_marginTop="65dp"
+        android:layout_marginTop="135dp"
         android:visibility="gone"
         android:text="@string/text_main_recording"
         android:textColor="@color/color_primary"
         android:textSize="24sp" />
 
+    <Space
+        android:id="@+id/space_between"
+        android:layout_width="match_parent"
+        android:layout_height="31dp"/>
 
     <ImageView
         android:id="@+id/btn_start"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="234dp"
+        android:layout_height="234dp"
         android:layout_gravity="center"
         android:layout_margin="20dp"
-        android:src="@drawable/btn_start1" />
+        android:src="@drawable/btn_start" />
 
     <TextView
         android:id="@+id/main_tv_explain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="13dp"
         android:text="@string/text_main_start"
         android:textColor="@color/color_primary_light"
         android:textSize="22sp" />
@@ -94,8 +98,8 @@
         android:id="@+id/list_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="16dp"
         android:orientation="vertical"
         android:layout_gravity="center"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 </LinearLayout>

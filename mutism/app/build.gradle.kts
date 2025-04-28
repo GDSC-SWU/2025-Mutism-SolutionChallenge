@@ -51,4 +51,5 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.flexbox)
     implementation(libs.material.v1120)
+    implementation("org.tensorflow:tensorflow-lite-task-audio:0.2.0")
 }
