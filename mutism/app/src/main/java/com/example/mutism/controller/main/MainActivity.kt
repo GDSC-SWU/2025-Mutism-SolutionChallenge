@@ -135,7 +135,7 @@ class MainActivity : AppCompatActivity() {
     private fun registerNoiseSelectLauncher() =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
-                Toast.makeText(this, "소음 선택이 완료되었습니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Noise selection is complete.", Toast.LENGTH_SHORT).show()
             }
         }
 
