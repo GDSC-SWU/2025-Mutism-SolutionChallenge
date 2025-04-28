@@ -151,7 +151,6 @@ class ForegroundService : Service() {
         val intent = Intent("com.mutism.UPDATE_LIST")
         intent.putExtra("new_text", newText)
         sendBroadcast(intent)
-        Log.d("foregroundService", newText)
     }
 
     private fun stopAudioClassification() {
