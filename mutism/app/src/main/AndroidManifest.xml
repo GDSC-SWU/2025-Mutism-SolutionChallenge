@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-feature android:name="android.hardware.telephony" android:required="false" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
 
     <application
         android:allowBackup="true"
@@ -32,6 +35,11 @@
             </intent-filter>
 
         </activity>
+        <service
+            android:name=".controller.main.ForegroundService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="microphone"/>
     </application>
 
 </manifest>

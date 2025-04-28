@@ -29,7 +29,7 @@
 
     <TextView
         android:id="@+id/tv_recording"
-        android:layout_width="208dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="24dp"
@@ -46,17 +46,17 @@
 
     <ImageView
         android:id="@+id/btn_start"
-        android:layout_width="220dp"
-        android:layout_height="220dp"
+        android:layout_width="234dp"
+        android:layout_height="234dp"
         android:layout_gravity="center"
-        android:src="@drawable/btn_start1" />
+        android:src="@drawable/btn_start" />
 
     <TextView
         android:id="@+id/main_tv_explain"
-        android:layout_width="222dp"
-        android:layout_height="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="13dp"
         android:text="@string/text_main_start"
         android:textColor="@color/color_primary_light"
         android:textSize="20sp" />
@@ -66,7 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="109dp"
         android:background="@drawable/btn_sos_bg"
         android:clickable="true"
         android:focusable="true">
@@ -91,5 +91,14 @@
         android:text="@string/text_current_noise_label"
         android:textColor="@color/color_primary_dark"
         android:textSize="20sp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/list_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical"
+        android:layout_gravity="center"
         android:visibility="gone" />
 </LinearLayout>
