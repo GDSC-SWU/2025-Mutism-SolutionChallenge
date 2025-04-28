@@ -41,6 +41,13 @@ class NoiseSelectActivity : AppCompatActivity() {
         // ViewModel 초기화
         tagViewModel = ViewModelProvider(this)[TagViewModel::class.java]
 
+        val sharedPrefs = getSharedPreferences("NoiseSelectPrefs", MODE_PRIVATE)
+        val savedTags = sharedPrefs.getStringSet(KEY_SELECTED_NOISE_TAGS, emptySet())
+
+        savedTags?.forEach { tag ->
+            tagViewModel.selectTag(tag)
+        }
+
         // 뷰 초기화
         tabLayout = binding.tabLayout
         viewPager = binding.viewPager
@@ -98,7 +105,21 @@ class NoiseSelectActivity : AppCompatActivity() {
 
         // 검색 버튼 클릭 이벤트
         binding.btnSelect.setOnClickListener {
-            Toast.makeText(this, "선택된 태그: ${tagViewModel.selectedTags.value}", Toast.LENGTH_SHORT).show()
+            val selectedTags = tagViewModel.selectedTags.value ?: emptyList()
+
+            if (selectedTags.isNotEmpty()) {
+                val sharedPrefs = getSharedPreferences("NoiseSelectPrefs", MODE_PRIVATE)
+                with(sharedPrefs.edit()) {
+                    putStringSet(KEY_SELECTED_NOISE_TAGS, selectedTags.toSet())
+                    apply()
+                }
+                Toast.makeText(this, "태그가 저장되었습니다!", Toast.LENGTH_SHORT).show()
+
+                setResult(RESULT_OK) // 여기 추가!
+                finish()
+            } else {
+                Toast.makeText(this, "선택된 태그가 없습니다.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.btnBack.setOnClickListener {
@@ -111,5 +132,9 @@ class NoiseSelectActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    companion object {
+        private const val KEY_SELECTED_NOISE_TAGS = "selected_noise_tags"
     }
 }

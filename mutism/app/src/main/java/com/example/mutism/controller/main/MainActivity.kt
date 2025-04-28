@@ -17,6 +17,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -25,10 +26,17 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.mutism.R
 import com.example.mutism.controller.myPage.MyPageActivity
+import com.example.mutism.controller.noiseSelectPage.NoiseSelectActivity
 import com.example.mutism.databinding.ActivityMainBinding
+import com.example.mutism.dialog.SelectNoiseDialog
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private var isRecording = false
+    private var selectNoiseDialog: SelectNoiseDialog? = null
+
+    // ActivityResultLauncher
+    private val noiseSelectLauncher = registerNoiseSelectLauncher()
     private lateinit var listContainer: LinearLayout
     private lateinit var receiver: BroadcastReceiver
 
@@ -66,26 +74,39 @@ class MainActivity : AppCompatActivity() {
 
         binding.tvRecording.visibility = View.GONE
 
+        // 코드 통합 -> 확인 필요
         binding.btnStart.setOnClickListener {
-            updateRecordingUI()
+            val sharedPrefs = getSharedPreferences("NoiseSelectPrefs", MODE_PRIVATE)
+            val selectedNoiseTags = sharedPrefs.getStringSet(KEY_SELECTED_NOISE_TAGS, emptySet())
 
-            if (ForegroundService.isRunning) {
-                // Stop the foreground service if it is currently running
-                stopService(Intent(this, ForegroundService::class.java))
-                Toast.makeText(this, "Stop recording", Toast.LENGTH_SHORT).show()
+            if (selectedNoiseTags.isNullOrEmpty()) {
+                if (selectNoiseDialog?.isShowing != true) {
+                    selectNoiseDialog =
+                        SelectNoiseDialog(this) {
+                            val intent = Intent(this, NoiseSelectActivity::class.java)
+                            noiseSelectLauncher.launch(intent)
+                        }
+                    selectNoiseDialog?.show()
+                }
             } else {
-                if (hasRecordPermission()) { // If microphone permission is granted
-                    startForegroundService()
-                    Toast.makeText(this, "Start recording", Toast.LENGTH_SHORT).show()
+                isRecording = !isRecording
+                updateRecordingUI()
+
+                if (ForegroundService.isRunning) {
+                    stopService(Intent(this, ForegroundService::class.java))
+                    Toast.makeText(this, "Stop recording", Toast.LENGTH_SHORT).show()
                 } else {
-                    // Request microphone permission if not already granted
-                    requestPermissions(
-                        arrayOf(Manifest.permission.RECORD_AUDIO),
-                        REQUEST_RECORD_AUDIO,
-                    )
+                    if (hasRecordPermission()) {
+                        startForegroundService()
+                        Toast.makeText(this, "Start recording", Toast.LENGTH_SHORT).show()
+                    } else {
+                        requestPermissions(
+                            arrayOf(Manifest.permission.RECORD_AUDIO),
+                            REQUEST_RECORD_AUDIO,
+                        )
+                    }
                 }
             }
-            updateRecordingUI()
         }
 
         binding.btnMyPage.setOnClickListener {
@@ -146,7 +167,8 @@ class MainActivity : AppCompatActivity() {
             binding.spaceBetween.visibility = View.GONE
         } else {
             binding.btnStart.setImageResource(R.drawable.btn_start)
-            rootLayout.setBackgroundResource(R.drawable.bg_main1)
+            // bg_main1으로 수정
+            rootLayout.setBackgroundResource(R.drawable.bg_main2)
             binding.tvWelcome.visibility = View.VISIBLE
             binding.tvRecording.visibility = View.GONE
             binding.spaceBetween.visibility = View.VISIBLE
@@ -235,9 +257,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun registerNoiseSelectLauncher() =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                Toast.makeText(this, "Noise selection is complete.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     companion object {
         const val REQUEST_CALL_PERMISSION = 100
         const val EMERGENCY_NUMBER = "112"
+        private const val KEY_SELECTED_NOISE_TAGS = "selected_noise_tags"
         const val REQUEST_RECORD_AUDIO = 1337
         const val MODEL_FILE = "yamnet.tflite"
         const val MINIMUM_DISPLAY_THRESHOLD: Float = 0.3f

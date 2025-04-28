@@ -3,7 +3,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_main1"
+    android:background="@drawable/bg_main2"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:orientation="vertical">
@@ -13,16 +13,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
-        android:layout_marginTop="27dp"
-        android:layout_marginEnd="27dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="35dp"
         android:src="@drawable/btn_my_page" />
 
     <TextView
         android:id="@+id/tv_welcome"
-        android:layout_width="238dp"
-        android:layout_height="78dp"
-        android:layout_marginStart="27dp"
-        android:layout_marginTop="82dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="50dp"
         android:text="@string/text_main_welcome"
         android:textColor="@color/color_primary_light"
         android:textSize="28sp" />
@@ -49,6 +49,7 @@
         android:layout_width="234dp"
         android:layout_height="234dp"
         android:layout_gravity="center"
+        android:layout_margin="20dp"
         android:src="@drawable/btn_start" />
 
     <TextView
@@ -59,14 +60,14 @@
         android:layout_marginTop="13dp"
         android:text="@string/text_main_start"
         android:textColor="@color/color_primary_light"
-        android:textSize="20sp" />
+        android:textSize="22sp" />
 
     <FrameLayout
         android:id="@+id/btn_sos_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="109dp"
+        android:layout_marginTop="110dp"
         android:background="@drawable/btn_sos_bg"
         android:clickable="true"
         android:focusable="true">
