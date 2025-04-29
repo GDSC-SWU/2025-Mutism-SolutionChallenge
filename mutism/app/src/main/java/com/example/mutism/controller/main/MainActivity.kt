@@ -160,22 +160,17 @@ class MainActivity : AppCompatActivity() {
             rootLayout.setBackgroundResource(R.drawable.bg_main2)
             binding.tvWelcome.visibility = View.GONE
             binding.tvRecording.visibility = View.VISIBLE
-            binding.spaceBetween.visibility = View.GONE
             binding.tvNowHear.visibility = View.VISIBLE
             binding.mainTvExplain.text = getString(R.string.text_main_stop)
             binding.listContainer.visibility = View.VISIBLE
-            binding.spaceBetween.visibility = View.GONE
         } else {
             binding.btnStart.setImageResource(R.drawable.btn_start)
-            // bg_main1으로 수정
-            rootLayout.setBackgroundResource(R.drawable.bg_main2)
+            rootLayout.setBackgroundResource(R.drawable.bg_main1)
             binding.tvWelcome.visibility = View.VISIBLE
             binding.tvRecording.visibility = View.GONE
-            binding.spaceBetween.visibility = View.VISIBLE
             binding.tvNowHear.visibility = View.GONE
             binding.mainTvExplain.text = getString(R.string.text_main_start)
             binding.listContainer.visibility = View.GONE
-            binding.spaceBetween.visibility = View.VISIBLE
         }
     }
 
