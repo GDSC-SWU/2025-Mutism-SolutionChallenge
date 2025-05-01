@@ -39,7 +39,7 @@ class NoiseSelectTabFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         val view = inflater.inflate(R.layout.fragment_tab, container, false)
-        categoryContainer = view.findViewById<LinearLayout>(R.id.categoryContainer)
+        categoryContainer = view.findViewById(R.id.categoryContainer)
         chipMap = mutableMapOf()
 
         tagViewModel.selectedTags.observe(viewLifecycleOwner) { selected ->

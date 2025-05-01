@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.mutism.controller.noiseSelectPage.NoiseSelectActivity
 import com.example.mutism.controller.whiteNoisePage.WhiteNoiseActivity
 import com.example.mutism.databinding.ActivityMyPageBinding
+import com.google.android.material.chip.Chip
 
 class MyPageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyPageBinding
@@ -36,13 +37,19 @@ class MyPageActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        sharedPrefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        sharedPrefs = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
 
         loadUserInfo()
+        updateSelectedNoiseChips()
 
         binding.btnSave.setOnClickListener {
             saveUserInfo()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateSelectedNoiseChips()
     }
 
     private fun saveUserInfo() {
@@ -69,8 +76,27 @@ class MyPageActivity : AppCompatActivity() {
         binding.tvAgeValue.setText(age)
     }
 
+    private fun updateSelectedNoiseChips() {
+        val noisePrefs = getSharedPreferences("NoiseSelectPrefs", Context.MODE_PRIVATE)
+        val savedTags = noisePrefs.getStringSet(KEY_SELECTED_NOISE_TAGS, emptySet())
+
+        val chipGroup = binding.chipGroupSelectedNoises
+        chipGroup.removeAllViews() // remove chips
+
+        savedTags?.forEach { tag ->
+            val chip =
+                Chip(this).apply {
+                    text = tag
+                    isCloseIconVisible = false
+                    isClickable = false
+                    isCheckable = false
+                }
+            chipGroup.addView(chip)
+        }
+    }
+
     companion object {
-        const val PREFS_NAME = "UserPrefs"
+        private const val KEY_SELECTED_NOISE_TAGS = "selected_noise_tags"
         const val KEY_AUTISM_LEVEL = "autism_level"
         const val KEY_GENDER = "gender"
         const val KEY_AGE = "age"

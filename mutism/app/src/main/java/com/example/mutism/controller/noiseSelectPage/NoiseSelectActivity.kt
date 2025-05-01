@@ -115,7 +115,7 @@ class NoiseSelectActivity : AppCompatActivity() {
                 }
                 Toast.makeText(this, "태그가 저장되었습니다!", Toast.LENGTH_SHORT).show()
 
-                setResult(RESULT_OK) // 여기 추가!
+                setResult(RESULT_OK)
                 finish()
             } else {
                 Toast.makeText(this, "선택된 태그가 없습니다.", Toast.LENGTH_SHORT).show()
