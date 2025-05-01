@@ -2,7 +2,6 @@ package com.example.mutism.controller.noiseSelectPage
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,6 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 
 class NoiseSelectTabFragment : Fragment() {
-    private var listener: TagSelectionListener? = null
     private lateinit var tagViewModel: TagViewModel
     private lateinit var chipMap: MutableMap<String, Chip>
     private lateinit var categoryContainer: LinearLayout
@@ -26,11 +24,6 @@ class NoiseSelectTabFragment : Fragment() {
         super.onAttach(context)
 
         tagViewModel = ViewModelProvider(requireActivity())[TagViewModel::class.java]
-
-        if (context is TagSelectionListener) {
-            listener = context
-            Log.d("NoiseSelectTab", "listener 연결됨")
-        }
     }
 
     override fun onCreateView(
@@ -39,7 +32,7 @@ class NoiseSelectTabFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         val view = inflater.inflate(R.layout.fragment_tab, container, false)
-        categoryContainer = view.findViewById<LinearLayout>(R.id.categoryContainer)
+        categoryContainer = view.findViewById(R.id.categoryContainer)
         chipMap = mutableMapOf()
 
         tagViewModel.selectedTags.observe(viewLifecycleOwner) { selected ->
@@ -53,11 +46,6 @@ class NoiseSelectTabFragment : Fragment() {
             addCategorySection(category, tags, inflater)
         }
         return view
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
     }
 
     private fun addCategorySection(

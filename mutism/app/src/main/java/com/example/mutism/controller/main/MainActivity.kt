@@ -165,7 +165,7 @@ class MainActivity : AppCompatActivity() {
             binding.listContainer.visibility = View.VISIBLE
         } else {
             binding.btnStart.setImageResource(R.drawable.btn_start)
-            rootLayout.setBackgroundResource(R.drawable.bg_main1)
+            rootLayout.setBackgroundResource(R.drawable.bg_main3)
             binding.tvWelcome.visibility = View.VISIBLE
             binding.tvRecording.visibility = View.GONE
             binding.tvNowHear.visibility = View.GONE
