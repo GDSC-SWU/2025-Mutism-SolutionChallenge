@@ -185,12 +185,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:cardCornerRadius="15dp"
         app:layout_constraintTop_toBottomOf="@+id/tv_opinion">
-        <TextView
+        <EditText
+            android:id="@+id/edt_relax_method"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="15dp"
-            android:text="@string/my_page_relax_method_text"
-            android:layout_gravity="center"/>
+            android:hint="@string/my_page_relax_method_text"
+            android:textColorHint="@color/color_primary_light2"
+            android:textColor="@color/color_primary_dark"
+            android:layout_gravity="center"
+            android:background="@null"/>
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView

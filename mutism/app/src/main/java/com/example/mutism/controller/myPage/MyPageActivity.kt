@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -56,13 +57,16 @@ class MyPageActivity : AppCompatActivity() {
         val autismLevel = binding.tvAutismLevelValue.text.toString()
         val gender = binding.tvGenderValue.text.toString()
         val age = binding.tvAgeValue.text.toString()
+        val relaxMethod = binding.edtRelaxMethod.text.toString()
 
         val editor = sharedPrefs.edit()
         editor.putString(KEY_AUTISM_LEVEL, autismLevel)
         editor.putString(KEY_GENDER, gender)
         editor.putString(KEY_AGE, age)
+        editor.putString(KEY_RELAX_METHOD, relaxMethod)
         editor.apply()
 
+        Log.d("saveUserInfo", "saveUserInfo : $autismLevel,$gender,$age,$relaxMethod")
         Toast.makeText(this, "User information saved!", Toast.LENGTH_SHORT).show()
     }
 
@@ -70,10 +74,12 @@ class MyPageActivity : AppCompatActivity() {
         val autismLevel = sharedPrefs.getString(KEY_AUTISM_LEVEL, "")
         val gender = sharedPrefs.getString(KEY_GENDER, "")
         val age = sharedPrefs.getString(KEY_AGE, "")
+        val relaxMethod = sharedPrefs.getString(KEY_RELAX_METHOD, "")
 
         binding.tvAutismLevelValue.setText(autismLevel)
         binding.tvGenderValue.setText(gender)
         binding.tvAgeValue.setText(age)
+        binding.edtRelaxMethod.setText(relaxMethod)
     }
 
     private fun updateSelectedNoiseChips() {
@@ -100,5 +106,6 @@ class MyPageActivity : AppCompatActivity() {
         const val KEY_AUTISM_LEVEL = "autism_level"
         const val KEY_GENDER = "gender"
         const val KEY_AGE = "age"
+        const val KEY_RELAX_METHOD = "relax_method"
     }
 }
