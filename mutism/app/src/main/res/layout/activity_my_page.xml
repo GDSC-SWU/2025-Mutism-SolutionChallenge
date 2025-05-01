@@ -47,21 +47,20 @@
             android:paddingEnd="15dp"
             android:src="@drawable/arrow2" />
     </LinearLayout>
+
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chipGroup_selected_noises"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        app:singleLine="true"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        app:singleLine="false"
         app:layout_constraintTop_toBottomOf="@+id/selected_noise_container"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:singleSelection="false"
         app:chipSpacing="8dp"/>
-
-
 
     <LinearLayout
         android:id="@+id/white_noise_container"
