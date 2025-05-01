@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_main1"
+    android:background="@drawable/bg_main3"
     android:clipChildren="false"
     android:clipToPadding="false">
 
@@ -23,7 +23,7 @@
         android:id="@+id/tv_welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="27dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="82dp"
         android:text="@string/text_main_welcome"
         android:textColor="@color/color_primary_light"

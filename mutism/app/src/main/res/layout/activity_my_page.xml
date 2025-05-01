@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp"
-    android:background="@drawable/default_page_bg">
+    android:background="@drawable/bg_my_page1">
 
     <ImageView
         android:id="@+id/btn_back"
@@ -14,7 +14,7 @@
         android:layout_height="24dp"
         android:src="@drawable/arrow"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="33dp"
+        android:layout_marginTop="30dp"
         android:layout_marginBottom="40dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
@@ -36,7 +36,7 @@
             android:layout_weight="1"
             android:text="@string/text_my_page_noise"
             android:paddingStart="20dp"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:textColor="@color/color_primary_dark" />
 
         <ImageView
@@ -78,7 +78,7 @@
             android:layout_weight="1"
             android:paddingStart="20dp"
             android:text="@string/text_my_page_white_noises"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:textColor="@color/color_primary_dark" />
 
         <ImageView
@@ -96,10 +96,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/text_my_page_autism"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:textColor="@color/color_primary_dark"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="80dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf= "@+id/white_noise_container" />
 
@@ -109,6 +109,7 @@
         android:layout_height="wrap_content"
         android:hint="Level 2"
         android:textSize="14sp"
+        android:textColor="@color/color_primary_light"
         android:textColorHint="@color/color_primary_light2"
         android:backgroundTint="@color/color_primary_light2"
         android:layout_marginEnd="45dp"
@@ -120,7 +121,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/text_my_page_gender"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:textColor="@color/color_primary_dark"
         android:layout_marginStart="15dp"
         android:layout_marginTop="30dp"
@@ -133,6 +134,7 @@
         android:layout_height="wrap_content"
         android:hint="Female"
         android:textSize="14sp"
+        android:textColor="@color/color_primary_light"
         android:textColorHint="@color/color_primary_light2"
         android:backgroundTint="@color/color_primary_light2"
         android:layout_marginEnd="45dp"
@@ -144,7 +146,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/text_my_page_age"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:textColor="@color/color_primary_dark"
         android:layout_marginStart="15dp"
         android:layout_marginTop="30dp"
@@ -157,6 +159,7 @@
         android:layout_height="wrap_content"
         android:hint="13"
         android:textSize="14sp"
+        android:textColor="@color/color_primary_light"
         android:textColorHint="@color/color_primary_light2"
         android:backgroundTint="@color/color_primary_light2"
         android:layout_marginEnd="45dp"
@@ -168,7 +171,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/text_my_page_Method"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:textColor="@color/color_primary_dark"
         android:layout_marginStart="15dp"
         android:layout_marginTop="30dp"
@@ -177,9 +180,11 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/crv_method_container"
-        android:layout_width="330dp"
-        android:layout_height="130dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
         android:backgroundTint="@color/color_primary_light3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -187,9 +192,10 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_opinion">
         <EditText
             android:id="@+id/edt_relax_method"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="15dp"
+            android:layout_margin="15dp"
+            android:textSize="15sp"
             android:hint="@string/my_page_relax_method_text"
             android:textColorHint="@color/color_primary_light2"
             android:textColor="@color/color_primary_dark"
@@ -201,7 +207,7 @@
         android:id="@+id/btn_save"
         android:layout_width="280dp"
         android:layout_height="40dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="30dp"
         app:cardCornerRadius="20dp"
         android:backgroundTint="@color/color_primary_light2"
         app:layout_constraintTop_toBottomOf="@+id/crv_method_container"
@@ -212,7 +218,7 @@
             android:layout_height="wrap_content"
             android:text="@string/my_page_btn_save"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:layout_gravity="center"/>
     </com.google.android.material.card.MaterialCardView>
 

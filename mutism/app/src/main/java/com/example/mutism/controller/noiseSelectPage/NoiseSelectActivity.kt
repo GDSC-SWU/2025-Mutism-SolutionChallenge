@@ -113,12 +113,12 @@ class NoiseSelectActivity : AppCompatActivity() {
                     putStringSet(KEY_SELECTED_NOISE_TAGS, selectedTags.toSet())
                     apply()
                 }
-                Toast.makeText(this, "태그가 저장되었습니다!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Tags have been saved!", Toast.LENGTH_SHORT).show()
 
                 setResult(RESULT_OK)
                 finish()
             } else {
-                Toast.makeText(this, "선택된 태그가 없습니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "No tags selected.", Toast.LENGTH_SHORT).show()
             }
         }
 

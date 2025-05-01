@@ -22,6 +22,6 @@
     <string name="dialog_title">No selected noise</string>
     <string name="dialog_subtext">We don\'t know which sounds\nyour patient dislikes yet.</string>
     <string name="dialog_btn_text">Go to select noises</string>
-    <string name="my_page_relax_method_text">ex) Take deep breaths,\nListen to calming music or white noise</string>
+    <string name="my_page_relax_method_text">EX) Take deep breaths,\nListen to calming music or white noise</string>
     <string name="my_page_btn_save">Save</string>
 </resources>
