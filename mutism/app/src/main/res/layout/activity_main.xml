@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_main3"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <ImageView
+        android:id="@+id/btn_my_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="27dp"
+        android:layout_marginEnd="27dp"
+        android:src="@drawable/btn_my_page"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/tv_welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="82dp"
+        android:text="@string/text_main_welcome"
+        android:textColor="@color/color_primary_light"
+        android:textSize="28sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_my_page"/>
+
+    <TextView
+        android:id="@+id/tv_recording"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="135dp"
+        android:visibility="gone"
+        android:text="@string/text_main_recording"
+        android:textColor="@color/color_primary"
+        android:textSize="24sp"
+        app:layout_constraintTop_toBottomOf="@+id/btn_my_page"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:id="@+id/btn_start"
+        android:layout_width="234dp"
+        android:layout_height="234dp"
+        android:layout_marginTop="191dp"
+        android:src="@drawable/btn_start"
+        app:layout_constraintTop_toBottomOf="@+id/btn_my_page"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/main_tv_explain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:text="@string/text_main_start"
+        android:textColor="@color/color_primary_light"
+        android:textSize="22sp"
+        app:layout_constraintTop_toBottomOf="@+id/btn_start"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/btn_sos_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="77dp"
+        android:background="@drawable/btn_sos_bg"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toBottomOf="@+id/main_tv_explain"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" >
+
+        <TextView
+            android:id="@+id/btn_sos"
+            android:layout_width="124dp"
+            android:layout_height="66dp"
+            android:gravity="center"
+            android:text="@string/button_sos"
+            android:textColor="@color/white"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_now_hear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="23dp"
+        android:text="@string/text_current_noise_label"
+        android:textColor="@color/color_primary_dark"
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/btn_sos_container"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/list_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/tv_now_hear"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

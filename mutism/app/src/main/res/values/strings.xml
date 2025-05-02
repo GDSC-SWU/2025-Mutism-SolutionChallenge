@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">mutism</string>
+    <string name="noise_tv_question">What is the sound\nyour patient doesn\'t like?</string>
+    <string name="btn_select">Select</string>
+    <string name="car">car</string>
+    <string name="white_noise_tv_question">What sounds does your patient like?</string>
+    <string name="text_main_welcome">Let\'s start a safe\nday today :)</string>
+    <string name="text_main_recording">Measuring sound...</string>
+    <string name="text_main_start">Press the button to start</string>
+    <string name="text_main_stop">Press the button to stop</string>
+    <string name="text_current_noise_label">Now you hear :</string>
+    <string name="button_sos">SOS</string>
+    <string name="text_noise_title">Noises</string>
+    <string name="text_noise_selected_tab_label">Selected :</string>
+    <string name="text_noise_empty_tag_message">Please select the sounds your patient dislikes.</string>
+    <string name="text_my_page_noise">Selected Noises</string>
+    <string name="text_my_page_white_noises">Selected White Noises</string>
+    <string name="text_my_page_autism">Autism Functional Level</string>
+    <string name="text_my_page_gender">Gender</string>
+    <string name="text_my_page_age">Age</string>
+    <string name="text_my_page_Method">Relaxation Method</string>
+    <string name="dialog_title">No selected noise</string>
+    <string name="dialog_subtext">We don\'t know which sounds\nyour patient dislikes yet.</string>
+    <string name="dialog_btn_text">Go to select noises</string>
+    <string name="my_page_relax_method_text">EX) Take deep breaths,\nListen to calming music or white noise</string>
+    <string name="my_page_btn_save">Save</string>
+</resources>

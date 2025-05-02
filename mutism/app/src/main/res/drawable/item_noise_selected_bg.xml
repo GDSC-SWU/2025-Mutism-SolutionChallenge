@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 바깥쪽 흰색 테두리 -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/color_noise_item_bg" />
+            <corners android:radius="20dp" />
+        </shape>
+    </item>
+
+    <!-- 안쪽 그림자 느낌의 배경 (2dp 여백을 줘서 테두리를 보여줌) -->
+    <item android:left="2dp" android:top="2dp" android:right="2dp" android:bottom="2dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:type="linear"
+                android:angle="135"
+                android:startColor="@color/color_primary_light"
+            android:endColor="@color/color_noise_bg"
+            />
+            <corners android:radius="18dp" />
+        </shape>
+    </item>
+
+</layer-list>
