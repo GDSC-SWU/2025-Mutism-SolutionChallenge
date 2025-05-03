@@ -24,35 +24,42 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="82dp"
+        android:layout_marginBottom="31dp"
         android:text="@string/text_main_welcome"
         android:textColor="@color/color_primary_light"
         android:textSize="28sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_my_page"/>
+        app:layout_constraintBottom_toTopOf="@+id/btn_start"/>
 
     <TextView
         android:id="@+id/tv_recording"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="135dp"
+        android:layout_marginBottom="27dp"
         android:visibility="gone"
         android:text="@string/text_main_recording"
         android:textColor="@color/color_primary"
         android:textSize="24sp"
-        app:layout_constraintTop_toBottomOf="@+id/btn_my_page"
+        app:layout_constraintBottom_toTopOf="@+id/btn_start"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.492" />
 
     <ImageView
         android:id="@+id/btn_start"
         android:layout_width="234dp"
         android:layout_height="234dp"
-        android:layout_marginTop="191dp"
         android:src="@drawable/btn_start"
-        app:layout_constraintTop_toBottomOf="@+id/btn_my_page"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/guideline_top"
+        app:layout_constraintBottom_toBottomOf="@id/guideline_top" />
 
     <TextView
         android:id="@+id/main_tv_explain"
@@ -91,7 +98,7 @@
 
     <TextView
         android:id="@+id/tv_now_hear"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="36dp"
         android:layout_marginTop="23dp"
@@ -102,14 +109,26 @@
         app:layout_constraintTop_toBottomOf="@+id/btn_sos_container"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/list_container"
-        android:layout_width="match_parent"
+    <FrameLayout
+        android:id="@+id/classified_noise_container"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/bg_classified_sound"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/tv_now_hear"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/tv_now_hear"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_now_hear"
+        app:layout_constraintStart_toEndOf="@+id/tv_now_hear" >
+
+        <TextView
+            android:id="@+id/classified_noise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="13dp"
+            android:paddingVertical="6dp"
+            android:gravity="center"
+            android:text="silence"
+            android:textColor="@color/color_noise_bg"
+            android:textSize="24sp" />
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
