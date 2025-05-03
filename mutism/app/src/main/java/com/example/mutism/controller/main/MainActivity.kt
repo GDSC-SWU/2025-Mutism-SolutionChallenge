@@ -34,8 +34,6 @@ class MainActivity : AppCompatActivity() {
 
     // ActivityResultLauncher
     private val noiseSelectLauncher = registerNoiseSelectLauncher()
-
-//    private lateinit var listContainer: LinearLayout
     private lateinit var receiver: BroadcastReceiver
 
     private val updateClassifiedNoiseReceiver =
@@ -56,7 +54,6 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-//        listContainer = binding.listContainer
 
         receiver =
             object : BroadcastReceiver() {
