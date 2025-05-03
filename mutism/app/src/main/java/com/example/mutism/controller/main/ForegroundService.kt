@@ -24,6 +24,7 @@ class ForegroundService : Service() {
     private var handler: Handler? = null
     private val classificationInterval = 500L
     private var lastLabel: String? = null
+    private lateinit var selectedTags: Set<String>
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -34,6 +35,9 @@ class ForegroundService : Service() {
         val notification = createNotification()
         startForeground(1, notification)
         startAudioClassification()
+
+        val sharedPrefs = getSharedPreferences("NoiseSelectPrefs", MODE_PRIVATE)
+        selectedTags = sharedPrefs.getStringSet(MainActivity.KEY_SELECTED_NOISE_TAGS, emptySet())!!
     }
 
     override fun onDestroy() {
@@ -114,7 +118,12 @@ class ForegroundService : Service() {
                         topCategory?.let { category ->
                             Log.d("ForegroundService", "db: %.2f, category: %s (%.2f)".format(decibel, category.label, category.score))
 
-                            // ✅ 이전 결과와 다를 경우에만 보내기
+                            // Check if the stored noise tags include the current category label
+                            if (selectedTags?.contains(category.label) == true) {
+                                Log.d("NoiseCheck", "Matched label: ${category.label}")
+                            }
+
+                            // ✅ Only send when the result differs from the previous one
                             if (category.label != lastLabel) {
                                 sendToMainActivity(category.label)
                                 lastLabel = category.label

@@ -228,7 +228,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val REQUEST_CALL_PERMISSION = 100
         const val EMERGENCY_NUMBER = "112"
-        private const val KEY_SELECTED_NOISE_TAGS = "selected_noise_tags"
+        const val KEY_SELECTED_NOISE_TAGS = "selected_noise_tags"
         const val REQUEST_RECORD_AUDIO = 1337
         const val MODEL_FILE = "yamnet.tflite"
         const val MINIMUM_DISPLAY_THRESHOLD: Float = 0.3f
