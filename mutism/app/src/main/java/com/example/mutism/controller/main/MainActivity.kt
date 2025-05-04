@@ -42,9 +42,7 @@ class MainActivity : AppCompatActivity() {
                 context: Context?,
                 intent: Intent?,
             ) {
-                Log.d("mainActivity", "BroadcastReceiver received")
                 val newText = intent?.getStringExtra("new_text") ?: return
-                Log.d("mainActivity", newText)
                 binding.classifiedNoise.text = newText
             }
         }
@@ -61,9 +59,6 @@ class MainActivity : AppCompatActivity() {
                     context: Context,
                     intent: Intent,
                 ) {
-                    if (intent.action == "com.mutism.UPDATE_LIST") {
-                        // 원하는 작업 수행
-                    }
                 }
             }
 
