@@ -11,7 +11,10 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -34,6 +37,7 @@ class MainActivity : AppCompatActivity() {
 
     // ActivityResultLauncher
     private val noiseSelectLauncher = registerNoiseSelectLauncher()
+    private lateinit var listContainer: LinearLayout
     private lateinit var receiver: BroadcastReceiver
 
     private val updateClassifiedNoiseReceiver =
@@ -43,7 +47,7 @@ class MainActivity : AppCompatActivity() {
                 intent: Intent?,
             ) {
                 val newText = intent?.getStringExtra("new_text") ?: return
-                binding.classifiedNoise.text = newText
+                addTextItem(newText)
             }
         }
 
@@ -52,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        listContainer = binding.listContainer
 
         receiver =
             object : BroadcastReceiver() {
@@ -152,7 +157,7 @@ class MainActivity : AppCompatActivity() {
             binding.tvRecording.visibility = View.VISIBLE
             binding.tvNowHear.visibility = View.VISIBLE
             binding.mainTvExplain.text = getString(R.string.text_main_stop)
-            binding.classifiedNoiseContainer.visibility = View.VISIBLE
+            binding.listContainer.visibility = View.VISIBLE
         } else {
             binding.btnStart.setImageResource(R.drawable.btn_start)
             rootLayout.setBackgroundResource(R.drawable.bg_main3)
@@ -160,7 +165,7 @@ class MainActivity : AppCompatActivity() {
             binding.tvRecording.visibility = View.GONE
             binding.tvNowHear.visibility = View.GONE
             binding.mainTvExplain.text = getString(R.string.text_main_start)
-            binding.classifiedNoiseContainer.visibility = View.GONE
+            binding.listContainer.visibility = View.GONE
         }
     }
 
@@ -177,6 +182,36 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Call failed: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
+
+    fun addTextItem(newText: String) {
+        val count = listContainer.childCount
+        if (count < 3) {
+            val textView = createTextView(newText)
+            listContainer.addView(textView)
+        } else {
+            listContainer.removeAllViews()
+            val textView = createTextView(newText)
+            listContainer.addView(textView)
+        }
+    }
+
+    private fun createTextView(text: String): TextView =
+        TextView(this).apply {
+            this.text = text
+            setTextColor(ContextCompat.getColor(context, R.color.color_noise_bg))
+            textSize = 24f
+            setPadding(20, 6, 20, 6)
+            background = ContextCompat.getDrawable(context, R.drawable.bg_classified_sound)
+            layoutParams =
+                LinearLayout
+                    .LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                    ).apply {
+                        topMargin = 12
+                        gravity = Gravity.CENTER
+                    }
+        }
 
     // MARK: - Voice Recording Functions
 
