@@ -1,11 +1,26 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
 }
 
+val geminiApiKey: String? =
+    project.rootProject
+        .file("local.properties")
+        .let { file ->
+            Properties().apply {
+                file.inputStream().use { load(it) }
+            }["GEMINI_API_KEY"] as String?
+        }
+
 android {
     namespace = "com.example.mutism"
     compileSdk = 35
+
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId = "com.example.mutism"
@@ -15,6 +30,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "GEMINI_API_KEY", "\"${geminiApiKey}\"")
     }
 
     buildTypes {
