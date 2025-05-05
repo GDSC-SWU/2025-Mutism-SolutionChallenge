@@ -13,6 +13,7 @@ import android.os.HandlerThread
 import android.os.IBinder
 import android.util.Log
 import androidx.annotation.RequiresPermission
+import com.example.mutism.BuildConfig
 import com.example.mutism.controller.myPage.MyPageActivity.Companion.KEY_RELAX_METHOD
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier
@@ -41,6 +42,8 @@ class ForegroundService : Service() {
     private var lastCategoryTimestamp: Long = 0L
     private var lastCategoryLabel: String? = null
     private val geminiCallIntervalMillis: Long = 60 * 1000
+
+    val apiKey = BuildConfig.GEMINI_API_KEY
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -173,7 +176,6 @@ class ForegroundService : Service() {
     }
 
     private fun callGeminiAPI(prompt: String) {
-        val apiKey = "AIzaSyCGLlDF6GSZ_3Q5QWpT2R7HWSGBti6BlDk"
         val url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$apiKey"
 
         val requestBodyJson =
