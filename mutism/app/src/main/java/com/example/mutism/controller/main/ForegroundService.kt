@@ -132,14 +132,23 @@ class ForegroundService : Service() {
                             if (selectedTags?.contains(category.label) == true) {
                                 // Check if the category has changed or if enough time has passed
                                 val currentTime = System.currentTimeMillis()
-                                // Check if the detected sound label is different from the last one and if enough time has passed since the last Gemini API call
-                                if (category.label != lastCategoryLabel && currentTime - lastCategoryTimestamp > geminiCallIntervalMillis) {
+                                val timeSinceLastCall = currentTime - lastCategoryTimestamp
+                                if (timeSinceLastCall >= geminiCallIntervalMillis) {
+                                    // Always call Gemini if 2 minutes (geminiCallIntervalMillis) have passed
                                     currentNoise = category.label
                                     val prompt = promptGenerator.generatePrompt(name, releasedMethod, currentNoise, sensitiveNoise)
                                     Log.d("callGeminiAPI", "prompt: $prompt")
                                     callGeminiAPI(prompt)
 
-                                    // Update the last called category and timestamp
+                                    lastCategoryLabel = category.label
+                                    lastCategoryTimestamp = currentTime
+                                } else if (timeSinceLastCall >= 60_000 && category.label != lastCategoryLabel) {
+                                    // Call Gemini if 1 minute has passed and the sensitive noise has changed
+                                    currentNoise = category.label
+                                    val prompt = promptGenerator.generatePrompt(name, releasedMethod, currentNoise, sensitiveNoise)
+                                    Log.d("callGeminiAPI", "prompt: $prompt")
+                                    callGeminiAPI(prompt)
+
                                     lastCategoryLabel = category.label
                                     lastCategoryTimestamp = currentTime
                                 }
