@@ -9,6 +9,30 @@
     android:clipChildren="false"
     android:clipToPadding="false">
 
+    <FrameLayout
+        android:id="@+id/btn_sos_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="27dp"
+        android:layout_marginStart="34dp"
+        android:background="@drawable/btn_sos_bg"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
+
+        <TextView
+            android:id="@+id/btn_sos"
+            android:layout_width="85dp"
+            android:layout_height="52dp"
+            android:gravity="center"
+            android:text="@string/button_sos"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </FrameLayout>
+
+
     <ImageView
         android:id="@+id/btn_my_page"
         android:layout_width="wrap_content"
@@ -73,62 +97,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <FrameLayout
-        android:id="@+id/btn_sos_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="77dp"
-        android:background="@drawable/btn_sos_bg"
-        android:clickable="true"
-        android:focusable="true"
-        app:layout_constraintTop_toBottomOf="@+id/main_tv_explain"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" >
-
-        <TextView
-            android:id="@+id/btn_sos"
-            android:layout_width="124dp"
-            android:layout_height="66dp"
-            android:gravity="center"
-            android:text="@string/button_sos"
-            android:textColor="@color/white"
-            android:textSize="26sp"
-            android:textStyle="bold" />
-    </FrameLayout>
-
     <TextView
         android:id="@+id/tv_now_hear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="36dp"
-        android:layout_marginTop="23dp"
+        android:layout_marginBottom="150dp"
         android:text="@string/text_current_noise_label"
         android:textColor="@color/color_primary_dark"
         android:textSize="20sp"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/btn_sos_container"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <FrameLayout
-        android:id="@+id/classified_noise_container"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/list_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:background="@drawable/bg_classified_sound"
+        android:layout_marginTop="4dp"
+        android:orientation="vertical"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="@+id/tv_now_hear"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_now_hear"
-        app:layout_constraintStart_toEndOf="@+id/tv_now_hear" >
-
-        <TextView
-            android:id="@+id/classified_noise"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="13dp"
-            android:paddingVertical="6dp"
-            android:gravity="center"
-            android:text="silence"
-            android:textColor="@color/color_noise_bg"
-            android:textSize="24sp" />
-    </FrameLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toBottomOf="@+id/tv_now_hear"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+ </androidx.constraintlayout.widget.ConstraintLayout>

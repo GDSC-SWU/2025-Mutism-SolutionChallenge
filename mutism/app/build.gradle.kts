@@ -52,4 +52,5 @@ dependencies {
     implementation(libs.flexbox)
     implementation(libs.material.v1120)
     implementation(libs.tensorflow.lite.task.audio)
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 }

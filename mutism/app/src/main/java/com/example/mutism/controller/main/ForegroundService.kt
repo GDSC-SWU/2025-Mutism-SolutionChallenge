@@ -1,32 +1,50 @@
 package com.example.mutism.controller.main
 
+import RolePromptGenerator
+import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
-import android.media.AudioRecord
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.IBinder
 import android.util.Log
+import androidx.annotation.RequiresPermission
+import com.example.mutism.controller.myPage.MyPageActivity.Companion.KEY_RELAX_METHOD
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier
 
 class ForegroundService : Service() {
     companion object {
         var isRunning = false
         private const val CHANNEL_ID = "ForegroundServiceChannel"
+        private const val REFERENCE = 0.00002
     }
 
     private var audioClassifier: AudioClassifier? = null
-    private var audioRecord: AudioRecord? = null
     private var handler: Handler? = null
     private val classificationInterval = 500L
     private var lastLabel: String? = null
 
+    // user info
+    var promptGenerator: RolePromptGenerator = RolePromptGenerator()
+    private lateinit var selectedTags: Set<String>
+    var name: String? = null
+    var releasedMethod: String? = null
+    var sensitiveNoise: List<String>? = null
+    var currentNoise: String? = null
+
+    // Track the last time Gemini API was called
+    private var lastCategoryTimestamp: Long = 0L
+    private var lastCategoryLabel: String? = null
+    private val geminiCallIntervalMillis: Long = 60 * 1000
+
     override fun onBind(intent: Intent?): IBinder? = null
 
+    @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     override fun onCreate() {
         super.onCreate()
         isRunning = true
@@ -34,6 +52,13 @@ class ForegroundService : Service() {
         val notification = createNotification()
         startForeground(1, notification)
         startAudioClassification()
+
+        val sharedPrefs = getSharedPreferences("NoiseSelectPrefs", MODE_PRIVATE)
+        selectedTags = sharedPrefs.getStringSet(MainActivity.KEY_SELECTED_NOISE_TAGS, emptySet())!!
+//        name = sharedPrefs.getString(KEY_NAME, "") ?: ""
+        name = "효진"
+        releasedMethod = sharedPrefs.getString(KEY_RELAX_METHOD, "") ?: ""
+        sensitiveNoise = selectedTags.toList()
     }
 
     override fun onDestroy() {
@@ -71,6 +96,7 @@ class ForegroundService : Service() {
                 .build()
         }
 
+    @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     private fun startAudioClassification() {
         try {
             val classifier = AudioClassifier.createFromFile(this, MainActivity.MODEL_FILE)
@@ -82,7 +108,6 @@ class ForegroundService : Service() {
             handler = Handler(handlerThread.looper)
 
             audioClassifier = classifier
-            audioRecord = record
 
             val classifyRunnable =
                 object : Runnable {
@@ -90,17 +115,6 @@ class ForegroundService : Service() {
                         val audioTensor = classifier.createInputTensorAudio()
                         audioTensor.load(record)
                         val output = classifier.classify(audioTensor)
-
-                        // Measure decibel
-                        val bufferSize =
-                            AudioRecord.getMinBufferSize(
-                                audioRecord!!.sampleRate,
-                                audioRecord!!.channelConfiguration,
-                                audioRecord!!.audioFormat,
-                            )
-                        val buffer = ShortArray(bufferSize)
-                        val readSize = record.read(buffer, 0, buffer.size)
-                        val decibel = calculateDecibel(buffer, readSize)
 
                         // Filter categories
                         val filtered =
@@ -112,9 +126,35 @@ class ForegroundService : Service() {
                         // Log formatted output
                         val topCategory = filtered.firstOrNull()
                         topCategory?.let { category ->
-                            Log.d("ForegroundService", "db: %.2f, category: %s (%.2f)".format(decibel, category.label, category.score))
+                            Log.d("ForegroundService", "category: %s (%.2f)".format(category.label, category.score))
 
-                            // ✅ 이전 결과와 다를 경우에만 보내기
+                            // Check if the stored noise tags include the current category label
+                            if (selectedTags?.contains(category.label) == true) {
+                                // Check if the category has changed or if enough time has passed
+                                val currentTime = System.currentTimeMillis()
+                                val timeSinceLastCall = currentTime - lastCategoryTimestamp
+                                if (timeSinceLastCall >= geminiCallIntervalMillis) {
+                                    // Always call Gemini if 2 minutes (geminiCallIntervalMillis) have passed
+                                    currentNoise = category.label
+                                    val prompt = promptGenerator.generatePrompt(name, releasedMethod, currentNoise, sensitiveNoise)
+                                    Log.d("callGeminiAPI", "prompt: $prompt")
+                                    callGeminiAPI(prompt)
+
+                                    lastCategoryLabel = category.label
+                                    lastCategoryTimestamp = currentTime
+                                } else if (timeSinceLastCall >= 60_000 && category.label != lastCategoryLabel) {
+                                    // Call Gemini if 1 minute has passed and the sensitive noise has changed
+                                    currentNoise = category.label
+                                    val prompt = promptGenerator.generatePrompt(name, releasedMethod, currentNoise, sensitiveNoise)
+                                    Log.d("callGeminiAPI", "prompt: $prompt")
+                                    callGeminiAPI(prompt)
+
+                                    lastCategoryLabel = category.label
+                                    lastCategoryTimestamp = currentTime
+                                }
+                            }
+
+                            // ✅ Only send when the result differs from the previous one
                             if (category.label != lastLabel) {
                                 sendToMainActivity(category.label)
                                 lastLabel = category.label
@@ -132,19 +172,53 @@ class ForegroundService : Service() {
         }
     }
 
-    private fun calculateDecibel(
-        buffer: ShortArray,
-        readSize: Int,
-    ): Double {
-        if (readSize == 0) return -100.0 // Handle case where there is no data
+    private fun callGeminiAPI(prompt: String) {
+        val apiKey = "AIzaSyCGLlDF6GSZ_3Q5QWpT2R7HWSGBti6BlDk"
+        val url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$apiKey"
 
-        var sum: Long = 0
-        for (i in 0 until readSize) {
-            sum += buffer[i] * buffer[i]
-        }
+        val requestBodyJson =
+            """
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "$prompt"
+                    }
+                  ]
+                }
+              ]
+            }
+            """.trimIndent()
 
-        val rms = Math.sqrt(sum.toDouble() / readSize)
-        return if (rms > 0) 20 * Math.log10(rms) else -100.0 // If rms is 0, return -100
+        val client = okhttp3.OkHttpClient()
+        val requestBody =
+            okhttp3.RequestBody.create(
+                "application/json".toMediaTypeOrNull(),
+                requestBodyJson,
+            )
+
+        val request =
+            okhttp3.Request
+                .Builder()
+                .url(url)
+                .post(requestBody)
+                .build()
+
+        Thread {
+            try {
+                client.newCall(request).execute().use { response ->
+                    if (!response.isSuccessful) {
+                        Log.e("GeminiAPI", "Unsuccessful response: ${response.code}")
+                    } else {
+                        val responseBody = response.body?.string()
+                        Log.d("GeminiAPI", "Response: $responseBody")
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("GeminiAPI", "Error calling Gemini API", e)
+            }
+        }.start()
     }
 
     fun sendToMainActivity(newText: String) {
@@ -155,9 +229,6 @@ class ForegroundService : Service() {
 
     private fun stopAudioClassification() {
         handler?.removeCallbacksAndMessages(null)
-        audioRecord?.stop()
-        audioRecord?.release()
-        audioRecord = null
         audioClassifier = null
         handler?.looper?.quit()
         handler = null
