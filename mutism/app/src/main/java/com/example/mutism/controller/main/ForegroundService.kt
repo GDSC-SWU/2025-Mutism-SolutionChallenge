@@ -17,6 +17,7 @@ import androidx.annotation.RequiresPermission
 import com.example.mutism.BuildConfig
 import com.example.mutism.controller.myPage.MyPageActivity.Companion.KEY_RELAX_METHOD
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import org.json.JSONObject
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier
 
 class ForegroundService : Service() {
@@ -45,6 +46,9 @@ class ForegroundService : Service() {
 
     private lateinit var selectedTagsLower: List<String>
 
+    // TTS
+    private var ttsManager = TTSManager()
+
     override fun onBind(intent: Intent?): IBinder? = null
 
     @RequiresPermission(Manifest.permission.RECORD_AUDIO)
@@ -64,12 +68,15 @@ class ForegroundService : Service() {
         name = "효진"
         releasedMethod = sharedPrefs.getString(KEY_RELAX_METHOD, "") ?: ""
         sensitiveNoise = selectedTags.toList()
+
+        ttsManager.initTTS(this)
     }
 
     override fun onDestroy() {
         stopAudioClassification()
         isRunning = false
         super.onDestroy()
+        ttsManager.shutdown()
     }
 
     private fun createNotificationChannel() {
@@ -136,15 +143,18 @@ class ForegroundService : Service() {
                             if (selectedTags.contains(category.label)) {
                                 val currentTime = System.currentTimeMillis()
                                 val timeSinceLastCall = currentTime - lastCategoryTimestamp
+                                val isSpeaking = ttsManager.isSpeaking()
 
                                 val shouldCallGemini =
-                                    timeSinceLastCall >= geminiCallIntervalMillis ||
-                                        (timeSinceLastCall >= 60_000 && category.label != lastCategoryLabel)
+                                    (
+                                        timeSinceLastCall >= geminiCallIntervalMillis ||
+                                            (timeSinceLastCall >= 60_000 && category.label != lastCategoryLabel)
+                                    ) &&
+                                        !isSpeaking
 
                                 if (shouldCallGemini) {
                                     currentNoise = category.label
                                     val prompt = promptGenerator.generatePrompt(name, releasedMethod, currentNoise, sensitiveNoise)
-                                    Log.d("callGeminiAPI", "prompt: $prompt")
                                     callGeminiAPI(prompt)
 
                                     lastCategoryLabel = category.label
@@ -223,6 +233,17 @@ class ForegroundService : Service() {
                     } else {
                         val responseBody = response.body?.string()
                         Log.d("GeminiAPI", "Response: $responseBody")
+
+                        val json = JSONObject(responseBody)
+                        val text =
+                            json
+                                .getJSONArray("candidates")
+                                .getJSONObject(0)
+                                .getJSONObject("content")
+                                .getJSONArray("parts")
+                                .getJSONObject(0)
+                                .getString("text")
+                        ttsManager.speak(text)
                     }
                 }
             } catch (e: Exception) {
