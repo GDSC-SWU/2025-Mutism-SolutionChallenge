@@ -20,7 +20,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier
 
 class ForegroundService : Service() {
-
     private var audioClassifier: AudioClassifier? = null
     private var handler: Handler? = null
     private val classificationInterval = 500L
@@ -29,11 +28,11 @@ class ForegroundService : Service() {
     private var lastNotifiedLabel: String? = null
     private var lastNotifyTime: Long = 0L
     private val notifyCooldownMs = 10_000L // 10초 간 중복 알림 금지
-  
+
     // user info
     var promptGenerator: RolePromptGenerator = RolePromptGenerator()
     private lateinit var selectedTags: Set<String>
-  
+
     var name: String? = null
     var releasedMethod: String? = null
     var sensitiveNoise: List<String>? = null
@@ -43,9 +42,6 @@ class ForegroundService : Service() {
     private var lastCategoryTimestamp: Long = 0L
     private var lastCategoryLabel: String? = null
     private val geminiCallIntervalMillis: Long = 60 * 1000
-
-    val apiKey = BuildConfig.GEMINI_API_KEY
-
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -114,65 +110,68 @@ class ForegroundService : Service() {
 
             audioClassifier = classifier
 
-            val classifyRunnable = object : Runnable {
-    override fun run() {
-        val audioTensor = classifier.createInputTensorAudio()
-        audioTensor.load(record)
-        val output = classifier.classify(audioTensor)
+            val classifyRunnable =
+                object : Runnable {
+                    override fun run() {
+                        val audioTensor = classifier.createInputTensorAudio()
+                        audioTensor.load(record)
+                        val output = classifier.classify(audioTensor)
 
-        val filtered = output[0].categories
-            .filter { it.score > MainActivity.MINIMUM_DISPLAY_THRESHOLD }
-            .sortedByDescending { it.score }
+                        val filtered =
+                            output[0]
+                                .categories
+                                .filter { it.score > MainActivity.MINIMUM_DISPLAY_THRESHOLD }
+                                .sortedByDescending { it.score }
 
-        val topCategory = filtered.firstOrNull()
-        topCategory?.let { category ->
-            val label = category.label.lowercase()
-            Log.d("ForegroundService", "category: ${category.label} (${category.score})")
+                        val topCategory = filtered.firstOrNull()
+                        topCategory?.let { category ->
+                            val label = category.label.lowercase()
+                            Log.d("ForegroundService", "category: ${category.label} (${category.score})")
 
-            // ✅ Trigger Gemini API if the detected label is among user-selected tags
-            if (selectedTags.contains(category.label)) {
-                val currentTime = System.currentTimeMillis()
-                val timeSinceLastCall = currentTime - lastCategoryTimestamp
+                            // ✅ Trigger Gemini API if the detected label is among user-selected tags
+                            if (selectedTags.contains(category.label)) {
+                                val currentTime = System.currentTimeMillis()
+                                val timeSinceLastCall = currentTime - lastCategoryTimestamp
 
-                val shouldCallGemini =
-                    timeSinceLastCall >= geminiCallIntervalMillis ||
-                    (timeSinceLastCall >= 60_000 && category.label != lastCategoryLabel)
+                                val shouldCallGemini =
+                                    timeSinceLastCall >= geminiCallIntervalMillis ||
+                                        (timeSinceLastCall >= 60_000 && category.label != lastCategoryLabel)
 
-                if (shouldCallGemini) {
-                    currentNoise = category.label
-                    val prompt = promptGenerator.generatePrompt(name, releasedMethod, currentNoise, sensitiveNoise)
-                    Log.d("callGeminiAPI", "prompt: $prompt")
-                    callGeminiAPI(prompt)
+                                if (shouldCallGemini) {
+                                    currentNoise = category.label
+                                    val prompt = promptGenerator.generatePrompt(name, releasedMethod, currentNoise, sensitiveNoise)
+                                    Log.d("callGeminiAPI", "prompt: $prompt")
+                                    callGeminiAPI(prompt)
 
-                    lastCategoryLabel = category.label
-                    lastCategoryTimestamp = currentTime
+                                    lastCategoryLabel = category.label
+                                    lastCategoryTimestamp = currentTime
+                                }
+                            }
+
+                            // ✅ Only send to MainActivity when the label changes
+                            if (label != lastLabel) {
+                                sendToMainActivity(category.label)
+                                lastLabel = label
+                            }
+
+                            // ✅ Show a notification if the detected label is in the selected tags
+                            val selectedTagsLower = selectedTags.map { it.lowercase() }
+                            val currentTime = System.currentTimeMillis()
+
+                            val shouldNotify =
+                                selectedTagsLower.contains(label) &&
+                                    (label != lastNotifiedLabel || (currentTime - lastNotifyTime > notifyCooldownMs))
+
+                            if (shouldNotify) {
+                                showSoundDetectedNotification(label)
+                                lastNotifiedLabel = label
+                                lastNotifyTime = currentTime
+                            }
+                        }
+
+                        handler?.postDelayed(this, classificationInterval)
+                    }
                 }
-            }
-
-            // ✅ Only send to MainActivity when the label changes
-            if (label != lastLabel) {
-                sendToMainActivity(category.label)
-                lastLabel = label
-            }
-
-            // ✅ Show a notification if the detected label is in the selected tags
-            val prefs = getSharedPreferences("NoiseSelectPrefs", MODE_PRIVATE)
-            val selectedTagsLower = prefs.getStringSet("selected_noise_tags", emptySet())?.map { it.lowercase() } ?: emptyList()
-            val currentTime = System.currentTimeMillis()
-
-            val shouldNotify = selectedTagsLower.contains(label) &&
-                    (label != lastNotifiedLabel || (currentTime - lastNotifyTime > notifyCooldownMs))
-
-            if (shouldNotify) {
-                showSoundDetectedNotification(label)
-                lastNotifiedLabel = label
-                lastNotifyTime = currentTime
-            }
-        }
-
-        handler?.postDelayed(this, classificationInterval)
-    }
-}
 
             handler?.post(classifyRunnable)
         } catch (e: Exception) {
@@ -182,7 +181,7 @@ class ForegroundService : Service() {
     }
 
     private fun callGeminiAPI(prompt: String) {
-        val url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$apiKey"
+        val url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$API_KEY"
 
         val requestBodyJson =
             """
@@ -297,5 +296,6 @@ class ForegroundService : Service() {
         private const val FOREGROUND_CHANNEL_ID = "ForegroundServiceChannel"
         private const val SOUND_DETECTED_CHANNEL_ID = "sound_detected_channel"
         private const val REFERENCE = 0.00002
+        private const val API_KEY = BuildConfig.GEMINI_API_KEY
     }
 }
