@@ -1,22 +1,27 @@
 package com.example.mutism.controller.main
 
+import RolePromptGenerator
+import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
-import android.media.AudioRecord
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.IBinder
 import android.util.Log
+import androidx.annotation.RequiresPermission
+import com.example.mutism.BuildConfig
+import com.example.mutism.controller.myPage.MyPageActivity.Companion.KEY_RELAX_METHOD
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier
 
 class ForegroundService : Service() {
+
     private var audioClassifier: AudioClassifier? = null
-    private var audioRecord: AudioRecord? = null
     private var handler: Handler? = null
     private val classificationInterval = 500L
     private var lastLabel: String? = null
@@ -24,9 +29,27 @@ class ForegroundService : Service() {
     private var lastNotifiedLabel: String? = null
     private var lastNotifyTime: Long = 0L
     private val notifyCooldownMs = 10_000L // 10초 간 중복 알림 금지
+  
+    // user info
+    var promptGenerator: RolePromptGenerator = RolePromptGenerator()
+    private lateinit var selectedTags: Set<String>
+  
+    var name: String? = null
+    var releasedMethod: String? = null
+    var sensitiveNoise: List<String>? = null
+    var currentNoise: String? = null
+
+    // Track the last time Gemini API was called
+    private var lastCategoryTimestamp: Long = 0L
+    private var lastCategoryLabel: String? = null
+    private val geminiCallIntervalMillis: Long = 60 * 1000
+
+    val apiKey = BuildConfig.GEMINI_API_KEY
+
 
     override fun onBind(intent: Intent?): IBinder? = null
 
+    @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     override fun onCreate() {
         super.onCreate()
         isRunning = true
@@ -34,6 +57,13 @@ class ForegroundService : Service() {
         val notification = createNotification()
         startForeground(1, notification)
         startAudioClassification()
+
+        val sharedPrefs = getSharedPreferences("NoiseSelectPrefs", MODE_PRIVATE)
+        selectedTags = sharedPrefs.getStringSet(MainActivity.KEY_SELECTED_NOISE_TAGS, emptySet())!!
+//        name = sharedPrefs.getString(KEY_NAME, "") ?: ""
+        name = "효진"
+        releasedMethod = sharedPrefs.getString(KEY_RELAX_METHOD, "") ?: ""
+        sensitiveNoise = selectedTags.toList()
     }
 
     override fun onDestroy() {
@@ -71,6 +101,7 @@ class ForegroundService : Service() {
                 .build()
         }
 
+    @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     private fun startAudioClassification() {
         try {
             val classifier = AudioClassifier.createFromFile(this, MainActivity.MODEL_FILE)
@@ -82,64 +113,66 @@ class ForegroundService : Service() {
             handler = Handler(handlerThread.looper)
 
             audioClassifier = classifier
-            audioRecord = record
 
-            val classifyRunnable =
-                object : Runnable {
-                    override fun run() {
-                        val audioTensor = classifier.createInputTensorAudio()
-                        audioTensor.load(record)
-                        val output = classifier.classify(audioTensor)
+            val classifyRunnable = object : Runnable {
+    override fun run() {
+        val audioTensor = classifier.createInputTensorAudio()
+        audioTensor.load(record)
+        val output = classifier.classify(audioTensor)
 
-                        // Measure decibel
-                        val bufferSize =
-                            AudioRecord.getMinBufferSize(
-                                audioRecord!!.sampleRate,
-                                audioRecord!!.channelConfiguration,
-                                audioRecord!!.audioFormat,
-                            )
-                        val buffer = ShortArray(bufferSize)
-                        val readSize = record.read(buffer, 0, buffer.size)
-                        val decibel = calculateDecibel(buffer, readSize)
+        val filtered = output[0].categories
+            .filter { it.score > MainActivity.MINIMUM_DISPLAY_THRESHOLD }
+            .sortedByDescending { it.score }
 
-                        // Filter categories
-                        val filtered =
-                            output[0]
-                                .categories
-                                .filter { it.score > MainActivity.MINIMUM_DISPLAY_THRESHOLD }
-                                .sortedByDescending { it.score }
+        val topCategory = filtered.firstOrNull()
+        topCategory?.let { category ->
+            val label = category.label.lowercase()
+            Log.d("ForegroundService", "category: ${category.label} (${category.score})")
 
-                        // Log formatted output
-                        val topCategory = filtered.firstOrNull()
-                        topCategory?.let { category ->
-                            val label = category.label.lowercase()
+            // ✅ Trigger Gemini API if the detected label is among user-selected tags
+            if (selectedTags.contains(category.label)) {
+                val currentTime = System.currentTimeMillis()
+                val timeSinceLastCall = currentTime - lastCategoryTimestamp
 
-                            Log.d("ForegroundService", "db: %.2f, category: %s (%.2f)".format(decibel, category.label, category.score))
+                val shouldCallGemini =
+                    timeSinceLastCall >= geminiCallIntervalMillis ||
+                    (timeSinceLastCall >= 60_000 && category.label != lastCategoryLabel)
 
-                            // 이전 결과와 다를 경우에만 보내기
-                            if (label != lastLabel) {
-                                sendToMainActivity(category.label)
-                                lastLabel = category.label
-                            }
+                if (shouldCallGemini) {
+                    currentNoise = category.label
+                    val prompt = promptGenerator.generatePrompt(name, releasedMethod, currentNoise, sensitiveNoise)
+                    Log.d("callGeminiAPI", "prompt: $prompt")
+                    callGeminiAPI(prompt)
 
-                            // 알림 조건 확인: 사용자 설정된 소음에 포함된 경우
-                            val prefs = getSharedPreferences("NoiseSelectPrefs", MODE_PRIVATE)
-                            val selectedTags = prefs.getStringSet("selected_noise_tags", emptySet())
-                            val currentTime = System.currentTimeMillis()
-
-                            if (selectedTags?.map { it.lowercase() }?.contains(label) == true) {
-                                val shouldNotify = label != lastNotifiedLabel || (currentTime - lastNotifyTime > notifyCooldownMs)
-                                if (shouldNotify) {
-                                    showSoundDetectedNotification(label)
-                                    lastNotifiedLabel = label
-                                    lastNotifyTime = currentTime
-                                }
-                            }
-                        }
-
-                        handler?.postDelayed(this, classificationInterval)
-                    }
+                    lastCategoryLabel = category.label
+                    lastCategoryTimestamp = currentTime
                 }
+            }
+
+            // ✅ Only send to MainActivity when the label changes
+            if (label != lastLabel) {
+                sendToMainActivity(category.label)
+                lastLabel = label
+            }
+
+            // ✅ Show a notification if the detected label is in the selected tags
+            val prefs = getSharedPreferences("NoiseSelectPrefs", MODE_PRIVATE)
+            val selectedTagsLower = prefs.getStringSet("selected_noise_tags", emptySet())?.map { it.lowercase() } ?: emptyList()
+            val currentTime = System.currentTimeMillis()
+
+            val shouldNotify = selectedTagsLower.contains(label) &&
+                    (label != lastNotifiedLabel || (currentTime - lastNotifyTime > notifyCooldownMs))
+
+            if (shouldNotify) {
+                showSoundDetectedNotification(label)
+                lastNotifiedLabel = label
+                lastNotifyTime = currentTime
+            }
+        }
+
+        handler?.postDelayed(this, classificationInterval)
+    }
+}
 
             handler?.post(classifyRunnable)
         } catch (e: Exception) {
@@ -148,19 +181,52 @@ class ForegroundService : Service() {
         }
     }
 
-    private fun calculateDecibel(
-        buffer: ShortArray,
-        readSize: Int,
-    ): Double {
-        if (readSize == 0) return -100.0 // Handle case where there is no data
+    private fun callGeminiAPI(prompt: String) {
+        val url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$apiKey"
 
-        var sum: Long = 0
-        for (i in 0 until readSize) {
-            sum += buffer[i] * buffer[i]
-        }
+        val requestBodyJson =
+            """
+            {
+              "contents": [
+                {
+                  "parts": [
+                    {
+                      "text": "$prompt"
+                    }
+                  ]
+                }
+              ]
+            }
+            """.trimIndent()
 
-        val rms = Math.sqrt(sum.toDouble() / readSize)
-        return if (rms > 0) 20 * Math.log10(rms) else -100.0 // If rms is 0, return -100
+        val client = okhttp3.OkHttpClient()
+        val requestBody =
+            okhttp3.RequestBody.create(
+                "application/json".toMediaTypeOrNull(),
+                requestBodyJson,
+            )
+
+        val request =
+            okhttp3.Request
+                .Builder()
+                .url(url)
+                .post(requestBody)
+                .build()
+
+        Thread {
+            try {
+                client.newCall(request).execute().use { response ->
+                    if (!response.isSuccessful) {
+                        Log.e("GeminiAPI", "Unsuccessful response: ${response.code}")
+                    } else {
+                        val responseBody = response.body?.string()
+                        Log.d("GeminiAPI", "Response: $responseBody")
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("GeminiAPI", "Error calling Gemini API", e)
+            }
+        }.start()
     }
 
     fun sendToMainActivity(newText: String) {
@@ -171,9 +237,6 @@ class ForegroundService : Service() {
 
     private fun stopAudioClassification() {
         handler?.removeCallbacksAndMessages(null)
-        audioRecord?.stop()
-        audioRecord?.release()
-        audioRecord = null
         audioClassifier = null
         handler?.looper?.quit()
         handler = null
@@ -233,5 +296,6 @@ class ForegroundService : Service() {
         var isRunning = false
         private const val FOREGROUND_CHANNEL_ID = "ForegroundServiceChannel"
         private const val SOUND_DETECTED_CHANNEL_ID = "sound_detected_channel"
+        private const val REFERENCE = 0.00002
     }
 }

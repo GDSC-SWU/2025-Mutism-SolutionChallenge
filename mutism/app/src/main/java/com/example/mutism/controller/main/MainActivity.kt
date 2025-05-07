@@ -43,15 +43,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var listContainer: LinearLayout
     private lateinit var receiver: BroadcastReceiver
 
-    private val updateListReceiver =
+    private val updateClassifiedNoiseReceiver =
         object : BroadcastReceiver() {
             override fun onReceive(
                 context: Context?,
                 intent: Intent?,
             ) {
-                Log.d("mainActivity", "BroadcastReceiver received")
                 val newText = intent?.getStringExtra("new_text") ?: return
-                Log.d("mainActivity", newText)
                 addTextItem(newText)
             }
         }
@@ -70,9 +68,6 @@ class MainActivity : AppCompatActivity() {
                     context: Context,
                     intent: Intent,
                 ) {
-                    if (intent.action == "com.mutism.UPDATE_LIST") {
-                        // 원하는 작업 수행
-                    }
                 }
             }
 
@@ -149,15 +144,15 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         val filter = IntentFilter("com.mutism.UPDATE_LIST")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(updateListReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+            registerReceiver(updateClassifiedNoiseReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
         } else {
-            registerReceiver(updateListReceiver, filter)
+            registerReceiver(updateClassifiedNoiseReceiver, filter)
         }
     }
 
     override fun onStop() {
         super.onStop()
-        unregisterReceiver(updateListReceiver)
+        unregisterReceiver(updateClassifiedNoiseReceiver)
     }
 
     private fun updateRecordingUI() {
@@ -212,7 +207,7 @@ class MainActivity : AppCompatActivity() {
             this.text = text
             setTextColor(ContextCompat.getColor(context, R.color.color_noise_bg))
             textSize = 24f
-            setPadding(13, 6, 6, 13)
+            setPadding(20, 6, 20, 6)
             background = ContextCompat.getDrawable(context, R.drawable.bg_classified_sound)
             layoutParams =
                 LinearLayout
@@ -220,10 +215,11 @@ class MainActivity : AppCompatActivity() {
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT,
                     ).apply {
-                        topMargin = 8
+                        topMargin = 12
                         gravity = Gravity.CENTER
                     }
         }
+
     // MARK: - Voice Recording Functions
 
     // request permission
@@ -307,7 +303,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val REQUEST_CALL_PERMISSION = 100
         const val EMERGENCY_NUMBER = "112"
-        private const val KEY_SELECTED_NOISE_TAGS = "selected_noise_tags"
+        const val KEY_SELECTED_NOISE_TAGS = "selected_noise_tags"
         const val REQUEST_RECORD_AUDIO = 1337
         const val MODEL_FILE = "yamnet.tflite"
         const val MINIMUM_DISPLAY_THRESHOLD: Float = 0.3f
