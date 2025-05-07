@@ -43,6 +43,8 @@ class ForegroundService : Service() {
     private var lastCategoryLabel: String? = null
     private val geminiCallIntervalMillis: Long = 60 * 1000
 
+    private lateinit var selectedTagsLower: List<String>
+
     override fun onBind(intent: Intent?): IBinder? = null
 
     @RequiresPermission(Manifest.permission.RECORD_AUDIO)
@@ -55,7 +57,9 @@ class ForegroundService : Service() {
         startAudioClassification()
 
         val sharedPrefs = getSharedPreferences("NoiseSelectPrefs", MODE_PRIVATE)
-        selectedTags = sharedPrefs.getStringSet(MainActivity.KEY_SELECTED_NOISE_TAGS, emptySet())!!
+        selectedTags = sharedPrefs.getStringSet(MainActivity.KEY_SELECTED_NOISE_TAGS, emptySet()) ?: emptySet()
+        selectedTagsLower = selectedTags.map { it.lowercase() }
+
 //        name = sharedPrefs.getString(KEY_NAME, "") ?: ""
         name = "효진"
         releasedMethod = sharedPrefs.getString(KEY_RELAX_METHOD, "") ?: ""
@@ -155,7 +159,6 @@ class ForegroundService : Service() {
                             }
 
                             // ✅ Show a notification if the detected label is in the selected tags
-                            val selectedTagsLower = selectedTags.map { it.lowercase() }
                             val currentTime = System.currentTimeMillis()
 
                             val shouldNotify =
