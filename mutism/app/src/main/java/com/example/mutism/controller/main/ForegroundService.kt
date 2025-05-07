@@ -3,6 +3,7 @@ package com.example.mutism.controller.main
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.media.AudioRecord
@@ -14,16 +15,15 @@ import android.util.Log
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier
 
 class ForegroundService : Service() {
-    companion object {
-        var isRunning = false
-        private const val CHANNEL_ID = "ForegroundServiceChannel"
-    }
-
     private var audioClassifier: AudioClassifier? = null
     private var audioRecord: AudioRecord? = null
     private var handler: Handler? = null
     private val classificationInterval = 500L
     private var lastLabel: String? = null
+
+    private var lastNotifiedLabel: String? = null
+    private var lastNotifyTime: Long = 0L
+    private val notifyCooldownMs = 10_000L // 10초 간 중복 알림 금지
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -46,7 +46,7 @@ class ForegroundService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val serviceChannel =
                 NotificationChannel(
-                    CHANNEL_ID,
+                    FOREGROUND_CHANNEL_ID,
                     "Foreground Service Channel",
                     NotificationManager.IMPORTANCE_DEFAULT,
                 )
@@ -59,7 +59,7 @@ class ForegroundService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val builder =
                 Notification
-                    .Builder(this, CHANNEL_ID)
+                    .Builder(this, FOREGROUND_CHANNEL_ID)
                     .setContentTitle("Audio Classification Service")
                     .setContentText("Running...")
             builder.build()
@@ -112,12 +112,28 @@ class ForegroundService : Service() {
                         // Log formatted output
                         val topCategory = filtered.firstOrNull()
                         topCategory?.let { category ->
+                            val label = category.label.lowercase()
+
                             Log.d("ForegroundService", "db: %.2f, category: %s (%.2f)".format(decibel, category.label, category.score))
 
                             // ✅ 이전 결과와 다를 경우에만 보내기
-                            if (category.label != lastLabel) {
+                            if (label != lastLabel) {
                                 sendToMainActivity(category.label)
                                 lastLabel = category.label
+                            }
+
+                            // 알림 조건 확인: 사용자 설정된 소음에 포함된 경우
+                            val prefs = getSharedPreferences("NoiseSelectPrefs", MODE_PRIVATE)
+                            val selectedTags = prefs.getStringSet("selected_noise_tags", emptySet())
+                            val currentTime = System.currentTimeMillis()
+
+                            if (selectedTags?.map { it.lowercase() }?.contains(label) == true) {
+                                val shouldNotify = label != lastNotifiedLabel || (currentTime - lastNotifyTime > notifyCooldownMs)
+                                if (shouldNotify) {
+                                    showSoundDetectedNotification(label)
+                                    lastNotifiedLabel = label
+                                    lastNotifyTime = currentTime
+                                }
                             }
                         }
 
@@ -161,5 +177,61 @@ class ForegroundService : Service() {
         audioClassifier = null
         handler?.looper?.quit()
         handler = null
+    }
+
+    @Suppress("DEPRECATION")
+    private fun showSoundDetectedNotification(detectedLabel: String) {
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+
+        val intent =
+            Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+        val pendingIntent =
+            PendingIntent.getActivity(
+                this,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            )
+
+        val notification: Notification =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channel =
+                    NotificationChannel(
+                        SOUND_DETECTED_CHANNEL_ID,
+                        "Sound Detected Notification",
+                        NotificationManager.IMPORTANCE_HIGH,
+                    ).apply {
+                        description = "Alerts when selected sounds are detected"
+                    }
+                notificationManager.createNotificationChannel(channel)
+
+                Notification
+                    .Builder(this, SOUND_DETECTED_CHANNEL_ID)
+                    .setSmallIcon(android.R.drawable.ic_dialog_info)
+                    .setContentTitle("Sensitive Sound Detected")
+                    .setContentText("Detected: $detectedLabel")
+                    .setAutoCancel(true)
+                    .setContentIntent(pendingIntent)
+                    .build()
+            } else {
+                Notification
+                    .Builder(this)
+                    .setSmallIcon(android.R.drawable.ic_dialog_info)
+                    .setContentTitle("Sensitive Sound Detected")
+                    .setContentText("Detected: $detectedLabel")
+                    .setAutoCancel(true)
+                    .setContentIntent(pendingIntent)
+                    .build()
+            }
+
+        notificationManager.notify(1002, notification)
+    }
+
+    companion object {
+        var isRunning = false
+        private const val FOREGROUND_CHANNEL_ID = "ForegroundServiceChannel"
+        private const val SOUND_DETECTED_CHANNEL_ID = "sound_detected_channel"
     }
 }
