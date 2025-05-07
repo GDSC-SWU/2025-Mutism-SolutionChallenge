@@ -1,9 +1,11 @@
 package com.example.mutism.controller.whiteNoisePage
 
+import android.annotation.SuppressLint
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.mutism.R
 import com.example.mutism.databinding.ActivityWhiteNoiseBinding
@@ -94,6 +96,7 @@ class WhiteNoiseActivity : AppCompatActivity() {
         updateSelectButtonState()
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun updateSelectButtonState() {
         val hasSelection = whiteNoiseList.any { it.isSelected }
 
@@ -128,7 +131,7 @@ class WhiteNoiseActivity : AppCompatActivity() {
 
     private fun saveSelection(name: String) {
         val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-        prefs.edit().putString(KEY_SELECTED_NOISE, name).apply()
+        prefs.edit { putString(KEY_SELECTED_NOISE, name) }
     }
 
     companion object {

@@ -5,6 +5,7 @@ import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.os.Build
@@ -19,20 +20,20 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier
 
 class ForegroundService : Service() {
-    companion object {
-        var isRunning = false
-        private const val CHANNEL_ID = "ForegroundServiceChannel"
-        private const val REFERENCE = 0.00002
-    }
 
     private var audioClassifier: AudioClassifier? = null
     private var handler: Handler? = null
     private val classificationInterval = 500L
     private var lastLabel: String? = null
 
+    private var lastNotifiedLabel: String? = null
+    private var lastNotifyTime: Long = 0L
+    private val notifyCooldownMs = 10_000L // 10초 간 중복 알림 금지
+  
     // user info
     var promptGenerator: RolePromptGenerator = RolePromptGenerator()
     private lateinit var selectedTags: Set<String>
+  
     var name: String? = null
     var releasedMethod: String? = null
     var sensitiveNoise: List<String>? = null
@@ -44,6 +45,7 @@ class ForegroundService : Service() {
     private val geminiCallIntervalMillis: Long = 60 * 1000
 
     val apiKey = BuildConfig.GEMINI_API_KEY
+
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -74,7 +76,7 @@ class ForegroundService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val serviceChannel =
                 NotificationChannel(
-                    CHANNEL_ID,
+                    FOREGROUND_CHANNEL_ID,
                     "Foreground Service Channel",
                     NotificationManager.IMPORTANCE_DEFAULT,
                 )
@@ -87,7 +89,7 @@ class ForegroundService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val builder =
                 Notification
-                    .Builder(this, CHANNEL_ID)
+                    .Builder(this, FOREGROUND_CHANNEL_ID)
                     .setContentTitle("Audio Classification Service")
                     .setContentText("Running...")
             builder.build()
@@ -112,61 +114,65 @@ class ForegroundService : Service() {
 
             audioClassifier = classifier
 
-            val classifyRunnable =
-                object : Runnable {
-                    override fun run() {
-                        val audioTensor = classifier.createInputTensorAudio()
-                        audioTensor.load(record)
-                        val output = classifier.classify(audioTensor)
+            val classifyRunnable = object : Runnable {
+    override fun run() {
+        val audioTensor = classifier.createInputTensorAudio()
+        audioTensor.load(record)
+        val output = classifier.classify(audioTensor)
 
-                        // Filter categories
-                        val filtered =
-                            output[0]
-                                .categories
-                                .filter { it.score > MainActivity.MINIMUM_DISPLAY_THRESHOLD }
-                                .sortedByDescending { it.score }
+        val filtered = output[0].categories
+            .filter { it.score > MainActivity.MINIMUM_DISPLAY_THRESHOLD }
+            .sortedByDescending { it.score }
 
-                        // Log formatted output
-                        val topCategory = filtered.firstOrNull()
-                        topCategory?.let { category ->
-                            Log.d("ForegroundService", "category: %s (%.2f)".format(category.label, category.score))
+        val topCategory = filtered.firstOrNull()
+        topCategory?.let { category ->
+            val label = category.label.lowercase()
+            Log.d("ForegroundService", "category: ${category.label} (${category.score})")
 
-                            // Check if the stored noise tags include the current category label
-                            if (selectedTags?.contains(category.label) == true) {
-                                // Check if the category has changed or if enough time has passed
-                                val currentTime = System.currentTimeMillis()
-                                val timeSinceLastCall = currentTime - lastCategoryTimestamp
-                                if (timeSinceLastCall >= geminiCallIntervalMillis) {
-                                    // Always call Gemini if 2 minutes (geminiCallIntervalMillis) have passed
-                                    currentNoise = category.label
-                                    val prompt = promptGenerator.generatePrompt(name, releasedMethod, currentNoise, sensitiveNoise)
-                                    Log.d("callGeminiAPI", "prompt: $prompt")
-                                    callGeminiAPI(prompt)
+            // ✅ Trigger Gemini API if the detected label is among user-selected tags
+            if (selectedTags.contains(category.label)) {
+                val currentTime = System.currentTimeMillis()
+                val timeSinceLastCall = currentTime - lastCategoryTimestamp
 
-                                    lastCategoryLabel = category.label
-                                    lastCategoryTimestamp = currentTime
-                                } else if (timeSinceLastCall >= 60_000 && category.label != lastCategoryLabel) {
-                                    // Call Gemini if 1 minute has passed and the sensitive noise has changed
-                                    currentNoise = category.label
-                                    val prompt = promptGenerator.generatePrompt(name, releasedMethod, currentNoise, sensitiveNoise)
-                                    Log.d("callGeminiAPI", "prompt: $prompt")
-                                    callGeminiAPI(prompt)
+                val shouldCallGemini =
+                    timeSinceLastCall >= geminiCallIntervalMillis ||
+                    (timeSinceLastCall >= 60_000 && category.label != lastCategoryLabel)
 
-                                    lastCategoryLabel = category.label
-                                    lastCategoryTimestamp = currentTime
-                                }
-                            }
+                if (shouldCallGemini) {
+                    currentNoise = category.label
+                    val prompt = promptGenerator.generatePrompt(name, releasedMethod, currentNoise, sensitiveNoise)
+                    Log.d("callGeminiAPI", "prompt: $prompt")
+                    callGeminiAPI(prompt)
 
-                            // ✅ Only send when the result differs from the previous one
-                            if (category.label != lastLabel) {
-                                sendToMainActivity(category.label)
-                                lastLabel = category.label
-                            }
-                        }
-
-                        handler?.postDelayed(this, classificationInterval)
-                    }
+                    lastCategoryLabel = category.label
+                    lastCategoryTimestamp = currentTime
                 }
+            }
+
+            // ✅ Only send to MainActivity when the label changes
+            if (label != lastLabel) {
+                sendToMainActivity(category.label)
+                lastLabel = label
+            }
+
+            // ✅ Show a notification if the detected label is in the selected tags
+            val prefs = getSharedPreferences("NoiseSelectPrefs", MODE_PRIVATE)
+            val selectedTagsLower = prefs.getStringSet("selected_noise_tags", emptySet())?.map { it.lowercase() } ?: emptyList()
+            val currentTime = System.currentTimeMillis()
+
+            val shouldNotify = selectedTagsLower.contains(label) &&
+                    (label != lastNotifiedLabel || (currentTime - lastNotifyTime > notifyCooldownMs))
+
+            if (shouldNotify) {
+                showSoundDetectedNotification(label)
+                lastNotifiedLabel = label
+                lastNotifyTime = currentTime
+            }
+        }
+
+        handler?.postDelayed(this, classificationInterval)
+    }
+}
 
             handler?.post(classifyRunnable)
         } catch (e: Exception) {
@@ -234,5 +240,62 @@ class ForegroundService : Service() {
         audioClassifier = null
         handler?.looper?.quit()
         handler = null
+    }
+
+    @Suppress("DEPRECATION")
+    private fun showSoundDetectedNotification(detectedLabel: String) {
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+
+        val intent =
+            Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+        val pendingIntent =
+            PendingIntent.getActivity(
+                this,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+            )
+
+        val notification: Notification =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channel =
+                    NotificationChannel(
+                        SOUND_DETECTED_CHANNEL_ID,
+                        "Sound Detected Notification",
+                        NotificationManager.IMPORTANCE_HIGH,
+                    ).apply {
+                        description = "Alerts when selected sounds are detected"
+                    }
+                notificationManager.createNotificationChannel(channel)
+
+                Notification
+                    .Builder(this, SOUND_DETECTED_CHANNEL_ID)
+                    .setSmallIcon(android.R.drawable.ic_dialog_info)
+                    .setContentTitle("Sensitive Sound Detected")
+                    .setContentText("Detected: $detectedLabel")
+                    .setAutoCancel(true)
+                    .setContentIntent(pendingIntent)
+                    .build()
+            } else {
+                Notification
+                    .Builder(this)
+                    .setSmallIcon(android.R.drawable.ic_dialog_info)
+                    .setContentTitle("Sensitive Sound Detected")
+                    .setContentText("Detected: $detectedLabel")
+                    .setAutoCancel(true)
+                    .setContentIntent(pendingIntent)
+                    .build()
+            }
+
+        notificationManager.notify(1002, notification)
+    }
+
+    companion object {
+        var isRunning = false
+        private const val FOREGROUND_CHANNEL_ID = "ForegroundServiceChannel"
+        private const val SOUND_DETECTED_CHANNEL_ID = "sound_detected_channel"
+        private const val REFERENCE = 0.00002
     }
 }

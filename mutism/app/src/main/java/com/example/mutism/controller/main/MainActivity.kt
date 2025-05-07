@@ -2,6 +2,8 @@ package com.example.mutism.controller.main
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.ContentValues.TAG
 import android.content.Context
@@ -10,6 +12,7 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -51,6 +54,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    @SuppressLint("ImplicitSamInstance")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -124,6 +128,9 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
+
+        // 알림 권한 및 설정 상태 확인
+        checkNotificationPermissionAndStatus()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -254,6 +261,44 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Noise selection is complete.", Toast.LENGTH_SHORT).show()
             }
         }
+
+    private fun checkNotificationPermissionAndStatus() {
+        // Android 13 이상이면 POST_NOTIFICATIONS 권한 요청
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    2001,
+                )
+            }
+        }
+
+        // 알림 설정이 꺼져 있는지 확인하고 안내
+        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        if (!manager.areNotificationsEnabled()) {
+            AlertDialog
+                .Builder(this)
+                .setTitle("Notifications are turned off")
+                .setMessage("Please enable notifications to get sound alerts.")
+                .setPositiveButton("Go to Settings") { _, _ ->
+                    val intent =
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                                putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+                            }
+                        } else {
+                            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                data = "package:$packageName".toUri()
+                            }
+                        }
+                    startActivity(intent)
+                }.setNegativeButton("Later") { dialog, _ -> dialog.dismiss() }
+                .show()
+        }
+    }
 
     companion object {
         const val REQUEST_CALL_PERMISSION = 100

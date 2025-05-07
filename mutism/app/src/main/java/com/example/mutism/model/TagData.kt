@@ -19,7 +19,7 @@ val tagContents: Map<String, List<TagSection>> =
         "Human Sounds" to
             listOf(
                 TagSection("Speech", listOf("Speech", "Whispering", "Shout", "Narration", "Conversation")),
-                TagSection("Emotional Expression", listOf("Laughter", "Crying", "Screaming", "Sigh", "Groan", "Moan")),
+                TagSection("Emotional Expression", listOf("Laughter", "Crying", "sobbing", "Screaming", "Sigh", "Groan", "Moan")),
                 TagSection("Infant / Child", listOf("Baby cry", "Babbling", "Child speech")),
                 TagSection("Breathing", listOf("Breathing", "Wheeze", "Snore", "Gasp")),
                 TagSection("Other Body Sounds", listOf("Cough", "Sneeze", "Hiccup", "Burping", "Sniff")),
@@ -34,12 +34,15 @@ val tagContents: Map<String, List<TagSection>> =
             listOf(
                 TagSection("Alerts & Alarms", listOf("Alarm", "Beep", "Buzzer", "Siren", "Ringtone", "DTMF")),
                 TagSection("Communication", listOf("Telephone bell", "Message alert", "Notification")),
-                TagSection("Device Operation", listOf("Microwave", "Washing machine", "Printer", "Camera shutter")),
+                TagSection(
+                    "Device Operation",
+                    listOf("Computer keyboard", "Typing", "Microwave", "Washing machine", "Printer", "Camera shutter"),
+                ),
             ),
         "Machines & Tools" to
             listOf(
                 TagSection("Household Tools", listOf("Blender", "Drill", "Hair dryer", "Vacuum cleaner", "Electric toothbrush")),
-                TagSection("Engines & Motors", listOf("Engine starting", "Idling", "Accelerating", "Electric fan")),
+                TagSection("Engines & Motors", listOf("Vehicle", "Engine starting", "Idling", "Accelerating", "Electric fan")),
                 TagSection("Industrial Machines", listOf("Power tool", "Chainsaw", "Lawn mower")),
             ),
         "Transportation" to
@@ -51,7 +54,10 @@ val tagContents: Map<String, List<TagSection>> =
             listOf(
                 TagSection("Weather", listOf("Rain", "Thunderstorm", "Wind", "Snow")),
                 TagSection("Natural Environment", listOf("Ocean", "Stream", "River", "Fire")),
-                TagSection("Animal Sounds", listOf("Dog bark", "Cat meow", "Birdsong", "Insect buzz", "Frog croak")),
+                TagSection(
+                    "Animal Sounds",
+                    listOf("Animal", "Domestic animals", "Cat", "Dog", "Birdsong", "Insect buzz", "Frog croak"),
+                ),
             ),
         "Impact & Danger" to
             listOf(
@@ -70,6 +76,6 @@ val tagContents: Map<String, List<TagSection>> =
             ),
         "Others" to
             listOf(
-                TagSection("Unclassified / Silent", listOf("Silence", "Unknown", "Heart sounds", "ASMR")),
+                TagSection("Unclassified / Silent", listOf("Unknown", "Heart sounds", "ASMR")),
             ),
     )
