@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    @SuppressLint("ImplicitSamInstance")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
