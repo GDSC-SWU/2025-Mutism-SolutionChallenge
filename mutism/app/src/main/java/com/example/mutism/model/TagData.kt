@@ -76,6 +76,6 @@ val tagContents: Map<String, List<TagSection>> =
             ),
         "Others" to
             listOf(
-                TagSection("Unclassified / Silent", listOf("Silence", "Unknown", "Heart sounds", "ASMR")),
+                TagSection("Unclassified / Silent", listOf("Unknown", "Heart sounds", "ASMR")),
             ),
     )
