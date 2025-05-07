@@ -116,7 +116,7 @@ class ForegroundService : Service() {
 
                             Log.d("ForegroundService", "db: %.2f, category: %s (%.2f)".format(decibel, category.label, category.score))
 
-                            // ✅ 이전 결과와 다를 경우에만 보내기
+                            // 이전 결과와 다를 경우에만 보내기
                             if (label != lastLabel) {
                                 sendToMainActivity(category.label)
                                 lastLabel = category.label
