@@ -26,7 +26,7 @@
         android:orientation="horizontal"
         android:clickable="false"
         android:focusable="false"
-        android:layout_marginTop="55dp"
+        android:layout_marginTop="40dp"
         app:layout_constraintTop_toBottomOf="@+id/btn_back">
 
         <TextView
@@ -67,8 +67,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintTop_toBottomOf="@+id/chipGroup_selected_noises">
 
         <TextView
@@ -92,6 +91,32 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_my_page_name"
+        android:textSize="13sp"
+        android:textColor="@color/color_primary_dark"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="60dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf= "@+id/white_noise_container" />
+
+    <EditText
+        android:id="@+id/tv_name_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="name"
+        android:textSize="14sp"
+        android:textColor="@color/color_primary_light"
+        android:textColorHint="@color/color_primary_light2"
+        android:backgroundTint="@color/color_primary_light2"
+        android:layout_marginEnd="45dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_name"/>
+
+
+    <TextView
         android:id="@+id/tv_autism_level"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -99,9 +124,9 @@
         android:textSize="13sp"
         android:textColor="@color/color_primary_dark"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf= "@+id/white_noise_container" />
+        app:layout_constraintTop_toBottomOf= "@+id/tv_name" />
 
     <EditText
         android:id="@+id/tv_autism_level_value"
@@ -167,6 +192,32 @@
         app:layout_constraintTop_toTopOf="@+id/tv_age"/>
 
     <TextView
+        android:id="@+id/tv_emergency_contact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_my_page_emergency_contact"
+        android:textSize="13sp"
+        android:textColor="@color/color_primary_dark"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_age" />
+
+    <EditText
+        android:id="@+id/tv_emergency_contact_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="+82)10-1234-5678"
+        android:textSize="14sp"
+        android:textColor="@color/color_primary_light"
+        android:textColorHint="@color/color_primary_light2"
+        android:backgroundTint="@color/color_primary_light2"
+        android:layout_marginEnd="45dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_emergency_contact"/>
+
+
+    <TextView
         android:id="@+id/tv_opinion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -176,7 +227,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="30dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_age" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_emergency_contact" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/crv_method_container"
@@ -216,7 +267,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/my_page_btn_save"
+            android:text="@string/btn_my_page_save"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:layout_gravity="center"/>

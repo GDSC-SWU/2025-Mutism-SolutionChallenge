@@ -19,9 +19,15 @@
     <string name="text_my_page_gender">Gender</string>
     <string name="text_my_page_age">Age</string>
     <string name="text_my_page_Method">Relaxation Method</string>
-    <string name="dialog_title">No selected noise</string>
-    <string name="dialog_subtext">We don\'t know which sounds\nyour patient dislikes yet.</string>
-    <string name="dialog_btn_text">Go to select noises</string>
+    <string name="text_no_select_noise_dialog_title">No selected noise</string>
+    <string name="text_no_select_noise_dialog_subtext">We don\'t know which sounds\nyour patient dislikes yet.</string>
+    <string name="btn_no_select_noise_dialog_text">Go to select noises</string>
     <string name="my_page_relax_method_text">EX) Take deep breaths,\nListen to calming music or white noise</string>
-    <string name="my_page_btn_save">Save</string>
+    <string name="btn_my_page_save">Save</string>
+    <string name="text_my_page_name">Name</string>
+    <string name="text_my_page_emergency_contact">Emergency contact</string>
+    <string name="text_white_noise_title">Feeling better?</string>
+    <string name="text_white_noise_dialog_subtext">You’ve been listening white noise\nfor 5 minutes.\nWould you like to turn it off?</string>
+    <string name="btn_white_noise_dialog_btn_turn_off">Turn off</string>
+    <string name="btn_white_noise_dialog_btn_keep_playing">Keep playing</string>
 </resources>
