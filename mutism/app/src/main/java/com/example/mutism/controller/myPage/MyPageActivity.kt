@@ -54,15 +54,19 @@ class MyPageActivity : AppCompatActivity() {
     }
 
     private fun saveUserInfo() {
+        val name = binding.tvNameValue.text.toString()
         val autismLevel = binding.tvAutismLevelValue.text.toString()
         val gender = binding.tvGenderValue.text.toString()
         val age = binding.tvAgeValue.text.toString()
+        val emergencyNumber = binding.tvEmergencyContactValue.text.toString()
         val relaxMethod = binding.edtRelaxMethod.text.toString()
 
         val editor = sharedPrefs.edit()
+        editor.putString(KEY_NAME, name)
         editor.putString(KEY_AUTISM_LEVEL, autismLevel)
         editor.putString(KEY_GENDER, gender)
         editor.putString(KEY_AGE, age)
+        editor.putString(KEY_EMERGENCY_CONTACT, emergencyNumber)
         editor.putString(KEY_RELAX_METHOD, relaxMethod)
         editor.apply()
 
@@ -71,14 +75,18 @@ class MyPageActivity : AppCompatActivity() {
     }
 
     private fun loadUserInfo() {
+        val name = sharedPrefs.getString(KEY_NAME, "")
         val autismLevel = sharedPrefs.getString(KEY_AUTISM_LEVEL, "")
         val gender = sharedPrefs.getString(KEY_GENDER, "")
         val age = sharedPrefs.getString(KEY_AGE, "")
+        val emergencyNumber = sharedPrefs.getString(KEY_EMERGENCY_CONTACT, "")
         val relaxMethod = sharedPrefs.getString(KEY_RELAX_METHOD, "")
 
+        binding.tvNameValue.setText(name)
         binding.tvAutismLevelValue.setText(autismLevel)
         binding.tvGenderValue.setText(gender)
         binding.tvAgeValue.setText(age)
+        binding.tvEmergencyContactValue.setText(emergencyNumber)
         binding.edtRelaxMethod.setText(relaxMethod)
     }
 
@@ -103,9 +111,11 @@ class MyPageActivity : AppCompatActivity() {
 
     companion object {
         private const val KEY_SELECTED_NOISE_TAGS = "selected_noise_tags"
-        const val KEY_AUTISM_LEVEL = "autism_level"
-        const val KEY_GENDER = "gender"
-        const val KEY_AGE = "age"
-        const val KEY_RELAX_METHOD = "relax_method"
+        private const val KEY_NAME = "name"
+        private const val KEY_AUTISM_LEVEL = "autism_level"
+        private const val KEY_GENDER = "gender"
+        private const val KEY_AGE = "age"
+        private const val KEY_EMERGENCY_CONTACT = "emergency contact"
+        private const val KEY_RELAX_METHOD = "relax_method"
     }
 }

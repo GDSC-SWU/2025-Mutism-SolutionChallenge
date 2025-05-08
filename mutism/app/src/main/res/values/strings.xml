@@ -24,4 +24,6 @@
     <string name="dialog_btn_text">Go to select noises</string>
     <string name="my_page_relax_method_text">EX) Take deep breaths,\nListen to calming music or white noise</string>
     <string name="my_page_btn_save">Save</string>
+    <string name="text_my_page_name">Name</string>
+    <string name="text_my_page_emergency_contact">Emergency contact</string>
 </resources>
