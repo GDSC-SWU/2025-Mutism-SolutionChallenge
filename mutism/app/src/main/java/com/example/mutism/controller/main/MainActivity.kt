@@ -178,10 +178,23 @@ class MainActivity : AppCompatActivity() {
 
     private fun makeEmergencyCall() {
         try {
+            val sharedPrefs = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+            val rawContact = sharedPrefs.getString(KEY_EMERGENCY_CONTACT, null)
+            val contact = if (rawContact.isNullOrBlank()) EMERGENCY_NUMBER else rawContact
+
             val intent =
-                Intent(Intent.ACTION_CALL).apply {
-                    data = "tel:$EMERGENCY_NUMBER".toUri()
+                if (Build.FINGERPRINT.contains("generic")) {
+                    // 에뮬레이터인 경우: ACTION_DIAL (전화를 걸지는 않음)
+                    Intent(Intent.ACTION_DIAL).apply {
+                        data = "tel:$contact".toUri()
+                    }
+                } else {
+                    // 실제 기기인 경우: ACTION_CALL (즉시 전화 시도)
+                    Intent(Intent.ACTION_CALL).apply {
+                        data = "tel:$contact".toUri()
+                    }
                 }
+
             startActivity(intent)
         } catch (e: SecurityException) {
             Toast.makeText(this, "Unable to make call. Permission not granted.", Toast.LENGTH_SHORT).show()
@@ -302,10 +315,11 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val REQUEST_CALL_PERMISSION = 100
-        const val EMERGENCY_NUMBER = "112"
+        const val EMERGENCY_NUMBER = "1234"
         const val KEY_SELECTED_NOISE_TAGS = "selected_noise_tags"
         const val REQUEST_RECORD_AUDIO = 1337
         const val MODEL_FILE = "yamnet.tflite"
         const val MINIMUM_DISPLAY_THRESHOLD: Float = 0.3f
+        private const val KEY_EMERGENCY_CONTACT = "emergency contact"
     }
 }

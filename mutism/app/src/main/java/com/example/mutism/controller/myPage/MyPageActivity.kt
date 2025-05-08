@@ -116,6 +116,6 @@ class MyPageActivity : AppCompatActivity() {
         private const val KEY_GENDER = "gender"
         private const val KEY_AGE = "age"
         private const val KEY_EMERGENCY_CONTACT = "emergency contact"
-        private const val KEY_RELAX_METHOD = "relax_method"
+        const val KEY_RELAX_METHOD = "relax_method"
     }
 }
