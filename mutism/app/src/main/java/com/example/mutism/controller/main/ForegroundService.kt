@@ -38,6 +38,7 @@ class ForegroundService : Service() {
     var releasedMethod: String? = null
     var sensitiveNoise: List<String>? = null
     var currentNoise: String? = null
+    var selectedWhiteNoise: String? = null
 
     // Track the last time Gemini API was called
     private var lastCategoryTimestamp: Long = 0L
@@ -68,6 +69,7 @@ class ForegroundService : Service() {
         name = "효진"
         releasedMethod = sharedPrefs.getString(KEY_RELAX_METHOD, "") ?: ""
         sensitiveNoise = selectedTags.toList()
+        selectedWhiteNoise = sharedPrefs.getString("selected_white_noise", "") ?: ""
 
         ttsManager.initTTS(this)
     }
@@ -157,6 +159,10 @@ class ForegroundService : Service() {
                                     val prompt = promptGenerator.generatePrompt(name, releasedMethod, currentNoise, sensitiveNoise)
                                     callGeminiAPI(prompt)
 
+                                    // start white noise
+                                    if (selectedWhiteNoise != null || selectedWhiteNoise != "") {
+                                        ttsManager.speak("I'll play you some white noise of $selectedWhiteNoise")
+                                    }
                                     lastCategoryLabel = category.label
                                     lastCategoryTimestamp = currentTime
                                 }
