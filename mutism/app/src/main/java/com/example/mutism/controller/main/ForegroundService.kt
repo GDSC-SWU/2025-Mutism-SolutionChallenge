@@ -49,6 +49,8 @@ class ForegroundService : Service() {
     // TTS
     private var ttsManager = TTSManager()
 
+    private var noiseCount: Int = 0
+
     override fun onBind(intent: Intent?): IBinder? = null
 
     @RequiresPermission(Manifest.permission.RECORD_AUDIO)
@@ -156,6 +158,16 @@ class ForegroundService : Service() {
                                     val prompt = promptGenerator.generatePrompt(name, releasedMethod, currentNoise, sensitiveNoise)
                                     callGeminiAPI(prompt)
 
+                                    if (currentNoise == lastCategoryLabel) {
+                                        noiseCount += 1
+                                    } else {
+                                        noiseCount = 1 // 새로운 소리 감지 시 초기화
+                                    }
+
+                                    if (noiseCount == 10) {
+                                        sendEmergencyToMainActivity()
+                                    }
+
                                     lastCategoryLabel = category.label
                                     lastCategoryTimestamp = currentTime
                                 }
@@ -163,7 +175,7 @@ class ForegroundService : Service() {
 
                             // ✅ Only send to MainActivity when the label changes
                             if (label != lastLabel) {
-                                sendToMainActivity(category.label)
+                                sendClassifiedResultToMainActivity(category.label)
                                 lastLabel = label
                             }
 
@@ -251,10 +263,16 @@ class ForegroundService : Service() {
         }.start()
     }
 
-    fun sendToMainActivity(newText: String) {
-        val intent = Intent("com.mutism.UPDATE_LIST")
-        intent.putExtra("new_text", newText)
-        sendBroadcast(intent)
+    fun sendClassifiedResultToMainActivity(newText: String) {
+        val classifiedResultIntent = Intent("com.mutism.UPDATE_LIST")
+        classifiedResultIntent.putExtra("new_text", newText)
+        sendBroadcast(classifiedResultIntent)
+    }
+
+    fun sendEmergencyToMainActivity() {
+        val emergencyIntent = Intent("com.mutism.ACTION_EMERGENCY_CALL")
+        emergencyIntent.putExtra("emergency", true)
+        sendBroadcast(emergencyIntent)
     }
 
     private fun stopAudioClassification() {
