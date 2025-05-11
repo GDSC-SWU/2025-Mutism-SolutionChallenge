@@ -13,7 +13,7 @@
         android:id="@+id/btn_sos_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="27dp"
+        android:layout_marginTop="71dp"
         android:layout_marginStart="34dp"
         android:background="@drawable/btn_sos_bg"
         android:clickable="true"
@@ -37,7 +37,7 @@
         android:id="@+id/btn_my_page"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="27dp"
+        android:layout_marginTop="71dp"
         android:layout_marginEnd="27dp"
         android:src="@drawable/btn_my_page"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,13 +47,13 @@
         android:id="@+id/tv_welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginBottom="31dp"
+        android:layout_marginStart="34dp"
         android:text="@string/text_main_welcome"
         android:textColor="@color/color_primary_light"
         android:textSize="28sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/btn_start"/>
+        app:layout_constraintBottom_toTopOf="@+id/btn_start"
+        app:layout_constraintTop_toBottomOf="@+id/btn_sos_container" />
 
     <TextView
         android:id="@+id/tv_recording"
@@ -73,7 +73,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.492" />
+        app:layout_constraintGuide_percent="0.525" />
 
     <ImageView
         android:id="@+id/btn_start"

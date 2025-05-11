@@ -38,6 +38,7 @@ class ForegroundService : Service() {
     var releasedMethod: String? = null
     var sensitiveNoise: List<String>? = null
     var currentNoise: String? = null
+    var selectedWhiteNoise: String? = null
 
     // Track the last time Gemini API was called
     private var lastCategoryTimestamp: Long = 0L
@@ -70,6 +71,7 @@ class ForegroundService : Service() {
         name = "효진"
         releasedMethod = sharedPrefs.getString(KEY_RELAX_METHOD, "") ?: ""
         sensitiveNoise = selectedTags.toList()
+        selectedWhiteNoise = sharedPrefs.getString("selected_white_noise", "") ?: ""
 
         ttsManager.initTTS(this)
     }
@@ -156,7 +158,12 @@ class ForegroundService : Service() {
                                 if (shouldCallGemini) {
                                     currentNoise = category.label
                                     val prompt = promptGenerator.generatePrompt(name, releasedMethod, currentNoise, sensitiveNoise)
-                                    callGeminiAPI(prompt)
+
+                                    callGeminiAPI(prompt) {
+                                        if (!ttsManager.isSpeaking() && !selectedWhiteNoise.isNullOrBlank()) {
+                                            ttsManager.speak("I'll play you some white noise of $selectedWhiteNoise")
+                                        }
+                                    }
 
                                     if (currentNoise == lastCategoryLabel) {
                                         noiseCount += 1
@@ -204,7 +211,10 @@ class ForegroundService : Service() {
         }
     }
 
-    private fun callGeminiAPI(prompt: String) {
+    private fun callGeminiAPI(
+        prompt: String,
+        onComplete: (() -> Unit)? = null,
+    ) {
         val url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$API_KEY"
 
         val requestBodyJson =
