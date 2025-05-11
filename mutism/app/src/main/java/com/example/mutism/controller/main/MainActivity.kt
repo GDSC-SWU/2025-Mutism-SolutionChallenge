@@ -1,5 +1,3 @@
-// ✅ MainActivity.kt 수정본 - 백색소음 시작 시 버튼 표시, 중지 버튼 클릭 시 백색소음 종료
-
 package com.example.mutism.controller.main
 
 import android.Manifest
@@ -43,19 +41,25 @@ class MainActivity : AppCompatActivity() {
     private lateinit var listContainer: LinearLayout
     private lateinit var whiteNoiseDialogReceiver: BroadcastReceiver
 
-    private val updateClassifiedNoiseReceiver =
-        object : BroadcastReceiver() {
-            override fun onReceive(
-                context: Context?,
-                intent: Intent?,
-            ) {
-                val newText = intent?.getStringExtra("new_text") ?: return
+    private val broadcastReceiver = object : BroadcastReceiver() {
+    override fun onReceive(context: Context?, intent: Intent?) {
+        when (intent?.action) {
+            ForegroundService.ACTION_UPDATE -> {
+                val newText = intent.getStringExtra("new_text") ?: return
                 Log.d("MainActivity", "Broadcast 수신: $newText")
                 runOnUiThread {
                     addTextItem(newText)
                 }
             }
+            "com.mutism.ACTION_EMERGENCY_CALL" -> {
+                if (intent.getBooleanExtra("emergency", false)) {
+                    makeEmergencyCall()
+                }
+            }
         }
+    }
+}
+
 
     @SuppressLint("ImplicitSamInstance")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -127,20 +131,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
-    override fun onStart() {
-        super.onStart()
-
-        val filter = IntentFilter(ForegroundService.ACTION_UPDATE)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(updateClassifiedNoiseReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
-        } else {
-            registerReceiver(updateClassifiedNoiseReceiver, filter)
-        }
+override fun onStart() {
+    super.onStart()
+    val filter = IntentFilter().apply {
+        addAction(ForegroundService.ACTION_UPDATE)
+        addAction("com.mutism.ACTION_EMERGENCY_CALL")
     }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        registerReceiver(broadcastReceiver, filter, Context.RECEIVER_EXPORTED)
+    } else {
+        registerReceiver(broadcastReceiver, filter)
+    }
+}
 
     override fun onStop() {
         super.onStop()
-        unregisterReceiver(updateClassifiedNoiseReceiver)
+        unregisterReceiver(broadcastReceiver)
     }
 
     fun Int.dpToPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
@@ -173,7 +179,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun makeEmergencyCall() {
+    fun makeEmergencyCall() {
         try {
             val sharedPrefs = getSharedPreferences("UserPrefs", MODE_PRIVATE)
             val rawContact = sharedPrefs.getString(KEY_EMERGENCY_CONTACT, null)
