@@ -157,7 +157,11 @@ class MainActivity : AppCompatActivity() {
                 addAction("com.mutism.UPDATE_LIST")
                 addAction("com.mutism.ACTION_EMERGENCY_CALL")
             }
-        registerReceiver(broadcastReceiver, filter)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(broadcastReceiver, filter, Context.RECEIVER_EXPORTED)
+        } else {
+            registerReceiver(broadcastReceiver, filter)
+        }
     }
 
     override fun onStop() {
