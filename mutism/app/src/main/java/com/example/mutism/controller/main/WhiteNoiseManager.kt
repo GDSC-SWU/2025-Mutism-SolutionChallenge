@@ -61,8 +61,9 @@ object WhiteNoiseManager {
                 start()
                 Log.d("WhiteNoiseManager", "백색소음 시작됨: $formattedKey")
             }
-
         onStarted?.invoke() // 메인에서 버튼 보여주기 위한 콜백
+
+        notifyShowStopButton()
 
         handler.postDelayed(reminderRunnable, 5 * 60 * 1000L)
     }
@@ -85,6 +86,11 @@ object WhiteNoiseManager {
             it.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND &&
                 it.processName == appContext.packageName
         }
+    }
+
+    private fun notifyShowStopButton() {
+        val intent = Intent("com.mutism.ACTION_SHOW_STOP_WHITE_NOISE")
+        appContext.sendBroadcast(intent)
     }
 
     private fun showStopWhiteNoiseNotification() {

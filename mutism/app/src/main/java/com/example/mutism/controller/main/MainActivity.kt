@@ -41,25 +41,34 @@ class MainActivity : AppCompatActivity() {
     private lateinit var listContainer: LinearLayout
     private lateinit var whiteNoiseDialogReceiver: BroadcastReceiver
 
-    private val broadcastReceiver = object : BroadcastReceiver() {
-    override fun onReceive(context: Context?, intent: Intent?) {
-        when (intent?.action) {
-            ForegroundService.ACTION_UPDATE -> {
-                val newText = intent.getStringExtra("new_text") ?: return
-                Log.d("MainActivity", "Broadcast 수신: $newText")
-                runOnUiThread {
-                    addTextItem(newText)
-                }
-            }
-            "com.mutism.ACTION_EMERGENCY_CALL" -> {
-                if (intent.getBooleanExtra("emergency", false)) {
-                    makeEmergencyCall()
+    private val broadcastReceiver =
+        object : BroadcastReceiver() {
+            override fun onReceive(
+                context: Context?,
+                intent: Intent?,
+            ) {
+                when (intent?.action) {
+                    ForegroundService.ACTION_UPDATE -> {
+                        val newText = intent.getStringExtra("new_text") ?: return
+                        Log.d("MainActivity", "Broadcast 수신: $newText")
+                        runOnUiThread {
+                            addTextItem(newText)
+                        }
+                    }
+                    "com.mutism.ACTION_EMERGENCY_CALL" -> {
+                        if (intent.getBooleanExtra("emergency", false)) {
+                            makeEmergencyCall()
+                        }
+                    }
+
+                    "com.mutism.ACTION_SHOW_STOP_WHITE_NOISE" -> {
+                        runOnUiThread {
+                            binding.btnStopWhiteNoiseContainer.visibility = View.VISIBLE
+                        }
+                    }
                 }
             }
         }
-    }
-}
-
 
     @SuppressLint("ImplicitSamInstance")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -131,18 +140,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
-override fun onStart() {
-    super.onStart()
-    val filter = IntentFilter().apply {
-        addAction(ForegroundService.ACTION_UPDATE)
-        addAction("com.mutism.ACTION_EMERGENCY_CALL")
+    override fun onStart() {
+        super.onStart()
+        val filter =
+            IntentFilter().apply {
+                addAction(ForegroundService.ACTION_UPDATE)
+                addAction("com.mutism.ACTION_EMERGENCY_CALL")
+                addAction("com.mutism.ACTION_SHOW_STOP_WHITE_NOISE")
+            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(broadcastReceiver, filter, Context.RECEIVER_EXPORTED)
+        } else {
+            registerReceiver(broadcastReceiver, filter)
+        }
     }
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        registerReceiver(broadcastReceiver, filter, Context.RECEIVER_EXPORTED)
-    } else {
-        registerReceiver(broadcastReceiver, filter)
-    }
-}
 
     override fun onStop() {
         super.onStop()
