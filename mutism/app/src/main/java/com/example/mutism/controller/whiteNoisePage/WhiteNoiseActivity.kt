@@ -3,6 +3,7 @@ package com.example.mutism.controller.whiteNoisePage
 import android.annotation.SuppressLint
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
@@ -112,7 +113,11 @@ class WhiteNoiseActivity : AppCompatActivity() {
     }
 
     private fun playWhiteNoise(name: String) {
-        val resId = WhiteNoiseSoundMap.map[name] ?: return
+        val resId = WhiteNoiseSoundMap.map[name]
+        if (resId == null) {
+            Log.e("WhiteNoise", "No resource found for name: $name")
+            return
+        }
         stopPlayback()
         mediaPlayer =
             MediaPlayer.create(this, resId).apply {

@@ -13,7 +13,7 @@ class WhiteNoiseRelaxationDialog(
     private val onStopRequested: () -> Unit,
     // 'keep playing' 버튼 콜백
     private val onContinue: () -> Unit,
-) : Dialog(context) {
+) : Dialog(context, com.google.android.material.R.style.Theme_MaterialComponents_Dialog) {
     private val binding = DialogWhiteNoiseEndPromptBinding.inflate(LayoutInflater.from(context))
 
     init {

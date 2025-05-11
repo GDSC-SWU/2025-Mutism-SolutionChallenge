@@ -5,14 +5,14 @@ import com.example.mutism.R
 object WhiteNoiseData {
     val list =
         listOf(
-            WhiteNoiseItem("raindrop", R.drawable.rain),
-            WhiteNoiseItem("ocean\nwave", R.drawable.ocean),
-            WhiteNoiseItem("forest", R.drawable.forest),
-            WhiteNoiseItem("fireplace", R.drawable.fireplace),
-            WhiteNoiseItem("soft wind", R.drawable.softwind),
-            WhiteNoiseItem("bird sing", R.drawable.bird),
-            WhiteNoiseItem("flowing\nwater", R.drawable.flowingwater),
-            WhiteNoiseItem("space", R.drawable.space),
-            WhiteNoiseItem("bubble", R.drawable.soapbubble),
+            WhiteNoiseItem("raindrop", "Raindrop", R.drawable.rain),
+            WhiteNoiseItem("ocean_wave", "Ocean\nWave", R.drawable.ocean),
+            WhiteNoiseItem("forest", "Forest", R.drawable.forest),
+            WhiteNoiseItem("fireplace", "Fireplace", R.drawable.fireplace),
+            WhiteNoiseItem("soft_wind", "Soft Wind", R.drawable.softwind),
+            WhiteNoiseItem("bird_sing", "Bird Sing", R.drawable.bird),
+            WhiteNoiseItem("flowing_water", "Flowing\nWater", R.drawable.flowingwater),
+            WhiteNoiseItem("space", "Space", R.drawable.space),
+            WhiteNoiseItem("bubble", "Bubble", R.drawable.soapbubble),
         )
 }
