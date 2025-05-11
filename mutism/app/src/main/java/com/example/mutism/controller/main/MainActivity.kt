@@ -11,6 +11,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -110,13 +111,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        binding.btnWhiteNoise.setOnClickListener {
-            WhiteNoiseManager.init(applicationContext)
-            WhiteNoiseManager.playWhiteNoise("Raindrop") {
-                binding.btnStopWhiteNoiseContainer.visibility = View.VISIBLE
-            }
-        }
-
         binding.btnStopWhiteNoise.setOnClickListener {
             WhiteNoiseManager.stopWhiteNoise {
                 binding.btnStopWhiteNoiseContainer.visibility = View.GONE
@@ -149,12 +143,17 @@ class MainActivity : AppCompatActivity() {
         unregisterReceiver(updateClassifiedNoiseReceiver)
     }
 
+    fun Int.dpToPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
+
     private fun updateRecordingUI() {
         val rootLayout = findViewById<View>(R.id.main)
         Log.d("MainActivity", "updateRecordingUI: isRecording=$isRecording, isRunning=${ForegroundService.isRunning}")
 
+        val layoutParams = binding.btnStart.layoutParams
         if (isRecording) {
             binding.btnStart.setImageResource(R.drawable.btn_stop)
+            layoutParams.width = 214.dpToPx()
+            layoutParams.height = 214.dpToPx()
             rootLayout.setBackgroundResource(R.drawable.bg_main2)
             binding.tvWelcome.visibility = View.GONE
             binding.tvRecording.visibility = View.VISIBLE
@@ -163,6 +162,8 @@ class MainActivity : AppCompatActivity() {
             binding.listContainer.visibility = View.VISIBLE
         } else {
             binding.btnStart.setImageResource(R.drawable.btn_start)
+            layoutParams.width = 264.dpToPx()
+            layoutParams.height = 264.dpToPx()
             rootLayout.setBackgroundResource(R.drawable.bg_main3)
             binding.tvWelcome.visibility = View.VISIBLE
             binding.tvRecording.visibility = View.GONE
