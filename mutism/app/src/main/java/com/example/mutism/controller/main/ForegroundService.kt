@@ -157,11 +157,10 @@ class ForegroundService : Service() {
                                 if (shouldCallGemini) {
                                     currentNoise = category.label
                                     val prompt = promptGenerator.generatePrompt(name, releasedMethod, currentNoise, sensitiveNoise)
-                                    callGeminiAPI(prompt)
-
-                                    // start white noise
-                                    if (selectedWhiteNoise != null || selectedWhiteNoise != "") {
-                                        ttsManager.speak("I'll play you some white noise of $selectedWhiteNoise")
+                                    callGeminiAPI(prompt) {
+                                        if (!ttsManager.isSpeaking() && !selectedWhiteNoise.isNullOrBlank()) {
+                                            ttsManager.speak("I'll play you some white noise of $selectedWhiteNoise")
+                                        }
                                     }
                                     lastCategoryLabel = category.label
                                     lastCategoryTimestamp = currentTime
@@ -199,7 +198,10 @@ class ForegroundService : Service() {
         }
     }
 
-    private fun callGeminiAPI(prompt: String) {
+    private fun callGeminiAPI(
+        prompt: String,
+        onComplete: (() -> Unit)? = null,
+    ) {
         val url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$API_KEY"
 
         val requestBodyJson =
