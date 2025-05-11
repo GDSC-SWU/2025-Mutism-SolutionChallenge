@@ -43,14 +43,23 @@ class MainActivity : AppCompatActivity() {
     private lateinit var listContainer: LinearLayout
     private lateinit var receiver: BroadcastReceiver
 
-    private val updateClassifiedNoiseReceiver =
+    private val broadcastReceiver =
         object : BroadcastReceiver() {
             override fun onReceive(
                 context: Context?,
                 intent: Intent?,
             ) {
-                val newText = intent?.getStringExtra("new_text") ?: return
-                addTextItem(newText)
+                when (intent?.action) {
+                    "com.mutism.UPDATE_LIST" -> {
+                        val newText = intent?.getStringExtra("new_text") ?: return
+                        addTextItem(newText)
+                    }
+                    "com.mutism.ACTION_EMERGENCY_CALL" -> {
+                        if (intent.getBooleanExtra("emergency", false)) {
+                            makeEmergencyCall()
+                        }
+                    }
+                }
             }
         }
 
@@ -142,17 +151,18 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onStart() {
         super.onStart()
-        val filter = IntentFilter("com.mutism.UPDATE_LIST")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(updateClassifiedNoiseReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
-        } else {
-            registerReceiver(updateClassifiedNoiseReceiver, filter)
-        }
+
+        val filter =
+            IntentFilter().apply {
+                addAction("com.mutism.UPDATE_LIST")
+                addAction("com.mutism.ACTION_EMERGENCY_CALL")
+            }
+        registerReceiver(broadcastReceiver, filter)
     }
 
     override fun onStop() {
         super.onStop()
-        unregisterReceiver(updateClassifiedNoiseReceiver)
+        unregisterReceiver(broadcastReceiver)
     }
 
     private fun updateRecordingUI() {
@@ -176,7 +186,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun makeEmergencyCall() {
+    fun makeEmergencyCall() {
         try {
             val sharedPrefs = getSharedPreferences("UserPrefs", MODE_PRIVATE)
             val rawContact = sharedPrefs.getString(KEY_EMERGENCY_CONTACT, null)

@@ -50,6 +50,8 @@ class ForegroundService : Service() {
     // TTS
     private var ttsManager = TTSManager()
 
+    private var noiseCount: Int = 0
+
     override fun onBind(intent: Intent?): IBinder? = null
 
     @RequiresPermission(Manifest.permission.RECORD_AUDIO)
@@ -147,21 +149,32 @@ class ForegroundService : Service() {
                                 val timeSinceLastCall = currentTime - lastCategoryTimestamp
                                 val isSpeaking = ttsManager.isSpeaking()
 
+                                // 1. Detected a new sound label AND TTS is not speaking → Call Gemini
+                                // 2. Same sound label detected BUT 1 minute has passed AND TTS is not speaking → Call Gemini
+                                // 3. Same sound label detected AND less than 1 minute has passed AND TTS is not speaking → Do NOT call Gemini
+                                // 4. TTS is speaking → Never call Gemini
                                 val shouldCallGemini =
-                                    (
-                                        timeSinceLastCall >= geminiCallIntervalMillis ||
-                                            (timeSinceLastCall >= 60_000 && category.label != lastCategoryLabel)
-                                    ) &&
-                                        !isSpeaking
-
+                                    (category.label != lastCategoryLabel || timeSinceLastCall >= geminiCallIntervalMillis) && !isSpeaking
                                 if (shouldCallGemini) {
                                     currentNoise = category.label
                                     val prompt = promptGenerator.generatePrompt(name, releasedMethod, currentNoise, sensitiveNoise)
+
                                     callGeminiAPI(prompt) {
                                         if (!ttsManager.isSpeaking() && !selectedWhiteNoise.isNullOrBlank()) {
                                             ttsManager.speak("I'll play you some white noise of $selectedWhiteNoise")
                                         }
                                     }
+
+                                    if (currentNoise == lastCategoryLabel) {
+                                        noiseCount += 1
+                                    } else {
+                                        noiseCount = 1 // 새로운 소리 감지 시 초기화
+                                    }
+
+                                    if (noiseCount == 10) {
+                                        sendEmergencyToMainActivity()
+                                    }
+
                                     lastCategoryLabel = category.label
                                     lastCategoryTimestamp = currentTime
                                 }
@@ -169,7 +182,7 @@ class ForegroundService : Service() {
 
                             // ✅ Only send to MainActivity when the label changes
                             if (label != lastLabel) {
-                                sendToMainActivity(category.label)
+                                sendClassifiedResultToMainActivity(category.label)
                                 lastLabel = label
                             }
 
@@ -260,10 +273,16 @@ class ForegroundService : Service() {
         }.start()
     }
 
-    fun sendToMainActivity(newText: String) {
-        val intent = Intent("com.mutism.UPDATE_LIST")
-        intent.putExtra("new_text", newText)
-        sendBroadcast(intent)
+    fun sendClassifiedResultToMainActivity(newText: String) {
+        val classifiedResultIntent = Intent("com.mutism.UPDATE_LIST")
+        classifiedResultIntent.putExtra("new_text", newText)
+        sendBroadcast(classifiedResultIntent)
+    }
+
+    fun sendEmergencyToMainActivity() {
+        val emergencyIntent = Intent("com.mutism.ACTION_EMERGENCY_CALL")
+        emergencyIntent.putExtra("emergency", true)
+        sendBroadcast(emergencyIntent)
     }
 
     private fun stopAudioClassification() {
