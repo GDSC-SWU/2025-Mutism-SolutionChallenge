@@ -145,13 +145,12 @@ class ForegroundService : Service() {
                                 val timeSinceLastCall = currentTime - lastCategoryTimestamp
                                 val isSpeaking = ttsManager.isSpeaking()
 
+                                // 1. Detected a new sound label AND TTS is not speaking → Call Gemini
+                                // 2. Same sound label detected BUT 1 minute has passed AND TTS is not speaking → Call Gemini
+                                // 3. Same sound label detected AND less than 1 minute has passed AND TTS is not speaking → Do NOT call Gemini
+                                // 4. TTS is speaking → Never call Gemini
                                 val shouldCallGemini =
-                                    (
-                                        timeSinceLastCall >= geminiCallIntervalMillis ||
-                                            (timeSinceLastCall >= 60_000 && category.label != lastCategoryLabel)
-                                    ) &&
-                                        !isSpeaking
-
+                                    (category.label != lastCategoryLabel || timeSinceLastCall >= geminiCallIntervalMillis) && !isSpeaking
                                 if (shouldCallGemini) {
                                     currentNoise = category.label
                                     val prompt = promptGenerator.generatePrompt(name, releasedMethod, currentNoise, sensitiveNoise)
