@@ -51,8 +51,8 @@
         android:text="@string/text_main_welcome"
         android:textColor="@color/color_primary_light"
         android:textSize="28sp"
+        android:layout_marginTop="40dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/btn_start"
         app:layout_constraintTop_toBottomOf="@+id/btn_sos_container" />
 
     <TextView
@@ -73,12 +73,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.525" />
+        app:layout_constraintGuide_percent="0.465" />
 
     <ImageView
         android:id="@+id/btn_start"
-        android:layout_width="234dp"
-        android:layout_height="234dp"
+        android:layout_width="264dp"
+        android:layout_height="264dp"
         android:src="@drawable/btn_start"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -89,13 +89,36 @@
         android:id="@+id/main_tv_explain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
         android:text="@string/text_main_start"
         android:textColor="@color/color_primary_light"
         android:textSize="22sp"
         app:layout_constraintTop_toBottomOf="@+id/btn_start"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/btn_stop_white_noise_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_stop_white_noise_bg"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_tv_explain" >
+
+        <TextView
+            android:id="@+id/btn_stop_white_noise"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:gravity="center"
+            android:text="Turn Off the White Noise"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/tv_now_hear"
@@ -108,6 +131,7 @@
         android:textSize="20sp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_stop_white_noise_container"
         app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
@@ -120,4 +144,5 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_now_hear"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
  </androidx.constraintlayout.widget.ConstraintLayout>

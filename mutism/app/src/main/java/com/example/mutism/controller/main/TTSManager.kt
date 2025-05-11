@@ -1,6 +1,8 @@
 package com.example.mutism.controller.main
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import java.util.Locale
@@ -27,9 +29,32 @@ class TTSManager {
             }
     }
 
-    fun speak(text: String) {
-        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
-        tts?.playSilentUtterance(500, TextToSpeech.QUEUE_ADD, null)
+//    fun speak(text: String) {
+//        Log.d("TTSManager", "Speaking: $text")
+//        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+//        tts?.playSilentUtterance(500, TextToSpeech.QUEUE_ADD, null)
+//    }
+
+    fun speak(
+        text: String,
+        onDone: (() -> Unit)? = null,
+    ) {
+        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "utteranceId")
+        tts?.setOnUtteranceProgressListener(
+            object : android.speech.tts.UtteranceProgressListener() {
+                override fun onStart(utteranceId: String?) {}
+
+                override fun onDone(utteranceId: String?) {
+                    onDone?.let {
+                        Handler(Looper.getMainLooper()).post {
+                            it()
+                        }
+                    }
+                }
+
+                override fun onError(utteranceId: String?) {}
+            },
+        )
     }
 
     fun isSpeaking(): Boolean = tts?.isSpeaking == true

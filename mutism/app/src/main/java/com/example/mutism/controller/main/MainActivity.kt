@@ -5,11 +5,11 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -37,31 +37,29 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var isRecording = false
     private var selectNoiseDialog: SelectNoiseDialog? = null
-
-    // ActivityResultLauncher
     private val noiseSelectLauncher = registerNoiseSelectLauncher()
     private lateinit var listContainer: LinearLayout
-    private lateinit var receiver: BroadcastReceiver
+    private lateinit var whiteNoiseDialogReceiver: BroadcastReceiver
 
-    private val broadcastReceiver =
-        object : BroadcastReceiver() {
-            override fun onReceive(
-                context: Context?,
-                intent: Intent?,
-            ) {
-                when (intent?.action) {
-                    "com.mutism.UPDATE_LIST" -> {
-                        val newText = intent?.getStringExtra("new_text") ?: return
-                        addTextItem(newText)
-                    }
-                    "com.mutism.ACTION_EMERGENCY_CALL" -> {
-                        if (intent.getBooleanExtra("emergency", false)) {
-                            makeEmergencyCall()
-                        }
-                    }
+    private val broadcastReceiver = object : BroadcastReceiver() {
+    override fun onReceive(context: Context?, intent: Intent?) {
+        when (intent?.action) {
+            ForegroundService.ACTION_UPDATE -> {
+                val newText = intent.getStringExtra("new_text") ?: return
+                Log.d("MainActivity", "Broadcast 수신: $newText")
+                runOnUiThread {
+                    addTextItem(newText)
+                }
+            }
+            "com.mutism.ACTION_EMERGENCY_CALL" -> {
+                if (intent.getBooleanExtra("emergency", false)) {
+                    makeEmergencyCall()
                 }
             }
         }
+    }
+}
+
 
     @SuppressLint("ImplicitSamInstance")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,18 +69,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         listContainer = binding.listContainer
 
-        receiver =
-            object : BroadcastReceiver() {
-                override fun onReceive(
-                    context: Context,
-                    intent: Intent,
-                ) {
-                }
-            }
-
         binding.tvRecording.visibility = View.GONE
+        binding.btnStopWhiteNoiseContainer.visibility = View.GONE
 
-        // 코드 통합 -> 확인 필요
         binding.btnStart.setOnClickListener {
             val sharedPrefs = getSharedPreferences("NoiseSelectPrefs", MODE_PRIVATE)
             val selectedNoiseTags = sharedPrefs.getStringSet(KEY_SELECTED_NOISE_TAGS, emptySet())
@@ -100,45 +89,38 @@ class MainActivity : AppCompatActivity() {
                 isRecording = !isRecording
                 updateRecordingUI()
 
-                if (ForegroundService.isRunning) {
-                    stopService(Intent(this, ForegroundService::class.java))
-                    Toast.makeText(this, "Stop recording", Toast.LENGTH_SHORT).show()
-                } else {
+                if (isRecording) {
                     if (hasRecordPermission()) {
                         startForegroundService()
                         Toast.makeText(this, "Start recording", Toast.LENGTH_SHORT).show()
                     } else {
-                        requestPermissions(
-                            arrayOf(Manifest.permission.RECORD_AUDIO),
-                            REQUEST_RECORD_AUDIO,
-                        )
+                        requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), REQUEST_RECORD_AUDIO)
                     }
+                } else {
+                    stopService(Intent(this, ForegroundService::class.java))
+                    Toast.makeText(this, "Stop recording", Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
         binding.btnMyPage.setOnClickListener {
-            val intent = Intent(this, MyPageActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, MyPageActivity::class.java))
         }
 
         binding.btnSos.setOnClickListener {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
                 makeEmergencyCall()
             } else {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE)) {
-                    Toast.makeText(this, "This app needs permission to make emergency calls.", Toast.LENGTH_LONG).show()
-                }
-
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.CALL_PHONE),
-                    REQUEST_CALL_PERMISSION,
-                )
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CALL_PHONE), REQUEST_CALL_PERMISSION)
             }
         }
 
-        // 알림 권한 및 설정 상태 확인
+        binding.btnStopWhiteNoise.setOnClickListener {
+            WhiteNoiseManager.stopWhiteNoise {
+                binding.btnStopWhiteNoiseContainer.visibility = View.GONE
+            }
+        }
+
         checkNotificationPermissionAndStatus()
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -149,30 +131,35 @@ class MainActivity : AppCompatActivity() {
     }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
-    override fun onStart() {
-        super.onStart()
-
-        val filter =
-            IntentFilter().apply {
-                addAction("com.mutism.UPDATE_LIST")
-                addAction("com.mutism.ACTION_EMERGENCY_CALL")
-            }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(broadcastReceiver, filter, Context.RECEIVER_EXPORTED)
-        } else {
-            registerReceiver(broadcastReceiver, filter)
-        }
+override fun onStart() {
+    super.onStart()
+    val filter = IntentFilter().apply {
+        addAction(ForegroundService.ACTION_UPDATE)
+        addAction("com.mutism.ACTION_EMERGENCY_CALL")
     }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        registerReceiver(broadcastReceiver, filter, Context.RECEIVER_EXPORTED)
+    } else {
+        registerReceiver(broadcastReceiver, filter)
+    }
+}
 
     override fun onStop() {
         super.onStop()
         unregisterReceiver(broadcastReceiver)
     }
 
+    fun Int.dpToPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
+
     private fun updateRecordingUI() {
         val rootLayout = findViewById<View>(R.id.main)
-        if (!ForegroundService.isRunning) {
+        Log.d("MainActivity", "updateRecordingUI: isRecording=$isRecording, isRunning=${ForegroundService.isRunning}")
+
+        val layoutParams = binding.btnStart.layoutParams
+        if (isRecording) {
             binding.btnStart.setImageResource(R.drawable.btn_stop)
+            layoutParams.width = 214.dpToPx()
+            layoutParams.height = 214.dpToPx()
             rootLayout.setBackgroundResource(R.drawable.bg_main2)
             binding.tvWelcome.visibility = View.GONE
             binding.tvRecording.visibility = View.VISIBLE
@@ -181,6 +168,8 @@ class MainActivity : AppCompatActivity() {
             binding.listContainer.visibility = View.VISIBLE
         } else {
             binding.btnStart.setImageResource(R.drawable.btn_start)
+            layoutParams.width = 264.dpToPx()
+            layoutParams.height = 264.dpToPx()
             rootLayout.setBackgroundResource(R.drawable.bg_main3)
             binding.tvWelcome.visibility = View.VISIBLE
             binding.tvRecording.visibility = View.GONE
@@ -195,37 +184,23 @@ class MainActivity : AppCompatActivity() {
             val sharedPrefs = getSharedPreferences("UserPrefs", MODE_PRIVATE)
             val rawContact = sharedPrefs.getString(KEY_EMERGENCY_CONTACT, null)
             val contact = if (rawContact.isNullOrBlank()) EMERGENCY_NUMBER else rawContact
-
-            val intent =
-                if (Build.FINGERPRINT.contains("generic")) {
-                    // 에뮬레이터인 경우: ACTION_DIAL (전화를 걸지는 않음)
-                    Intent(Intent.ACTION_DIAL).apply {
-                        data = "tel:$contact".toUri()
-                    }
-                } else {
-                    // 실제 기기인 경우: ACTION_CALL (즉시 전화 시도)
-                    Intent(Intent.ACTION_CALL).apply {
-                        data = "tel:$contact".toUri()
-                    }
-                }
-
+            val intent = Intent(Intent.ACTION_CALL).apply { data = "tel:$contact".toUri() }
             startActivity(intent)
         } catch (e: SecurityException) {
-            Toast.makeText(this, "Unable to make call. Permission not granted.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Permission error", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             Toast.makeText(this, "Call failed: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
-    fun addTextItem(newText: String) {
+    private fun addTextItem(newText: String) {
         val count = listContainer.childCount
+        Log.d("MainActivity", "listContainer count: $count")
         if (count < 3) {
-            val textView = createTextView(newText)
-            listContainer.addView(textView)
+            listContainer.addView(createTextView(newText))
         } else {
             listContainer.removeAllViews()
-            val textView = createTextView(newText)
-            listContainer.addView(textView)
+            listContainer.addView(createTextView(newText))
         }
     }
 
@@ -237,41 +212,25 @@ class MainActivity : AppCompatActivity() {
             setPadding(20, 6, 20, 6)
             background = ContextCompat.getDrawable(context, R.drawable.bg_classified_sound)
             layoutParams =
-                LinearLayout
-                    .LayoutParams(
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                    ).apply {
-                        topMargin = 12
-                        gravity = Gravity.CENTER
-                    }
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                    topMargin = 12
+                    gravity = Gravity.CENTER
+                }
         }
 
-    // MARK: - Voice Recording Functions
-
-    // request permission
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_RECORD_AUDIO) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.i(TAG, "Audio permission granted :)")
-                startForegroundService()
-            } else {
-                Toast.makeText(this, "Microphone permission is required", Toast.LENGTH_SHORT).show()
-                Log.e(TAG, "Audio permission not granted :(")
-            }
+        if (requestCode == REQUEST_RECORD_AUDIO && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            startForegroundService()
         }
     }
 
     private fun hasRecordPermission(): Boolean =
-        ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.RECORD_AUDIO,
-        ) == PackageManager.PERMISSION_GRANTED
+        ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
 
     private fun startForegroundService() {
         val intent = Intent(this, ForegroundService::class.java)
@@ -290,27 +249,18 @@ class MainActivity : AppCompatActivity() {
         }
 
     private fun checkNotificationPermissionAndStatus() {
-        // Android 13 이상이면 POST_NOTIFICATIONS 권한 요청
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-                != PackageManager.PERMISSION_GRANTED
-            ) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
-                    2001,
-                )
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 2001)
             }
         }
-
-        // 알림 설정이 꺼져 있는지 확인하고 안내
         val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (!manager.areNotificationsEnabled()) {
             AlertDialog
                 .Builder(this)
-                .setTitle("Notifications are turned off")
-                .setMessage("Please enable notifications to get sound alerts.")
-                .setPositiveButton("Go to Settings") { _, _ ->
+                .setTitle("Notifications are off")
+                .setMessage("Enable notifications to receive sound alerts.")
+                .setPositiveButton("Settings") { _, _ ->
                     val intent =
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
