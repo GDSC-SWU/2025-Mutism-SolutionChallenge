@@ -67,7 +67,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         app:layout_constraintTop_toBottomOf="@+id/chipGroup_selected_noises">
 
         <TextView
@@ -90,6 +90,33 @@
 
     </LinearLayout>
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1.5dp"
+        android:background="@color/color_primary_light4"
+        app:layout_constraintTop_toBottomOf="@+id/white_noise_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        />
+
+
+<!--    <TextView-->
+<!--        android:id="@+id/tv_user_info"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="USER INFO"-->
+<!--        android:textColor="@color/color_primary_light3"-->
+<!--        android:textStyle="bold"-->
+<!--        android:textSize="20dp"-->
+<!--        android:layout_marginTop="40dp"-->
+<!--        android:layout_marginStart="15dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf= "@+id/white_noise_container"/>-->
+
     <TextView
         android:id="@+id/tv_name"
         android:layout_width="wrap_content"
@@ -98,9 +125,9 @@
         android:textSize="13sp"
         android:textColor="@color/color_primary_dark"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="25dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf= "@+id/white_noise_container" />
+        app:layout_constraintTop_toBottomOf= "@+id/divider" />
 
     <EditText
         android:id="@+id/tv_name_value"
@@ -112,9 +139,9 @@
         android:textColorHint="@color/color_primary_light3"
         android:backgroundTint="@color/color_primary_light3"
         android:layout_marginEnd="45dp"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="15dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf= "@+id/white_noise_container"
+        app:layout_constraintTop_toBottomOf= "@+id/divider"
         app:layout_constraintBottom_toTopOf="@+id/tv_autism_level_value"/>
 
 
@@ -140,7 +167,7 @@
         android:textColorHint="@color/color_primary_light3"
         android:backgroundTint="@color/color_primary_light3"
         android:layout_marginEnd="45dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_name_value"/>
 
@@ -222,7 +249,7 @@
         android:textColorHint="@color/color_primary_light3"
         android:backgroundTint="@color/color_primary_light3"
         android:layout_marginEnd="45dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gender_spinner"/>
 
@@ -248,7 +275,7 @@
         android:textColorHint="@color/color_primary_light3"
         android:backgroundTint="@color/color_primary_light3"
         android:layout_marginEnd="45dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_age_value"/>
 
