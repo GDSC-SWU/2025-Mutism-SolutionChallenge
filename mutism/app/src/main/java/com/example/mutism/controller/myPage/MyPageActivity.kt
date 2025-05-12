@@ -101,7 +101,6 @@ class MyPageActivity : AppCompatActivity() {
         val name = binding.tvNameValue.text.toString()
         val autismLevel = binding.tvAutismLevelValue.text.toString()
         val gender = selectedGender?.type ?: ""
-        val age = binding.tvAgeValue.text.toString()
         val emergencyNumber = binding.tvEmergencyContactValue.text.toString()
         val relaxMethod = binding.edtRelaxMethod.text.toString()
 
@@ -109,25 +108,22 @@ class MyPageActivity : AppCompatActivity() {
             putString(KEY_NAME, name)
             putString(KEY_AUTISM_LEVEL, autismLevel)
             putString(KEY_GENDER, gender)
-            putString(KEY_AGE, age)
             putString(KEY_EMERGENCY_CONTACT, emergencyNumber)
             putString(KEY_RELAX_METHOD, relaxMethod)
         }
 
-        Log.d("saveUserInfo", "saveUserInfo : $autismLevel,$gender,$age,$relaxMethod")
+        Log.d("saveUserInfo", "saveUserInfo : $autismLevel,$gender,$relaxMethod")
         Toast.makeText(this, "User information saved!", Toast.LENGTH_SHORT).show()
     }
 
     private fun loadUserInfo() {
         val name = sharedPrefs.getString(KEY_NAME, "")
         val autismLevel = sharedPrefs.getString(KEY_AUTISM_LEVEL, "")
-        val age = sharedPrefs.getString(KEY_AGE, "")
         val emergencyNumber = sharedPrefs.getString(KEY_EMERGENCY_CONTACT, "")
         val relaxMethod = sharedPrefs.getString(KEY_RELAX_METHOD, "")
 
         binding.tvNameValue.setText(name)
         binding.tvAutismLevelValue.setText(autismLevel)
-        binding.tvAgeValue.setText(age)
         binding.tvEmergencyContactValue.setText(emergencyNumber)
         binding.edtRelaxMethod.setText(relaxMethod)
     }
@@ -153,10 +149,9 @@ class MyPageActivity : AppCompatActivity() {
 
     companion object {
         private const val KEY_SELECTED_NOISE_TAGS = "selected_noise_tags"
-        private const val KEY_NAME = "name"
+        const val KEY_NAME = "name"
         private const val KEY_AUTISM_LEVEL = "autism_level"
-        private const val KEY_GENDER = "gender"
-        private const val KEY_AGE = "age"
+        const val KEY_GENDER = "gender"
         private const val KEY_EMERGENCY_CONTACT = "emergency contact"
         const val KEY_RELAX_METHOD = "relax_method"
     }

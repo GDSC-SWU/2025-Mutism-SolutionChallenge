@@ -157,31 +157,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_name_value"/>
 
-<!--    <TextView-->
-<!--        android:id="@+id/tv_gender"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="@string/text_my_page_gender"-->
-<!--        android:textSize="13sp"-->
-<!--        android:textColor="@color/color_primary_dark"-->
-<!--        android:layout_marginStart="15dp"-->
-<!--        android:layout_marginTop="30dp"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/tv_autism_level" />-->
-
-<!--    <EditText-->
-<!--        android:id="@+id/tv_gender_value"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:hint="Female"-->
-<!--        android:textSize="14sp"-->
-<!--        android:textColor="@color/color_primary_light"-->
-<!--        android:textColorHint="@color/color_primary_light2"-->
-<!--        android:backgroundTint="@color/color_primary_light2"-->
-<!--        android:layout_marginEnd="45dp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/tv_gender"/>-->
-
     <!-- 성별 TextView -->
     <TextView
         android:id="@+id/tv_gender"
@@ -212,33 +187,6 @@
         android:dropDownVerticalOffset="35dp"
         android:popupBackground="@color/white" />
 
-
-    <TextView
-        android:id="@+id/tv_age"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_my_page_age"
-        android:textSize="13sp"
-        android:textColor="@color/color_primary_dark"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="30dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_gender" />
-
-    <EditText
-        android:id="@+id/tv_age_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="13"
-        android:textSize="14sp"
-        android:textColor="@color/color_primary"
-        android:textColorHint="@color/color_primary_light3"
-        android:backgroundTint="@color/color_primary_light3"
-        android:layout_marginEnd="45dp"
-        android:layout_marginTop="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gender_spinner"/>
-
     <TextView
         android:id="@+id/tv_emergency_contact"
         android:layout_width="wrap_content"
@@ -249,7 +197,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="30dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_age" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_gender" />
 
     <EditText
         android:id="@+id/tv_emergency_contact_value"
@@ -263,7 +211,7 @@
         android:layout_marginEnd="45dp"
         android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_age_value"/>
+        app:layout_constraintTop_toBottomOf="@+id/gender_spinner"/>
 
 
     <TextView

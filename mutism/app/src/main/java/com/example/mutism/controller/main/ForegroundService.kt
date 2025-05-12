@@ -15,7 +15,7 @@ import android.os.IBinder
 import android.util.Log
 import androidx.annotation.RequiresPermission
 import com.example.mutism.BuildConfig
-import com.example.mutism.controller.myPage.MyPageActivity.Companion.KEY_RELAX_METHOD
+import com.example.mutism.controller.myPage.MyPageActivity
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import org.json.JSONObject
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier
@@ -68,14 +68,16 @@ class ForegroundService : Service() {
         selectedTags = noiseSelectPrefs.getStringSet(MainActivity.KEY_SELECTED_NOISE_TAGS, emptySet()) ?: emptySet()
         selectedTagsLower = selectedTags.map { it.lowercase() }
 
-        name = "stranger"
-        releasedMethod = userPrefs.getString(KEY_RELAX_METHOD, "") ?: ""
+        // user info
+        name = userPrefs.getString(MyPageActivity.KEY_NAME, "") ?: ""
+        releasedMethod = userPrefs.getString(MyPageActivity.KEY_RELAX_METHOD, "") ?: ""
         sensitiveNoise = selectedTags.toList()
         selectedWhiteNoise = whiteNoisePrefs.getString("selected_white_noise", "") ?: ""
 
-        Log.d("ForegroundService", "selectedWhiteNoise: $selectedWhiteNoise")
+        // init tts
+        ttsManager.initTTS(this, preferredGender = userPrefs.getString(MyPageActivity.KEY_GENDER, "Female") ?: "Female")
 
-        ttsManager.initTTS(this)
+        // start audio classification
         startAudioClassification()
     }
 
