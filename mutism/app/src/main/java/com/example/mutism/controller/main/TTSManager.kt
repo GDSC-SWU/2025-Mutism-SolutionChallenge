@@ -13,6 +13,7 @@ class TTSManager {
     fun initTTS(
         context: Context,
         onReady: (() -> Unit)? = null,
+        preferredGender: String = "Female",
     ) {
         tts =
             TextToSpeech(context) { status ->
@@ -21,6 +22,24 @@ class TTSManager {
                     if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         Log.e("TTSManager", "Language not supported.")
                     } else {
+                        val voices = tts?.voices
+                        val selectedVoice =
+                            voices?.firstOrNull { voice ->
+                                voice.locale == Locale.ENGLISH &&
+                                    when (preferredGender) {
+                                        "Female" -> voice.name.contains("female", ignoreCase = true)
+                                        "Male" -> voice.name.contains("male", ignoreCase = true)
+                                        else -> false
+                                    }
+                            }
+
+                        if (selectedVoice != null) {
+                            tts?.voice = selectedVoice
+                            Log.d("TTSManager", "Selected voice: ${selectedVoice.name}")
+                        } else {
+                            Log.w("TTSManager", "No matching voice found for $preferredGender")
+                        }
+
                         onReady?.invoke()
                     }
                 } else {
