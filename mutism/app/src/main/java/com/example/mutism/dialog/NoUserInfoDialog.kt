@@ -2,19 +2,23 @@ package com.example.mutism.dialog
 
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.Window
 import android.view.WindowManager
 import androidx.core.graphics.drawable.toDrawable
-import com.example.mutism.databinding.DialogSelectNoiseBinding
+import com.example.mutism.controller.myPage.MyPageActivity
+import com.example.mutism.databinding.DialogNoUserInfoBinding
 
-class SelectNoiseDialog(
+class NoUserInfoDialog(
     context: Context,
-    private val onSelectNoiseClicked: () -> Unit,
 ) : Dialog(context) {
-    private var binding: DialogSelectNoiseBinding = DialogSelectNoiseBinding.inflate(LayoutInflater.from(context))
+    private val binding: DialogNoUserInfoBinding =
+        DialogNoUserInfoBinding.inflate(LayoutInflater.from(context))
 
     init {
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(binding.root)
 
         window?.setLayout(
@@ -23,8 +27,10 @@ class SelectNoiseDialog(
         )
         window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable()) // 배경 투명 처리
 
-        binding.cvBtnSelectNoise.setOnClickListener {
-            onSelectNoiseClicked.invoke() // 버튼 클릭 시 콜백 호출
+        setCancelable(true)
+
+        binding.cvBtnGoToMyPage.setOnClickListener {
+            context.startActivity(Intent(context, MyPageActivity::class.java))
             dismiss()
         }
     }

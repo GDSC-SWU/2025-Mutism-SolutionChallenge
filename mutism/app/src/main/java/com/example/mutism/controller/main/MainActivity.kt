@@ -86,9 +86,12 @@ class MainActivity : AppCompatActivity() {
             val selectedNoiseTags = sharedPrefs.getStringSet(KEY_SELECTED_NOISE_TAGS, emptySet())
 
             if (!checkUserInfoFilled()) {
-                Toast.makeText(this, "Please complete your profile first.", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, MyPageActivity::class.java))
-                return@setOnClickListener
+                if (!checkUserInfoFilled()) {
+                    com.example.mutism.dialog
+                        .NoUserInfoDialog(this)
+                        .show()
+                    return@setOnClickListener
+                }
             }
 
             if (selectedNoiseTags.isNullOrEmpty()) {
