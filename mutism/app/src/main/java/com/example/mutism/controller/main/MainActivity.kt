@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
                 intent: Intent?,
             ) {
                 when (intent?.action) {
-                    ForegroundService.ACTION_UPDATE -> {
+                    "com.mutism.UPDATE_LIST" -> {
                         val newText = intent.getStringExtra("new_text") ?: return
                         Log.d("MainActivity", "Broadcast 수신: $newText")
                         runOnUiThread {
@@ -55,14 +55,18 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     "com.mutism.ACTION_EMERGENCY_CALL" -> {
-                        if (intent.getBooleanExtra("emergency", false)) {
-                            makeEmergencyCall()
-                        }
+                        makeEmergencyCall()
                     }
 
                     "com.mutism.ACTION_SHOW_STOP_WHITE_NOISE" -> {
                         runOnUiThread {
                             binding.btnStopWhiteNoiseContainer.visibility = View.VISIBLE
+                        }
+                    }
+
+                    "com.mutism.FOREGROUND_STOP" -> {
+                        runOnUiThread {
+                            clearTextItems()
                         }
                     }
                 }
@@ -152,9 +156,10 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         val filter =
             IntentFilter().apply {
-                addAction(ForegroundService.ACTION_UPDATE)
+                addAction("com.mutism.UPDATE_LIST")
                 addAction("com.mutism.ACTION_EMERGENCY_CALL")
                 addAction("com.mutism.ACTION_SHOW_STOP_WHITE_NOISE")
+                addAction("com.mutism.FOREGROUND_STOP")
             }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(broadcastReceiver, filter, Context.RECEIVER_EXPORTED)
@@ -221,6 +226,10 @@ class MainActivity : AppCompatActivity() {
             listContainer.removeAllViews()
             listContainer.addView(createTextView(newText))
         }
+    }
+
+    private fun clearTextItems() {
+        listContainer.removeAllViews()
     }
 
     private fun createTextView(text: String): TextView =
