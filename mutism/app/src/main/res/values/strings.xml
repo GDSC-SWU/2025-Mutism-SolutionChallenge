@@ -30,4 +30,7 @@
     <string name="text_white_noise_dialog_subtext">You’ve been listening white noise\nfor 5 minutes.\nWould you like to turn it off?</string>
     <string name="btn_white_noise_dialog_btn_turn_off">Turn off</string>
     <string name="btn_white_noise_dialog_btn_keep_playing">Keep playing</string>
+    <string name="text_no_user_info_dialog_title">Profile Required</string>
+    <string name="text_no_user_info_dialog_subtext">To start recording, please fill the required profile information.</string>
+    <string name="btn_go_to_profile">Go to My Page</string>
 </resources>

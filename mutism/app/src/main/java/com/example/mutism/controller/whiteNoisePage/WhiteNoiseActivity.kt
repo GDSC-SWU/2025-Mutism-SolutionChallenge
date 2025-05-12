@@ -33,7 +33,7 @@ class WhiteNoiseActivity : AppCompatActivity() {
         binding.btnSelect.setOnClickListener {
             selectedNoiseName?.let {
                 saveSelection(it)
-                Toast.makeText(this, "Selected: $it", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Selected white noise : $it", Toast.LENGTH_SHORT).show()
                 finish()
             } ?: Toast.makeText(this, "No noise selected.", Toast.LENGTH_SHORT).show()
         }

@@ -85,6 +85,15 @@ class MainActivity : AppCompatActivity() {
             val sharedPrefs = getSharedPreferences("NoiseSelectPrefs", MODE_PRIVATE)
             val selectedNoiseTags = sharedPrefs.getStringSet(KEY_SELECTED_NOISE_TAGS, emptySet())
 
+            if (!checkUserInfoFilled()) {
+                if (!checkUserInfoFilled()) {
+                    com.example.mutism.dialog
+                        .NoUserInfoDialog(this)
+                        .show()
+                    return@setOnClickListener
+                }
+            }
+
             if (selectedNoiseTags.isNullOrEmpty()) {
                 if (selectNoiseDialog?.isShowing != true) {
                     selectNoiseDialog =
@@ -285,6 +294,16 @@ class MainActivity : AppCompatActivity() {
                     startActivity(intent)
                 }.setNegativeButton("Later") { dialog, _ -> dialog.dismiss() }
                 .show()
+        }
+    }
+
+    private fun checkUserInfoFilled(): Boolean {
+        val userPrefs = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val requiredKeys = listOf("name", "autism_level", "gender", "age", "emergency contact", "relax_method")
+
+        return requiredKeys.all { key ->
+            val value = userPrefs.getString(key, null)
+            !value.isNullOrBlank()
         }
     }
 
