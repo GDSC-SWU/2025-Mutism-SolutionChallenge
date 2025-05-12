@@ -84,6 +84,7 @@ class ForegroundService : Service() {
         isRunning = false
         super.onDestroy()
         ttsManager.shutdown()
+        sendForegroundStopMainActivity()
     }
 
     private fun createNotificationChannel() {
@@ -278,16 +279,20 @@ class ForegroundService : Service() {
         }.start()
     }
 
-    fun sendClassifiedResultToMainActivity(newText: String) {
+    private fun sendClassifiedResultToMainActivity(newText: String) {
         val classifiedResultIntent = Intent("com.mutism.UPDATE_LIST")
         classifiedResultIntent.putExtra("new_text", newText)
         sendBroadcast(classifiedResultIntent)
     }
 
-    fun sendEmergencyToMainActivity() {
+    private fun sendEmergencyToMainActivity() {
         val emergencyIntent = Intent("com.mutism.ACTION_EMERGENCY_CALL")
-        emergencyIntent.putExtra("emergency", true)
         sendBroadcast(emergencyIntent)
+    }
+
+    private fun sendForegroundStopMainActivity() {
+        val foregroundIntent = Intent("com.mutism.FOREGROUND_STOP")
+        sendBroadcast(foregroundIntent)
     }
 
     private fun stopAudioClassification() {
@@ -335,6 +340,5 @@ class ForegroundService : Service() {
         private const val FOREGROUND_CHANNEL_ID = "ForegroundServiceChannel"
         private const val SOUND_DETECTED_CHANNEL_ID = "sound_detected_channel"
         private const val API_KEY = BuildConfig.GEMINI_API_KEY
-        const val ACTION_UPDATE = "com.mutism.UPDATE_LIST"
     }
 }
