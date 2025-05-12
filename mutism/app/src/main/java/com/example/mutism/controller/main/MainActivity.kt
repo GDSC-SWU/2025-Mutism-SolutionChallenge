@@ -307,7 +307,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkUserInfoFilled(): Boolean {
         val userPrefs = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val requiredKeys = listOf("name", "autism_level", "gender", "age", "emergency contact", "relax_method")
+        val requiredKeys = listOf("name", "autism_level", "gender", "emergency contact", "relax_method")
 
         return requiredKeys.all { key ->
             val value = userPrefs.getString(key, null)
