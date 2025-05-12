@@ -29,17 +29,10 @@ class TTSManager {
             }
     }
 
-//    fun speak(text: String) {
-//        Log.d("TTSManager", "Speaking: $text")
-//        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
-//        tts?.playSilentUtterance(500, TextToSpeech.QUEUE_ADD, null)
-//    }
-
     fun speak(
         text: String,
         onDone: (() -> Unit)? = null,
     ) {
-        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "utteranceId")
         tts?.setOnUtteranceProgressListener(
             object : android.speech.tts.UtteranceProgressListener() {
                 override fun onStart(utteranceId: String?) {}
@@ -55,6 +48,7 @@ class TTSManager {
                 override fun onError(utteranceId: String?) {}
             },
         )
+        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "utteranceId")
     }
 
     fun isSpeaking(): Boolean = tts?.isSpeaking == true

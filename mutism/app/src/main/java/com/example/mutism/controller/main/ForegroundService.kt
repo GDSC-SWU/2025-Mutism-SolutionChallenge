@@ -165,7 +165,9 @@ class ForegroundService : Service() {
                                     callGeminiAPI(prompt) {
                                         if (!ttsManager.isSpeaking() && !WhiteNoiseManager.isPlaying()) {
                                             if (!selectedWhiteNoise.isNullOrBlank()) {
-                                                WhiteNoiseManager.playWhiteNoise(selectedWhiteNoise!!)
+                                                ttsManager.speak("I'll play you some white noise of $selectedWhiteNoise", onDone = {
+                                                    WhiteNoiseManager.playWhiteNoise(selectedWhiteNoise!!)
+                                                })
                                             } else {
                                                 ttsManager.speak("No white noise selected. Please set one in your settings.")
                                             }
