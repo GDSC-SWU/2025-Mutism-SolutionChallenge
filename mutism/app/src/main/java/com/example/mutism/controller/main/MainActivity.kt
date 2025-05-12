@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity() {
     private var selectNoiseDialog: SelectNoiseDialog? = null
     private val noiseSelectLauncher = registerNoiseSelectLauncher()
     private lateinit var listContainer: LinearLayout
-    private lateinit var whiteNoiseDialogReceiver: BroadcastReceiver
 
     private val broadcastReceiver =
         object : BroadcastReceiver() {
