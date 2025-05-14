@@ -16,6 +16,7 @@ import com.example.mutism.R
 import com.example.mutism.controller.noiseSelectPage.NoiseSelectActivity
 import com.example.mutism.controller.whiteNoisePage.WhiteNoiseActivity
 import com.example.mutism.databinding.ActivityMyPageBinding
+import com.example.mutism.model.AutismLevel
 import com.example.mutism.model.Gender
 import com.google.android.material.chip.Chip
 
@@ -23,6 +24,8 @@ class MyPageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyPageBinding
     private lateinit var sharedPrefs: SharedPreferences
     private lateinit var genderType: ArrayList<Gender>
+    private lateinit var autismLevelType: ArrayList<AutismLevel>
+    private var selectedAutismLevel: AutismLevel? = null
     private var selectedGender: Gender? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +54,12 @@ class MyPageActivity : AppCompatActivity() {
         loadUserInfo()
         updateSelectedNoiseChips()
 
+        autismLevelType =
+            arrayListOf(
+                AutismLevel("Mild", 1),
+                AutismLevel("Moderate", 2),
+            )
+
         genderType =
             arrayListOf(
                 Gender("Male", "Male"),
@@ -58,9 +67,22 @@ class MyPageActivity : AppCompatActivity() {
                 Gender("Other", "Other"),
             )
 
-        val spinnerAdapter = ArrayAdapter(this, R.layout.item_spinner_gender, genderType)
-        spinnerAdapter.setDropDownViewResource(R.layout.item_spinner_gender)
-        binding.genderSpinner.adapter = spinnerAdapter
+        val autismLevelSpinnerAdapter = ArrayAdapter(this, R.layout.item_spinner, autismLevelType)
+        autismLevelSpinnerAdapter.setDropDownViewResource(R.layout.item_spinner)
+        binding.autismLevelSpinner.adapter = autismLevelSpinnerAdapter
+
+        val genderSpinnerAdapter = ArrayAdapter(this, R.layout.item_spinner, genderType)
+        genderSpinnerAdapter.setDropDownViewResource(R.layout.item_spinner)
+        binding.genderSpinner.adapter = genderSpinnerAdapter
+
+        val savedAutismLevelType = sharedPrefs.getString(KEY_AUTISM_LEVEL, null)
+        savedAutismLevelType?.let {
+            val index = autismLevelType.indexOfFirst { level -> level.type == it }
+            if (index != -1) {
+                binding.autismLevelSpinner.setSelection(index)
+                selectedAutismLevel = autismLevelType[index] // 초기값도 변수에 담아둠
+            }
+        }
 
         val savedGenderType = sharedPrefs.getString(KEY_GENDER, null)
         savedGenderType?.let {
@@ -70,6 +92,22 @@ class MyPageActivity : AppCompatActivity() {
                 selectedGender = genderType[index] // 초기값도 변수에 담아둠
             }
         }
+
+        binding.autismLevelSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long,
+                ) {
+                    selectedAutismLevel = autismLevelType[position]
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    selectedAutismLevel = null
+                }
+            }
 
         binding.genderSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
@@ -89,6 +127,7 @@ class MyPageActivity : AppCompatActivity() {
 
         binding.btnSave.setOnClickListener {
             saveUserInfo()
+            finish()
         }
     }
 
@@ -99,7 +138,7 @@ class MyPageActivity : AppCompatActivity() {
 
     private fun saveUserInfo() {
         val name = binding.tvNameValue.text.toString()
-        val autismLevel = binding.tvAutismLevelValue.text.toString()
+        val autismLevel = selectedAutismLevel?.type ?: ""
         val gender = selectedGender?.type ?: ""
         val emergencyNumber = binding.tvEmergencyContactValue.text.toString()
         val relaxMethod = binding.edtRelaxMethod.text.toString()
@@ -118,12 +157,10 @@ class MyPageActivity : AppCompatActivity() {
 
     private fun loadUserInfo() {
         val name = sharedPrefs.getString(KEY_NAME, "")
-        val autismLevel = sharedPrefs.getString(KEY_AUTISM_LEVEL, "")
         val emergencyNumber = sharedPrefs.getString(KEY_EMERGENCY_CONTACT, "")
         val relaxMethod = sharedPrefs.getString(KEY_RELAX_METHOD, "")
 
         binding.tvNameValue.setText(name)
-        binding.tvAutismLevelValue.setText(autismLevel)
         binding.tvEmergencyContactValue.setText(emergencyNumber)
         binding.edtRelaxMethod.setText(relaxMethod)
     }

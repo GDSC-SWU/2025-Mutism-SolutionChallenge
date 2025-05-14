@@ -4,4 +4,4 @@
     android:textColor="@color/color_primary_light"
     android:textSize="14sp"
     android:gravity="center"
-    android:padding="6dp" />
+    android:padding="5dp" />
