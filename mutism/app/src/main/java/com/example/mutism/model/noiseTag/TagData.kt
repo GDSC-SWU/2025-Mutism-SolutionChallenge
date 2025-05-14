@@ -1,4 +1,4 @@
-package com.example.mutism.model
+package com.example.mutism.model.noiseTag
 
 val tagTabTitles =
     listOf(

@@ -1,4 +1,4 @@
-package com.example.mutism.controller.main
+package com.example.mutism.manager
 
 import android.content.Context
 import android.os.Handler

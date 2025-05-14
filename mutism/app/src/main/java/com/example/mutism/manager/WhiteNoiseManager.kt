@@ -1,3 +1,5 @@
+package com.example.mutism.manager
+
 import android.app.ActivityManager
 import android.app.Notification
 import android.app.NotificationChannel
@@ -12,7 +14,7 @@ import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import com.example.mutism.controller.main.MainActivity
-import com.example.mutism.model.WhiteNoiseSoundMap
+import com.example.mutism.model.whiteNoise.WhiteNoiseSoundMap
 
 object WhiteNoiseManager {
     private var whiteNoisePlayer: MediaPlayer? = null
@@ -44,7 +46,7 @@ object WhiteNoiseManager {
         val formattedKey = name.lowercase().replace("\n", "_").replace(" ", "_")
         val resId =
             WhiteNoiseSoundMap.map[formattedKey] ?: run {
-                Log.e("WhiteNoiseManager", "리소스를 찾을 수 없음: $formattedKey")
+                Log.e("com.example.mutism.utils.WhiteNoiseManager", "리소스를 찾을 수 없음: $formattedKey")
                 return
             }
 
@@ -55,11 +57,11 @@ object WhiteNoiseManager {
                 isLooping = true
                 setVolume(1.0f, 1.0f)
                 setOnErrorListener { _, what, extra ->
-                    Log.e("WhiteNoiseManager", "MediaPlayer 오류 발생: what=$what, extra=$extra")
+                    Log.e("com.example.mutism.utils.WhiteNoiseManager", "MediaPlayer 오류 발생: what=$what, extra=$extra")
                     true
                 }
                 start()
-                Log.d("WhiteNoiseManager", "백색소음 시작됨: $formattedKey")
+                Log.d("com.example.mutism.utils.WhiteNoiseManager", "백색소음 시작됨: $formattedKey")
             }
         onStarted?.invoke() // 메인에서 버튼 보여주기 위한 콜백
 

@@ -1,4 +1,4 @@
-package com.example.mutism.dialog
+package com.example.mutism.controller.dialog
 
 import android.app.Dialog
 import android.content.Context

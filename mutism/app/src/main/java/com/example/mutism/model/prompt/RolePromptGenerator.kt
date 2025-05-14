@@ -1,3 +1,5 @@
+package com.example.mutism.model.prompt
+
 class RolePromptGenerator {
     fun generatePrompt(
         name: String?,

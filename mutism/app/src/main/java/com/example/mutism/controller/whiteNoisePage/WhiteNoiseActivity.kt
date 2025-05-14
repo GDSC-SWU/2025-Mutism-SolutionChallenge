@@ -10,9 +10,10 @@ import androidx.core.content.edit
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.mutism.R
 import com.example.mutism.databinding.ActivityWhiteNoiseBinding
-import com.example.mutism.model.WhiteNoiseData
-import com.example.mutism.model.WhiteNoiseItem
-import com.example.mutism.model.WhiteNoiseSoundMap
+import com.example.mutism.model.whiteNoise.WhiteNoiseData
+import com.example.mutism.model.whiteNoise.WhiteNoiseItem
+import com.example.mutism.model.whiteNoise.WhiteNoiseSoundMap
+import com.example.mutism.view.adapter.WhiteNoiseAdapter
 
 class WhiteNoiseActivity : AppCompatActivity() {
     private lateinit var binding: ActivityWhiteNoiseBinding

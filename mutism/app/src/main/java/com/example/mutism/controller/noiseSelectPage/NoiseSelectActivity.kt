@@ -13,8 +13,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.mutism.R
 import com.example.mutism.databinding.ActivityNoiseSelectBinding
-import com.example.mutism.model.tagContents
-import com.example.mutism.model.tagTabTitles
+import com.example.mutism.model.noiseTag.tagContents
+import com.example.mutism.model.noiseTag.tagTabTitles
+import com.example.mutism.view.adapter.NoiseViewPagerAdapter
 import com.example.mutism.viewmodel.TagViewModel
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup

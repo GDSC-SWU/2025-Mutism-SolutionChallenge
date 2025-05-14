@@ -1,9 +1,10 @@
-package com.example.mutism.controller.noiseSelectPage
+package com.example.mutism.view.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.mutism.model.TagSection
+import com.example.mutism.controller.noiseSelectPage.selectTab.NoiseSelectTabFragment
+import com.example.mutism.model.noiseTag.TagSection
 
 class NoiseViewPagerAdapter(
     fragmentActivity: FragmentActivity,

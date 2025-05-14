@@ -18,8 +18,8 @@ import com.example.mutism.R
 import com.example.mutism.controller.noiseSelectPage.NoiseSelectActivity
 import com.example.mutism.controller.whiteNoisePage.WhiteNoiseActivity
 import com.example.mutism.databinding.ActivityMyPageBinding
-import com.example.mutism.model.AutismLevel
-import com.example.mutism.model.Gender
+import com.example.mutism.model.userdata.AutismLevel
+import com.example.mutism.model.userdata.Gender
 import com.google.android.material.chip.Chip
 
 class MyPageActivity : AppCompatActivity() {

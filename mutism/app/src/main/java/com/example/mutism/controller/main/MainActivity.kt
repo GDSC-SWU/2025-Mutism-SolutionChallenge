@@ -28,10 +28,13 @@ import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.mutism.R
+import com.example.mutism.controller.dialog.NoUserInfoDialog
+import com.example.mutism.controller.dialog.SelectNoiseDialog
 import com.example.mutism.controller.myPage.MyPageActivity
 import com.example.mutism.controller.noiseSelectPage.NoiseSelectActivity
 import com.example.mutism.databinding.ActivityMainBinding
-import com.example.mutism.dialog.SelectNoiseDialog
+import com.example.mutism.manager.WhiteNoiseManager
+import com.example.mutism.service.ForegroundService
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -90,8 +93,7 @@ class MainActivity : AppCompatActivity() {
 
             if (!checkUserInfoFilled()) {
                 if (!checkUserInfoFilled()) {
-                    com.example.mutism.dialog
-                        .NoUserInfoDialog(this)
+                    NoUserInfoDialog(this)
                         .show()
                     return@setOnClickListener
                 }

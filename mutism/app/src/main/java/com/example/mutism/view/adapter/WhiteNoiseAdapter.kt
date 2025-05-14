@@ -1,4 +1,4 @@
-package com.example.mutism.controller.whiteNoisePage
+package com.example.mutism.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mutism.R
 import com.example.mutism.databinding.ItemWhiteNoiseBinding
-import com.example.mutism.model.WhiteNoiseItem
+import com.example.mutism.model.whiteNoise.WhiteNoiseItem
 
 class WhiteNoiseAdapter(
     private val onClick: (WhiteNoiseItem) -> Unit,

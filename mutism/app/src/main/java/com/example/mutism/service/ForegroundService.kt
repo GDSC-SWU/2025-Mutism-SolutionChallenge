@@ -1,6 +1,5 @@
-package com.example.mutism.controller.main
+package com.example.mutism.service
 
-import RolePromptGenerator
 import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
@@ -15,7 +14,11 @@ import android.os.IBinder
 import android.util.Log
 import androidx.annotation.RequiresPermission
 import com.example.mutism.BuildConfig
+import com.example.mutism.controller.main.MainActivity
 import com.example.mutism.controller.myPage.MyPageActivity
+import com.example.mutism.manager.TTSManager
+import com.example.mutism.manager.WhiteNoiseManager
+import com.example.mutism.model.prompt.RolePromptGenerator
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import org.json.JSONObject
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier

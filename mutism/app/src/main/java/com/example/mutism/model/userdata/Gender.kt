@@ -1,4 +1,4 @@
-package com.example.mutism.model
+package com.example.mutism.model.userdata
 
 data class Gender(
     val type: String,
