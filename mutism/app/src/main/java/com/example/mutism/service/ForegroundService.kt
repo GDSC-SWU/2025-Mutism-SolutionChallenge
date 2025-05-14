@@ -16,9 +16,9 @@ import androidx.annotation.RequiresPermission
 import com.example.mutism.BuildConfig
 import com.example.mutism.controller.main.MainActivity
 import com.example.mutism.controller.myPage.MyPageActivity
+import com.example.mutism.manager.RolePromptManager
 import com.example.mutism.manager.TTSManager
 import com.example.mutism.manager.WhiteNoiseManager
-import com.example.mutism.model.prompt.RolePromptGenerator
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import org.json.JSONObject
 import org.tensorflow.lite.task.audio.classifier.AudioClassifier
@@ -33,7 +33,7 @@ class ForegroundService : Service() {
     private var lastNotifyTime: Long = 0L
     private val notifyCooldownMs = 10_000L
 
-    var promptGenerator: RolePromptGenerator = RolePromptGenerator()
+    var promptGenerator: RolePromptManager = RolePromptManager()
     private lateinit var selectedTags: Set<String>
 
     var name: String? = null

@@ -1,6 +1,6 @@
-package com.example.mutism.model.prompt
+package com.example.mutism.manager
 
-class RolePromptGenerator {
+class RolePromptManager {
     fun generatePrompt(
         name: String?,
         releasedMethod: String?,
