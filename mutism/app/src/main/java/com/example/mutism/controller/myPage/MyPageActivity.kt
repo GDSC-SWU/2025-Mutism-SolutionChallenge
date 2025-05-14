@@ -37,6 +37,30 @@ class MyPageActivity : AppCompatActivity() {
         binding = ActivityMyPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.edtRelaxMethod.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                binding.myPage.postDelayed({
+                    binding.myPage.smoothScrollTo(0, binding.edtRelaxMethod.bottom + 500)
+                }, 200)
+            }
+        }
+
+        binding.tvEmergencyContactValue.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                binding.myPage.postDelayed({
+                    binding.myPage.smoothScrollTo(0, binding.tvEmergencyContactValue.bottom)
+                }, 200)
+            }
+        }
+
+        binding.tvNameValue.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                binding.myPage.postDelayed({
+                    binding.myPage.smoothScrollTo(0, binding.tvNameValue.top)
+                }, 200)
+            }
+        }
+
         binding.btnBack.setOnClickListener {
             finish()
         }

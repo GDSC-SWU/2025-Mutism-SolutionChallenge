@@ -4,14 +4,17 @@
     android:id="@+id/my_page"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
     android:background="@drawable/bg_my_page1"
-    android:fillViewport="true">
+    android:clipToPadding="false"
+    android:fillViewport="true"
+    android:fitsSystemWindows="true"
+    android:paddingBottom="200dp"
+    android:paddingTop="25dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="30dp"
+        android:padding="25dp"
         android:orientation="vertical">
 
         <!-- Back button -->
@@ -102,7 +105,7 @@
                 android:id="@+id/tv_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
+                android:layout_weight="4.5"
                 android:text="@string/text_my_page_name"
                 android:textSize="13sp"
                 android:textColor="@color/color_primary_dark" />
@@ -111,7 +114,7 @@
                 android:id="@+id/tv_name_value"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
                 android:hint="name"
                 android:textSize="14sp"
                 android:textColor="@color/color_primary"
@@ -266,7 +269,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="center"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
             app:cardCornerRadius="25dp"
             android:padding="10dp"
             android:backgroundTint="@color/color_primary_light2">
