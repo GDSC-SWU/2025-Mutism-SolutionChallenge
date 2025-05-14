@@ -106,7 +106,7 @@ class MyPageActivity : AppCompatActivity() {
             val index = autismLevelType.indexOfFirst { level -> level.type == it }
             if (index != -1) {
                 binding.autismLevelSpinner.setSelection(index)
-                selectedAutismLevel = autismLevelType[index] // 초기값도 변수에 담아둠
+                selectedAutismLevel = autismLevelType[index]
             }
         }
 
@@ -115,7 +115,7 @@ class MyPageActivity : AppCompatActivity() {
             val index = genderType.indexOfFirst { gender -> gender.type == it }
             if (index != -1) {
                 binding.genderSpinner.setSelection(index)
-                selectedGender = genderType[index] // 초기값도 변수에 담아둠
+                selectedGender = genderType[index]
             }
         }
 
