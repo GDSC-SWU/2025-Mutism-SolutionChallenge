@@ -57,7 +57,7 @@ class MyPageActivity : AppCompatActivity() {
         autismLevelType =
             arrayListOf(
                 AutismLevel("Mild", 1),
-                AutismLevel("Moderate", 2),
+                AutismLevel("Severe", 2),
             )
 
         genderType =
