@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -127,8 +129,9 @@ class MyPageActivity : AppCompatActivity() {
 
         binding.btnSave.setOnClickListener {
             saveUserInfo()
-            finish()
         }
+
+        setupPhoneNumberFormatting()
     }
 
     override fun onResume() {
@@ -140,8 +143,16 @@ class MyPageActivity : AppCompatActivity() {
         val name = binding.tvNameValue.text.toString()
         val autismLevel = selectedAutismLevel?.type ?: ""
         val gender = selectedGender?.type ?: ""
-        val emergencyNumber = binding.tvEmergencyContactValue.text.toString()
+        val emergencyNumber =
+            binding.tvEmergencyContactValue.text
+                .toString()
+                .replace("-", "")
         val relaxMethod = binding.edtRelaxMethod.text.toString()
+
+        if (name.isBlank() || autismLevel.isBlank() || gender.isBlank() || emergencyNumber.isBlank() || relaxMethod.isBlank()) {
+            Toast.makeText(this, "Please fill out all required information.", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         sharedPrefs.edit {
             putString(KEY_NAME, name)
@@ -153,6 +164,7 @@ class MyPageActivity : AppCompatActivity() {
 
         Log.d("saveUserInfo", "saveUserInfo : $autismLevel,$gender,$relaxMethod")
         Toast.makeText(this, "User information saved!", Toast.LENGTH_SHORT).show()
+        finish()
     }
 
     private fun loadUserInfo() {
@@ -182,6 +194,52 @@ class MyPageActivity : AppCompatActivity() {
                 }
             chipGroup.addView(chip)
         }
+    }
+
+    private fun setupPhoneNumberFormatting() {
+        binding.tvEmergencyContactValue.addTextChangedListener(
+            object : TextWatcher {
+                private var isFormatting = false
+                private var lastText = ""
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int,
+                ) {}
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int,
+                ) {}
+
+                override fun afterTextChanged(s: Editable?) {
+                    if (isFormatting) return
+
+                    val digitsOnly = s.toString().replace("-", "")
+                    if (digitsOnly == lastText) return
+
+                    isFormatting = true
+                    lastText = digitsOnly
+
+                    val formatted = formatPhoneNumber(digitsOnly)
+                    binding.tvEmergencyContactValue.setText(formatted)
+                    binding.tvEmergencyContactValue.setSelection(formatted.length)
+                    isFormatting = false
+                }
+
+                private fun formatPhoneNumber(number: String): String =
+                    when {
+                        number.length >= 11 -> number.replaceFirst("(\\d{3})(\\d{4})(\\d+)".toRegex(), "$1-$2-$3")
+                        number.length >= 10 -> number.replaceFirst("(\\d{3})(\\d{3})(\\d+)".toRegex(), "$1-$2-$3")
+                        number.length >= 7 -> number.replaceFirst("(\\d{3})(\\d{4})".toRegex(), "$1-$2")
+                        else -> number
+                    }
+            },
+        )
     }
 
     companion object {
