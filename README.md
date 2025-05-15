@@ -15,14 +15,14 @@
 
 ## 📑 Table of Contents
 
-1. [Overview](#overview)
-2. [User Research & Validation Process](#user-Research-&-Validation-Process)
-3. [MVP](#mVP)
-4. [Tech](#tech)
-5. [Screen](#screen)
-6. [Expected Effects](#expected-effects)
+1. [Overview](#-overview)
+2. [User Research & Validation Process](#-user-Research-&-Validation-Process)
+3. [MVP](#-mVP)
+4. [Tech](#-tech)
+5. [Screen](#-screen)
+6. [Expected Effects](#-expected-effects)
 7. [Future Development](#️-future-development)
-9. [Member](#member)
+9. [Member](#-member)
 
 ## 🧩 Overview
 
