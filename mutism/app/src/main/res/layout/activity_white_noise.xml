@@ -23,7 +23,7 @@
         android:id="@+id/tv_question"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/white_noise_tv_question"
+        android:text="@string/text_white_noise_question"
         android:textSize="18sp"
         android:textColor="@android:color/white"
         android:layout_marginBottom="16dp" />

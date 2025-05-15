@@ -2,120 +2,112 @@ package com.example.mutism.controller.noiseSelectPage
 
 import android.os.Bundle
 import android.view.View
-import android.widget.FrameLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager2.widget.ViewPager2
 import com.example.mutism.R
 import com.example.mutism.databinding.ActivityNoiseSelectBinding
+import com.example.mutism.manager.TagSelectionManager
 import com.example.mutism.model.noiseTag.tagContents
 import com.example.mutism.model.noiseTag.tagTabTitles
 import com.example.mutism.view.adapter.NoiseViewPagerAdapter
 import com.example.mutism.viewmodel.TagViewModel
 import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 class NoiseSelectActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNoiseSelectBinding
     private lateinit var tagViewModel: TagViewModel
-
-    private lateinit var tabLayout: TabLayout
-    private lateinit var viewPager: ViewPager2
-    private lateinit var selectedTagChipGroup: ChipGroup
-    private lateinit var emptyTagText: TextView
-    private lateinit var selectButton: FrameLayout
+    private lateinit var tagManager: TagSelectionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         binding = ActivityNoiseSelectBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // ViewModel 초기화
+        // Initialize ViewModel and tag manager
         tagViewModel = ViewModelProvider(this)[TagViewModel::class.java]
+        tagManager = TagSelectionManager(this)
 
-        val sharedPrefs = getSharedPreferences("NoiseSelectPrefs", MODE_PRIVATE)
-        val savedTags = sharedPrefs.getStringSet(KEY_SELECTED_NOISE_TAGS, emptySet())
+        initSavedTags() // Load previously selected tags
+        setupViewPagerAndTabs() // Setup ViewPager2 + TabLayout with tag data
+        observeSelectedTags() // Observe tag selection changes
+        setupListeners() // click listeners
+        handleSystemInsets() // Handle status/navigation bar padding
+    }
 
-        savedTags?.forEach { tag ->
-            tagViewModel.selectTag(tag)
-        }
+    // Loads previously saved tags from SharedPreferences into ViewModel
+    private fun initSavedTags() {
+        val savedTags = tagManager.loadSelectedTags()
+        savedTags.forEach { tagViewModel.selectTag(it) }
+    }
 
-        // 뷰 초기화
-        tabLayout = binding.tabLayout
-        viewPager = binding.viewPager
-        selectedTagChipGroup = binding.selectedTagChipGroup
-        emptyTagText = binding.emptyTagText
-        selectButton = binding.btnSelect
-
-        // 어댑터 연결
-        viewPager.adapter =
+    // Initializes ViewPager with tab titles and contents
+    private fun setupViewPagerAndTabs() {
+        binding.viewPager.adapter =
             NoiseViewPagerAdapter(
                 fragmentActivity = this,
                 tabTitles = tagTabTitles,
                 tagContentMap = tagContents,
             )
-
-        // 탭 타이틀 연결
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = tagTabTitles[position]
         }.attach()
+    }
 
-        // ViewModel에 따라 선택된 칩 그룹 UI 업데이트
+    // Observes ViewModel for tag selection updates and updates chip UI accordingly
+    private fun observeSelectedTags() {
         tagViewModel.selectedTags.observe(this) { selectedTags ->
-            selectedTagChipGroup.removeAllViews()
+            updateSelectedTagsUI(selectedTags)
+        }
+    }
 
-            if (selectedTags.isEmpty()) {
-                emptyTagText.visibility = View.VISIBLE
-                selectedTagChipGroup.visibility = View.GONE
+    // Updates the top chip group showing selected tags
+    private fun updateSelectedTagsUI(selectedTags: Set<String>) {
+        val chipGroup = binding.selectedTagChipGroup
+        chipGroup.removeAllViews()
 
-                // 버튼 비활성화
-                selectButton.setBackgroundResource(R.drawable.btn_unselect_noise)
-                selectButton.isEnabled = false
-                selectButton.isClickable = false
-            } else {
-                emptyTagText.visibility = View.GONE
-                selectedTagChipGroup.visibility = View.VISIBLE
+        if (selectedTags.isEmpty()) {
+            // No tags selected
+            binding.emptyTagText.visibility = View.VISIBLE
+            chipGroup.visibility = View.GONE
+            binding.btnSelect.apply {
+                setBackgroundResource(R.drawable.btn_unselect_noise)
+                isEnabled = false
+            }
+        } else {
+            // Tags selected
+            binding.emptyTagText.visibility = View.GONE
+            chipGroup.visibility = View.VISIBLE
+            binding.btnSelect.apply {
+                setBackgroundResource(R.drawable.btn_selected_noise)
+                isEnabled = true
+            }
 
-                // 버튼 활성화
-                selectButton.setBackgroundResource(R.drawable.btn_selected_noise)
-                selectButton.isEnabled = true
-                selectButton.isClickable = true
-
-                selectedTags.forEach { tag ->
-                    val chip =
-                        Chip(this).apply {
-                            text = tag
-                            isCloseIconVisible = true
-                            setOnCloseIconClickListener {
-                                tagViewModel.deselectTag(tag)
-                            }
-                        }
-                    selectedTagChipGroup.addView(chip)
-                }
+            selectedTags.forEach { tag ->
+                val chip =
+                    Chip(this).apply {
+                        text = tag
+                        isCloseIconVisible = true
+                        setOnCloseIconClickListener { tagViewModel.deselectTag(tag) }
+                    }
+                chipGroup.addView(chip)
             }
         }
+    }
 
-        // 검색 버튼 클릭 이벤트
+    // Handles Select and Back button clicks
+    private fun setupListeners() {
         binding.btnSelect.setOnClickListener {
-            val selectedTags = tagViewModel.selectedTags.value ?: emptyList()
-
+            val selectedTags = tagViewModel.selectedTags.value.orEmpty()
             if (selectedTags.isNotEmpty()) {
-                val sharedPrefs = getSharedPreferences("NoiseSelectPrefs", MODE_PRIVATE)
-                with(sharedPrefs.edit()) {
-                    putStringSet(KEY_SELECTED_NOISE_TAGS, selectedTags.toSet())
-                    apply()
-                }
+                // Save selected tags and return
+                tagManager.saveSelectedTags(selectedTags.toSet())
                 Toast.makeText(this, "Tags have been saved!", Toast.LENGTH_SHORT).show()
-
                 setResult(RESULT_OK)
                 finish()
             } else {
@@ -126,16 +118,13 @@ class NoiseSelectActivity : AppCompatActivity() {
         binding.btnBack.setOnClickListener {
             finish()
         }
+    }
 
-        // 시스템 UI 여백 처리
+    private fun handleSystemInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-    }
-
-    companion object {
-        private const val KEY_SELECTED_NOISE_TAGS = "selected_noise_tags"
     }
 }

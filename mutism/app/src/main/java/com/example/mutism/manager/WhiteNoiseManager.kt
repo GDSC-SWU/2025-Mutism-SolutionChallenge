@@ -16,16 +16,35 @@ import android.widget.Toast
 import com.example.mutism.controller.main.MainActivity
 import com.example.mutism.model.whiteNoise.WhiteNoiseSoundMap
 
+/** Singleton manager to handle white noise playback, timed reminders, and system notification logic. **/
 object WhiteNoiseManager {
     private var whiteNoisePlayer: MediaPlayer? = null
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var appContext: Context
 
+    // Runnable that triggers every 5 minutes while sound is playing
+    private val reminderRunnable =
+        object : Runnable {
+            override fun run() {
+                if (isPlaying()) {
+                    if (isAppInForeground()) {
+                        // Show in-app toast
+                        Toast.makeText(appContext, "5 minutes have passed. You can stop the white noise.", Toast.LENGTH_LONG).show()
+                    } else {
+                        // Show system notification if app is in background
+                        showStopWhiteNoiseNotification()
+                    }
+                    handler.postDelayed(this, 5 * 60 * 1000L) // Repeat after 5 minutes
+                }
+            }
+        }
+
+    // Initializes the manager with application context
     fun init(context: Context) {
         appContext = context.applicationContext
     }
 
-    // Start White Noise Playback
+    // Starts playing the selected white noise by name
     fun playWhiteNoise(
         name: String,
         onStarted: (() -> Unit)? = null,
@@ -33,31 +52,34 @@ object WhiteNoiseManager {
         val formattedKey = name.lowercase().replace("\n", "_").replace(" ", "_")
         val resId =
             WhiteNoiseSoundMap.map[formattedKey] ?: run {
-                Log.e("com.example.mutism.utils.WhiteNoiseManager", "리소스를 찾을 수 없음: $formattedKey")
+                Log.e("com.example.mutism.utils.WhiteNoiseManager", "Resource not found: $formattedKey")
                 return
             }
 
         stopWhiteNoise()
 
+        // Prepare and start MediaPlayer
         whiteNoisePlayer =
             MediaPlayer.create(appContext, resId)?.apply {
                 isLooping = true
                 setVolume(1.0f, 1.0f)
                 setOnErrorListener { _, what, extra ->
-                    Log.e("WhiteNoiseManager", "MediaPlayer error: what=$what, extra=$extra")
+                    Log.e("com.example.mutism.utils.WhiteNoiseManager", "MediaPlayer error: what=$what, extra=$extra")
                     true
                 }
                 start()
-                Log.d("WhiteNoiseManager", "White noise started: $formattedKey")
+                Log.d("com.example.mutism.utils.WhiteNoiseManager", "White noise started: $formattedKey")
             }
+        onStarted?.invoke() // Notify UI to show stop button
+        notifyShowStopButton() // Send broadcast to show stop button in UI
 
-        onStarted?.invoke() // Callback to show stop button in UI
-        notifyShowStopButton()
-
-        handler.postDelayed(reminderRunnable, 5 * 60 * 1000L) // Trigger reminder after 5 minutes
+        handler.postDelayed(reminderRunnable, 5 * 60 * 1000L)
     }
 
-    // Stop White Noise Playback
+    // Checks whether white noise is currently playing
+    fun isPlaying(): Boolean = whiteNoisePlayer?.isPlaying == true
+
+    // Stops the currently playing white noise and releases the MediaPlayer
     fun stopWhiteNoise(onStopped: (() -> Unit)? = null) {
         whiteNoisePlayer?.apply {
             stop()
@@ -67,55 +89,29 @@ object WhiteNoiseManager {
         onStopped?.invoke()
     }
 
-    fun isPlaying(): Boolean = whiteNoisePlayer?.isPlaying == true
-
-    // Reminder Loop Every 5 Minutes
-    private val reminderRunnable =
-        object : Runnable {
-            override fun run() {
-                if (isPlaying()) {
-                    if (isAppInForeground()) {
-                        Toast
-                            .makeText(
-                                appContext,
-                                "5 minutes have passed. You can stop the white noise.",
-                                Toast.LENGTH_LONG,
-                            ).show()
-                    } else {
-                        showStopWhiteNoiseNotification()
-                    }
-                    handler.postDelayed(this, 5 * 60 * 1000L)
-                }
-            }
-        }
-
-    // Check if App is in Foreground
+    // Checks if the app is currently running in the foreground.
     private fun isAppInForeground(): Boolean {
         val activityManager = appContext.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val appProcesses = activityManager.runningAppProcesses ?: return false
-
         return appProcesses.any {
             it.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND &&
                 it.processName == appContext.packageName
         }
     }
 
-    // Broadcast to Show Stop Button
+    // Sends a broadcast intent to notify the app UI to show the stop button.
     private fun notifyShowStopButton() {
         val intent = Intent("com.mutism.ACTION_SHOW_STOP_WHITE_NOISE")
         appContext.sendBroadcast(intent)
     }
 
-    // Show Notification if App is in Background
+    // Shows a notification to remind the user that white noise has been playing for 5 minutes.
     private fun showStopWhiteNoiseNotification() {
-        val notificationManager =
-            appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
+        val notificationManager = appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val intent =
             Intent(appContext, MainActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
-
         val pendingIntent =
             PendingIntent.getActivity(
                 appContext,
