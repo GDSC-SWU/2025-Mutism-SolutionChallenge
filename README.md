@@ -133,7 +133,7 @@ If sensitive sounds are detected repeatedly over a certain threshold, the situat
 
 
 
-## ⚒️ Tech 
+## ✨ Tech 
 
 ### Tech stack
 
