@@ -15,7 +15,7 @@
 
 ## 📑 Table of Contents
 
-1. [Overview](#Overview)
+1. [Overview](#🧩-Overview)
 2. [User Research & Validation Process](#User-Research-&-Validation-Process)
 3. [MVP](#MVP)
 4. [Tech Stack](#tech-stack)
@@ -29,8 +29,8 @@
 
 ### Autism?
 ![autism](https://github.com/user-attachments/assets/de1ef840-9c53-4521-b1aa-364e39ba427f)
-> Autism spectrum disorder (ASD) often includes heightened sensitivity to environmental sounds.  
-> Mutism aims to empower users with real-time detection and personalized responses to stressful auditory environments.
+Autism spectrum disorder (ASD) often includes heightened sensitivity to environmental sounds.  
+Mutism aims to empower users with real-time detection and personalized responses to stressful auditory environments.
 
 ![KakaoTalk_Photo_2025-05-16-01-40-25 003](https://github.com/user-attachments/assets/d48847aa-16e7-4f02-b044-14be311f4da9)
 
@@ -78,7 +78,7 @@ As a result, we clearly defined the app’s direction as:
 
 and improved the feature set based on direct feedback.
 
-![KakaoTalk_20250512_203824131_08](https://github.com/user-attachments/assets/f51ecbba-d3ad-4839-ae41-2d7467778309)
+<img src="https://github.com/user-attachments/assets/f51ecbba-d3ad-4839-ae41-2d7467778309" width="700" />
 
 ### 🧪 User Testing
 
@@ -86,12 +86,13 @@ After developing the app, we conducted interviews and user testing with **two in
 
 According to the social worker, although the participating individuals were classified as having severe autism in terms of behavior and intellectual level, they had relatively good cognitive abilities and were capable of self-regulation thanks to education received at the center. While they could understand instructions, they had limited expressive ability. Therefore, the **social worker's professional input played a crucial role** in helping us further improve the app.
 
-![KakaoTalk_20250514_153807825_02 jpg](https://github.com/user-attachments/assets/a0112105-c3e5-4945-a1e4-3f61ab9bb650)
+<img src="https://github.com/user-attachments/assets/a0112105-c3e5-4945-a1e4-3f61ab9bb650" width="700" />
 
 Since the app is in English, we first played a **screen recording with Korean subtitles** to help participants understand the overall flow.
 
 At this point, regarding the **white noise selection feature**, the participants mentioned that it was well-designed because autistic individuals often prefer sounds like **forest ambience or bubbles**, and these preferences were well reflected in the app.
-![KakaoTalk_20250514_153807825_03 jpg](https://github.com/user-attachments/assets/62531084-8389-40bb-b248-8525aca3669c)
+<img src="https://github.com/user-attachments/assets/62531084-8389-40bb-b248-8525aca3669c" width="700" />
+
 
 Finally, we received feedback on the strengths of our app and suggestions for additional features.
 
