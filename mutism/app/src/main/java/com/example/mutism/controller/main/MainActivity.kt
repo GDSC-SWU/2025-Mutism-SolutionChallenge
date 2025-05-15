@@ -13,7 +13,6 @@ import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
@@ -41,8 +40,9 @@ class MainActivity : AppCompatActivity() {
     private var isRecording = false
     private var selectNoiseDialog: SelectNoiseDialog? = null
     private val noiseSelectLauncher = registerNoiseSelectLauncher()
-    private lateinit var listContainer: LinearLayout
+    private lateinit var currentSoundListContainer: LinearLayout
 
+    // Receiver for broadcast actions
     private val broadcastReceiver =
         object : BroadcastReceiver() {
             override fun onReceive(
@@ -50,28 +50,19 @@ class MainActivity : AppCompatActivity() {
                 intent: Intent?,
             ) {
                 when (intent?.action) {
-                    "com.mutism.UPDATE_LIST" -> {
-                        val newText = intent.getStringExtra("new_text") ?: return
-                        Log.d("MainActivity", "Broadcast 수신: $newText")
-                        runOnUiThread {
-                            addTextItem(newText)
-                        }
-                    }
-                    "com.mutism.ACTION_EMERGENCY_CALL" -> {
-                        makeEmergencyCall()
+                    "com.mutism.UPDATE_CURRENT_SOUND_LIST" -> {
+                        val newText = intent.getStringExtra("classifiedSound") ?: return
+                        runOnUiThread { addTextItem(newText) }
                     }
 
-                    "com.mutism.ACTION_SHOW_STOP_WHITE_NOISE" -> {
+                    "com.mutism.ACTION_EMERGENCY_CALL" -> makeEmergencyCall()
+
+                    "com.mutism.ACTION_SHOW_STOP_WHITE_NOISE" ->
                         runOnUiThread {
                             binding.btnStopWhiteNoiseContainer.visibility = View.VISIBLE
                         }
-                    }
 
-                    "com.mutism.FOREGROUND_STOP" -> {
-                        runOnUiThread {
-                            clearTextItems()
-                        }
-                    }
+                    "com.mutism.FOREGROUND_STOP" -> runOnUiThread { clearTextItems() }
                 }
             }
         }
@@ -82,21 +73,21 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        listContainer = binding.listContainer
+        currentSoundListContainer = binding.listContainer
 
+        // Initial UI setup
         binding.tvRecording.visibility = View.GONE
         binding.btnStopWhiteNoiseContainer.visibility = View.GONE
 
+        // Start/Stop button
         binding.btnStart.setOnClickListener {
             val sharedPrefs = getSharedPreferences("NoiseSelectPrefs", MODE_PRIVATE)
             val selectedNoiseTags = sharedPrefs.getStringSet(KEY_SELECTED_NOISE_TAGS, emptySet())
 
             if (!checkUserInfoFilled()) {
-                if (!checkUserInfoFilled()) {
-                    NoUserInfoDialog(this)
-                        .show()
-                    return@setOnClickListener
-                }
+                NoUserInfoDialog(this)
+                    .show()
+                return@setOnClickListener
             }
 
             if (selectedNoiseTags.isNullOrEmpty()) {
@@ -117,7 +108,10 @@ class MainActivity : AppCompatActivity() {
                         startForegroundService()
                         Toast.makeText(this, "Start recording", Toast.LENGTH_SHORT).show()
                     } else {
-                        requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), REQUEST_RECORD_AUDIO)
+                        requestPermissions(
+                            arrayOf(Manifest.permission.RECORD_AUDIO),
+                            REQUEST_RECORD_AUDIO,
+                        )
                     }
                 } else {
                     stopService(Intent(this, ForegroundService::class.java))
@@ -126,18 +120,29 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // My Page navigation
         binding.btnMyPage.setOnClickListener {
             startActivity(Intent(this, MyPageActivity::class.java))
         }
 
+        // Emergency SOS button
         binding.btnSos.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.CALL_PHONE,
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
                 makeEmergencyCall()
             } else {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CALL_PHONE), REQUEST_CALL_PERMISSION)
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.CALL_PHONE),
+                    REQUEST_CALL_PERMISSION,
+                )
             }
         }
 
+        // Stop white noise
         binding.btnStopWhiteNoise.setOnClickListener {
             WhiteNoiseManager.stopWhiteNoise {
                 binding.btnStopWhiteNoiseContainer.visibility = View.GONE
@@ -146,6 +151,7 @@ class MainActivity : AppCompatActivity() {
 
         checkNotificationPermissionAndStatus()
 
+        // Apply system insets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -158,7 +164,7 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         val filter =
             IntentFilter().apply {
-                addAction("com.mutism.UPDATE_LIST")
+                addAction("com.mutism.UPDATE_CURRENT_SOUND_LIST")
                 addAction("com.mutism.ACTION_EMERGENCY_CALL")
                 addAction("com.mutism.ACTION_SHOW_STOP_WHITE_NOISE")
                 addAction("com.mutism.FOREGROUND_STOP")
@@ -175,13 +181,14 @@ class MainActivity : AppCompatActivity() {
         unregisterReceiver(broadcastReceiver)
     }
 
+    // Convert dp to pixels
     fun Int.dpToPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
 
+    // Update UI depending on recording state
     private fun updateRecordingUI() {
         val rootLayout = findViewById<View>(R.id.main)
-        Log.d("MainActivity", "updateRecordingUI: isRecording=$isRecording, isRunning=${ForegroundService.isRunning}")
-
         val layoutParams = binding.btnStart.layoutParams
+
         if (isRecording) {
             binding.btnStart.setImageResource(R.drawable.btn_stop)
             layoutParams.width = 214.dpToPx()
@@ -205,6 +212,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Make an emergency call
     fun makeEmergencyCall() {
         try {
             val sharedPrefs = getSharedPreferences("UserPrefs", MODE_PRIVATE)
@@ -219,21 +227,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun addTextItem(newText: String) {
-        val count = listContainer.childCount
-        Log.d("MainActivity", "listContainer count: $count")
-        if (count < 3) {
-            listContainer.addView(createTextView(newText))
+    // Add a new text item to currentSoundListContainer
+    private fun addTextItem(classifiedSound: String) {
+        if (currentSoundListContainer.childCount < 3) {
+            currentSoundListContainer.addView(createTextView(classifiedSound))
         } else {
-            listContainer.removeAllViews()
-            listContainer.addView(createTextView(newText))
+            currentSoundListContainer.removeAllViews()
+            currentSoundListContainer.addView(createTextView(classifiedSound))
         }
     }
 
+    // Clear all items from currentSoundListContainer
     private fun clearTextItems() {
-        listContainer.removeAllViews()
+        currentSoundListContainer.removeAllViews()
     }
 
+    // Create a styled TextView
     private fun createTextView(text: String): TextView =
         TextView(this).apply {
             this.text = text
@@ -242,12 +251,17 @@ class MainActivity : AppCompatActivity() {
             setPadding(20, 6, 20, 6)
             background = ContextCompat.getDrawable(context, R.drawable.bg_classified_sound)
             layoutParams =
-                LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                    topMargin = 12
-                    gravity = Gravity.CENTER
-                }
+                LinearLayout
+                    .LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                    ).apply {
+                        topMargin = 12
+                        gravity = Gravity.CENTER
+                    }
         }
 
+    // Handle permission result
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -260,8 +274,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun hasRecordPermission(): Boolean =
-        ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+        ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.RECORD_AUDIO,
+        ) == PackageManager.PERMISSION_GRANTED
 
+    // Start the recording foreground service
     private fun startForegroundService() {
         val intent = Intent(this, ForegroundService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -271,6 +289,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Register result launcher for noise selection activity
     private fun registerNoiseSelectLauncher() =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) {
@@ -278,12 +297,22 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    // Check notification permissions and show dialog if disabled
     private fun checkNotificationPermissionAndStatus() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), 2001)
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS,
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    2001,
+                )
             }
         }
+
         val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (!manager.areNotificationsEnabled()) {
             AlertDialog
@@ -307,10 +336,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Check whether required user info is filled
     private fun checkUserInfoFilled(): Boolean {
         val userPrefs = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        val requiredKeys = listOf("name", "autism_level", "gender", "emergency contact", "relax_method")
-
+        val requiredKeys =
+            listOf("name", "autism_level", "gender", "emergency contact", "relax_method")
         return requiredKeys.all { key ->
             val value = userPrefs.getString(key, null)
             !value.isNullOrBlank()
@@ -318,12 +348,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val REQUEST_CALL_PERMISSION = 100
-        const val EMERGENCY_NUMBER = "1234"
-        const val KEY_SELECTED_NOISE_TAGS = "selected_noise_tags"
-        const val REQUEST_RECORD_AUDIO = 1337
-        const val MODEL_FILE = "yamnet.tflite"
-        const val MINIMUM_DISPLAY_THRESHOLD: Float = 0.3f
+        private const val REQUEST_CALL_PERMISSION = 100
+        private const val EMERGENCY_NUMBER = "1234"
+        private const val REQUEST_RECORD_AUDIO = 1337
         private const val KEY_EMERGENCY_CONTACT = "emergency contact"
+        const val KEY_SELECTED_NOISE_TAGS = "selected_noise_tags"
     }
 }

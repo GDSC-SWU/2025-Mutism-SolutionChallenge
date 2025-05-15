@@ -35,7 +35,6 @@ class TTSManager {
 
                         if (selectedVoice != null) {
                             tts?.voice = selectedVoice
-                            Log.d("TTSManager", "Selected voice: ${selectedVoice.name}")
                         } else {
                             Log.w("TTSManager", "No matching voice found for $preferredGender")
                         }

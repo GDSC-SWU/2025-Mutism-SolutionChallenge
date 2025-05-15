@@ -267,11 +267,11 @@ class MyPageActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val KEY_SELECTED_NOISE_TAGS = "selected_noise_tags"
+        const val KEY_SELECTED_NOISE_TAGS = "selected_noise_tags"
         const val KEY_NAME = "name"
-        private const val KEY_AUTISM_LEVEL = "autism_level"
+        const val KEY_AUTISM_LEVEL = "autism_level"
         const val KEY_GENDER = "gender"
-        private const val KEY_EMERGENCY_CONTACT = "emergency contact"
+        const val KEY_EMERGENCY_CONTACT = "emergency contact"
         const val KEY_RELAX_METHOD = "relax_method"
     }
 }
