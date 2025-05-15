@@ -16,13 +16,13 @@
 ## 📑 Table of Contents
 
 1. [Overview](#overview)
-2. [User Research & Validation Process](#User-Research-&-Validation-Process)
-3. [MVP](#MVP)
-4. [Tech Stack](#tech-stack)
-5. [Screenshots](#screenshots)
+2. [User Research & Validation Process](#user-Research-&-Validation-Process)
+3. [MVP](#mVP)
+4. [Tech](#tech)
+5. [Screen](#screen)
 6. [Expected Effects](#expected-effects)
-7. [Future Plans](#future-plans)
-8. [Team Members](#team-members)
+7. [Future Development](#future-Development)
+9. [Member](#member)
 
 
 ## 🧩 Overview
