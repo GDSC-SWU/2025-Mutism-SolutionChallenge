@@ -14,7 +14,7 @@
 1. [Overview](#-overview)
 2. [User Research & Validation Process](#-user-research--validation-process)
 3. [MVP](#-mVP)
-4. [Tech](#tech)
+4. [Tech](#-tech)
 5. [Screen](#-screen)
 6. [Expected Effects](#-expected-effects)
 7. [Future Development](#️-future-development)
@@ -133,7 +133,7 @@ If sensitive sounds are detected repeatedly over a certain threshold, the situat
 
 
 
-## 🛠️ Tech 
+## ⚒️ Tech 
 
 ### Tech stack
 
