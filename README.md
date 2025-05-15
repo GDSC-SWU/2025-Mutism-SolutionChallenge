@@ -88,21 +88,21 @@ If sensitive sounds are detected repeatedly over a certain threshold, the situat
 | Realtime TTS           | Android TextToSpeech API       |
 | Storage & Auth         | Firebase                       |
 
-**Language**
+### Language
 
 - **Kotlin**: Used for Android app development.
 
-**Architecture**
+### Architecture
 
 - **MVC (Model - View - Controller)**
     - A simple structure with minimal asynchronous network response handling or complex state management.
     - Since the service primarily operates on-device with minimal external communication, the MVC pattern was considered more structurally efficient.
 
-**Data Management**
+### Data Management
 
 - **EncryptedSharedPreferences**: Used to securely store user information.
 
-**AI**
+### AI
 
 - **Gemini API (Gemini-2.0-flash)**
     - Suitable for generating personalized text considering various individual characteristics.
@@ -114,7 +114,7 @@ If sensitive sounds are detected repeatedly over a certain threshold, the situat
     - A lightweight ML framework that enables efficient execution of models on mobile and IoT devices.
     - Used to run the YAMNet model quickly and efficiently on mobile devices.
 
-**Network**
+### Network
 
 - **OkHttp**: Supports efficient HTTP network communication.
 
