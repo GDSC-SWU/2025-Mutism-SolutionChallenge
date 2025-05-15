@@ -4,7 +4,7 @@
     android:id="@+id/my_page"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_my_page1"
+    android:background="@drawable/bg_my_page"
     android:clipToPadding="false"
     android:fillViewport="true"
     android:fitsSystemWindows="true"
@@ -23,7 +23,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginBottom="30dp"
-            android:src="@drawable/arrow" />
+            android:src="@drawable/ic_right_arrow" />
 
         <!-- 소음 선택 -->
         <LinearLayout
@@ -47,7 +47,7 @@
                 android:id="@+id/btn_select_noise"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/arrow2" />
+                android:src="@drawable/ic_right_arrow2" />
         </LinearLayout>
 
         <com.google.android.material.chip.ChipGroup
@@ -82,7 +82,7 @@
                 android:id="@+id/btn_select_white_noise"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/arrow2" />
+                android:src="@drawable/ic_right_arrow2" />
         </LinearLayout>
 
         <!-- Divider -->

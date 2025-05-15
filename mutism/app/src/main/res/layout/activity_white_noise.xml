@@ -14,7 +14,7 @@
         android:id="@+id/btn_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/arrow"
+        android:src="@drawable/ic_right_arrow"
         android:layout_marginBottom="25dp"
         android:layout_marginTop="15dp"/>
 
@@ -46,7 +46,7 @@
         android:layout_gravity="center"
         android:clickable="true"
         android:focusable="true"
-        android:background="@drawable/btn_unselect_noise">
+        android:background="@drawable/btn_select_noise_unselect">
     </FrameLayout>
 
 

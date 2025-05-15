@@ -100,7 +100,7 @@ class WhiteNoiseActivity : AppCompatActivity() {
             isEnabled = hasSelection
             background =
                 getDrawable(
-                    if (hasSelection) R.drawable.btn_selected_noise else R.drawable.btn_unselect_noise,
+                    if (hasSelection) R.drawable.btn_select_noise_select else R.drawable.btn_select_noise_unselect,
                 )
         }
     }
