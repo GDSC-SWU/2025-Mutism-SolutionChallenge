@@ -190,20 +190,20 @@ class MainActivity : AppCompatActivity() {
         val layoutParams = binding.btnStart.layoutParams
 
         if (isRecording) {
-            binding.btnStart.setImageResource(R.drawable.btn_stop)
+            binding.btnStart.setImageResource(R.drawable.btn_main_stop)
             layoutParams.width = 214.dpToPx()
             layoutParams.height = 214.dpToPx()
-            rootLayout.setBackgroundResource(R.drawable.bg_main2)
+            rootLayout.setBackgroundResource(R.drawable.bg_main_not_recording)
             binding.tvWelcome.visibility = View.GONE
             binding.tvRecording.visibility = View.VISIBLE
             binding.tvNowHear.visibility = View.VISIBLE
             binding.mainTvExplain.text = getString(R.string.text_main_stop)
             binding.listContainer.visibility = View.VISIBLE
         } else {
-            binding.btnStart.setImageResource(R.drawable.btn_start)
+            binding.btnStart.setImageResource(R.drawable.btn_main_start)
             layoutParams.width = 264.dpToPx()
             layoutParams.height = 264.dpToPx()
-            rootLayout.setBackgroundResource(R.drawable.bg_main3)
+            rootLayout.setBackgroundResource(R.drawable.bg_main_recording)
             binding.tvWelcome.visibility = View.VISIBLE
             binding.tvRecording.visibility = View.GONE
             binding.tvNowHear.visibility = View.GONE
@@ -249,7 +249,7 @@ class MainActivity : AppCompatActivity() {
             setTextColor(ContextCompat.getColor(context, R.color.color_noise_bg))
             textSize = 24f
             setPadding(20, 6, 20, 6)
-            background = ContextCompat.getDrawable(context, R.drawable.bg_classified_sound)
+            background = ContextCompat.getDrawable(context, R.drawable.bg_main_current_sound)
             layoutParams =
                 LinearLayout
                     .LayoutParams(

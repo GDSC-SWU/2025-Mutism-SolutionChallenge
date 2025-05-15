@@ -22,9 +22,9 @@ class WhiteNoiseAdapter(
 
             val iconBg =
                 if (item.isSelected) {
-                    R.drawable.item_noise_selected_bg
+                    R.drawable.bg_noise_selected
                 } else {
-                    R.drawable.item_noise_unselect_bg
+                    R.drawable.bg_noise_unselect
                 }
             binding.iconContainer.background = ContextCompat.getDrawable(binding.root.context, iconBg)
 

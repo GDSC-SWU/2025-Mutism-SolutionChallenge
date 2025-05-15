@@ -76,7 +76,7 @@ class NoiseSelectActivity : AppCompatActivity() {
             binding.emptyTagText.visibility = View.VISIBLE
             chipGroup.visibility = View.GONE
             binding.btnSelect.apply {
-                setBackgroundResource(R.drawable.btn_unselect_noise)
+                setBackgroundResource(R.drawable.btn_select_noise_unselect)
                 isEnabled = false
             }
         } else {
@@ -84,7 +84,7 @@ class NoiseSelectActivity : AppCompatActivity() {
             binding.emptyTagText.visibility = View.GONE
             chipGroup.visibility = View.VISIBLE
             binding.btnSelect.apply {
-                setBackgroundResource(R.drawable.btn_selected_noise)
+                setBackgroundResource(R.drawable.btn_select_noise_select)
                 isEnabled = true
             }
 

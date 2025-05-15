@@ -5,14 +5,14 @@ import com.example.mutism.R
 object WhiteNoiseData {
     val list =
         listOf(
-            WhiteNoiseItem("raindrop", "Raindrop", R.drawable.rain),
-            WhiteNoiseItem("ocean_wave", "Ocean\nWave", R.drawable.ocean),
-            WhiteNoiseItem("forest", "Forest", R.drawable.forest),
-            WhiteNoiseItem("fireplace", "Fireplace", R.drawable.fireplace),
-            WhiteNoiseItem("soft_wind", "Soft Wind", R.drawable.softwind),
-            WhiteNoiseItem("bird_sing", "Bird Sing", R.drawable.bird),
-            WhiteNoiseItem("flowing_water", "Flowing\nWater", R.drawable.flowingwater),
-            WhiteNoiseItem("space", "Space", R.drawable.space),
-            WhiteNoiseItem("bubble", "Bubble", R.drawable.soapbubble),
+            WhiteNoiseItem("raindrop", "Raindrop", R.drawable.ic_white_noise_rain),
+            WhiteNoiseItem("ocean_wave", "Ocean\nWave", R.drawable.ic_white_noise_ocean),
+            WhiteNoiseItem("forest", "Forest", R.drawable.ic_white_noise_forest),
+            WhiteNoiseItem("fireplace", "Fireplace", R.drawable.ic_white_noise_fireplace),
+            WhiteNoiseItem("soft_wind", "Soft Wind", R.drawable.ic_white_noise_softwind),
+            WhiteNoiseItem("bird_sing", "Bird Sing", R.drawable.ic_white_noise_bird),
+            WhiteNoiseItem("flowing_water", "Flowing\nWater", R.drawable.ic_white_noise_flowingwater),
+            WhiteNoiseItem("space", "Space", R.drawable.ic_white_noise_space),
+            WhiteNoiseItem("bubble", "Bubble", R.drawable.ic_white_noise_soapbubble),
         )
 }

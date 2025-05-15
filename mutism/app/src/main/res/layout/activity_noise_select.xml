@@ -21,7 +21,7 @@
             android:layout_marginStart="4dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:src="@drawable/arrow"
+            android:src="@drawable/ic_right_arrow"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
@@ -139,7 +139,7 @@
         android:layout_gravity="center"
         android:clickable="true"
         android:focusable="true"
-        android:background="@drawable/btn_unselect_noise"
+        android:background="@drawable/btn_select_noise_unselect"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
