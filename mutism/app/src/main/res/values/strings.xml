@@ -10,8 +10,10 @@
     <string name="text_main_recording">Measuring sound...</string>
     <string name="text_main_start">Press the button to start</string>
     <string name="text_main_stop">Press the button to stop</string>
+    <string name="text_main_turn_off_white_noise">Turn Off the White Noise</string>
     <string name="text_current_noise_label">Now you hear :</string>
-    <string name="btn_sos">SOS</string>
+    <string name="btn_main_sos">SOS</string>
+
 
     <!-- select noise -->
     <string name="text_noise_title">Noises</string>
@@ -52,4 +54,5 @@
     <string name="btn_select">Select</string>
     <string name="car">car</string>
     <string name="chip_section_sub_category">subCategory</string>
+
 </resources>

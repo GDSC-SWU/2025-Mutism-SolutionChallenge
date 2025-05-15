@@ -26,7 +26,7 @@
             android:layout_width="85dp"
             android:layout_height="52dp"
             android:gravity="center"
-            android:text="@string/btn_sos"
+            android:text="@string/btn_main_sos"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -91,7 +91,7 @@
         android:layout_height="wrap_content"
         android:text="@string/text_main_start"
         android:textColor="@color/color_primary_light"
-        android:textSize="22sp"
+        android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@+id/btn_start"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -115,9 +115,9 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:gravity="center"
-            android:text="Turn Off the White Noise"
+            android:text="@string/text_main_turn_off_white_noise"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
     </FrameLayout>
 
     <TextView

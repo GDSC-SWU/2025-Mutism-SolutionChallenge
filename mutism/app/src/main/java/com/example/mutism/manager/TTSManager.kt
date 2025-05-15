@@ -1,8 +1,10 @@
 package com.example.mutism.manager
 
 import android.content.Context
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings.Global.putString
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import java.util.Locale
@@ -67,7 +69,11 @@ class TTSManager {
                 override fun onError(utteranceId: String?) {}
             },
         )
-        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, "utteranceId")
+        val params =
+            Bundle().apply {
+                putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "utteranceId")
+            }
+        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, params, "utteranceId")
     }
 
     fun isSpeaking(): Boolean = tts?.isSpeaking == true

@@ -31,102 +31,103 @@ class ForegroundService : Service() {
     private var audioClassifier: AudioClassifier? = null
     private var handler: Handler? = null
 
-    private var lastNotifiedNoise: String? = null
-    private var lastNotifyTime: Long = 0L
-    private var sameLabelRepeatCount = 0
+    private var lastDetectedSound: String? = null
+    private var lastNotificationTime: Long = 0L
+    private var repeatCount = 0
 
-    private var lastSound: String? = null
-    private var lastNoiseTimestamp: Long = 0L
-    private var lastNoise: String? = null
-    private var noiseCount = 0
+    private var previousSound: String? = null
+    private var lastSensitiveSoundTime: Long = 0L
+    private var lastSensitiveSound: String? = null
+    private var sensitiveSoundCount = 0
 
-    private var promptGenerator: RolePromptManager = RolePromptManager()
-    private var ttsManager = TTSManager()
-    private lateinit var selectedTagsLower: List<String>
+    private val promptManager = RolePromptManager()
+    private val ttsManager = TTSManager()
+    private lateinit var sensitiveSoundList: List<String>
 
-    // user info
-    private var name: String? = null
-    private var releasedMethod: String? = null
-    private var sensitiveNoise: List<String>? = null
-    private var currentNoise: String? = null
+    // User info
+    private var userName: String? = null
+    private var relaxMethod: String? = null
     private var selectedWhiteNoise: String? = null
+    private var currentSensitiveSound: String? = null
 
-    // region: Lifecycle
     override fun onBind(intent: Intent?): IBinder? = null
 
     @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     override fun onCreate() {
         super.onCreate()
-
         WhiteNoiseManager.init(applicationContext)
-        createNotificationChannel()
-        startForeground(1, createNotification())
-        loadSharedPreferences()
-        ttsManager.initTTS(this, preferredGender = getGender())
-
+        createNotificationChannels()
+        startForeground(1, buildForegroundNotification())
+        loadPreferences()
+        ttsManager.initTTS(this, preferredGender = getUserGender())
         startAudioClassification()
     }
 
     override fun onDestroy() {
         stopAudioClassification()
-        super.onDestroy()
         ttsManager.shutdown()
-        sendForegroundStopMainActivity()
+        sendBroadcast(Intent("com.mutism.FOREGROUND_STOP"))
+        super.onDestroy()
     }
-    // endregion
 
-    // region: Init Helpers
-    private fun loadSharedPreferences() {
-        val noiseSelectPrefs = getSharedPreferences("NoiseSelectPrefs", MODE_PRIVATE)
+    private fun loadPreferences() {
+        val noisePrefs = getSharedPreferences("NoiseSelectPrefs", MODE_PRIVATE)
         val whiteNoisePrefs = getSharedPreferences("WhiteNoisePrefs", MODE_PRIVATE)
         val userPrefs = getSharedPreferences("UserPrefs", MODE_PRIVATE)
-        val selectedTags =
-            noiseSelectPrefs.getStringSet(MainActivity.KEY_SELECTED_NOISE_TAGS, emptySet())
-                ?: emptySet()
 
-        selectedTagsLower = selectedTags.map { it.lowercase() }
-        name = userPrefs.getString(MyPageActivity.KEY_NAME, "") ?: ""
-        releasedMethod = userPrefs.getString(MyPageActivity.KEY_RELAX_METHOD, "") ?: ""
-        sensitiveNoise = selectedTags.toList()
-        selectedWhiteNoise = whiteNoisePrefs.getString("selected_white_noise", "") ?: ""
+        val selectedTags = noisePrefs.getStringSet(MainActivity.KEY_SELECTED_NOISE_TAGS, emptySet()) ?: emptySet()
+        sensitiveSoundList = selectedTags.map { it.lowercase() }
+
+        userName = userPrefs.getString(MyPageActivity.KEY_NAME, "")
+        relaxMethod = userPrefs.getString(MyPageActivity.KEY_RELAX_METHOD, "")
+        selectedWhiteNoise = whiteNoisePrefs.getString("selected_white_noise", "")
     }
 
-    private fun getGender(): String {
+    private fun getUserGender(): String {
         val userPrefs = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         return userPrefs.getString(MyPageActivity.KEY_GENDER, "Female") ?: "Female"
     }
-    // endregion
 
-    // region: Notification
-    private fun createNotificationChannel() {
+    private fun createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel =
+            val manager = getSystemService(NotificationManager::class.java)
+
+            val foregroundChannel =
                 NotificationChannel(
                     FOREGROUND_CHANNEL_ID,
-                    "Foreground Service Channel",
-                    NotificationManager.IMPORTANCE_DEFAULT,
-                )
-            getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
+                    "Foreground Audio Service",
+                    NotificationManager.IMPORTANCE_LOW,
+                ).apply { description = "Used by ForegroundService to stay alive" }
+            manager.createNotificationChannel(foregroundChannel)
+
+            val soundChannel =
+                NotificationChannel(
+                    SOUND_DETECTED_CHANNEL_ID,
+                    "Sound Detected Notification",
+                    NotificationManager.IMPORTANCE_HIGH,
+                ).apply {
+                    description = "Alerts when selected sounds are detected"
+                    enableVibration(true)
+                    enableLights(true)
+                }
+            manager.createNotificationChannel(soundChannel)
         }
     }
 
-    private fun createNotification(): Notification =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Notification
-                .Builder(this, FOREGROUND_CHANNEL_ID)
-                .setContentTitle("Audio Classification Service")
-                .setContentText("Running...")
-                .build()
-        } else {
-            Notification
-                .Builder(this)
-                .setContentTitle("Audio Classification Service")
-                .setContentText("Running...")
-                .build()
-        }
-    // endregion
+    private fun buildForegroundNotification(): Notification {
+        val builder =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Notification.Builder(this, FOREGROUND_CHANNEL_ID)
+            } else {
+                Notification.Builder(this)
+            }
+        return builder
+            .setSmallIcon(android.R.drawable.ic_dialog_info)
+            .setContentTitle("Audio Classification Service")
+            .setContentText("Running...")
+            .build()
+    }
 
-    // region: Audio Classification
     @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     private fun startAudioClassification() {
         try {
@@ -134,20 +135,20 @@ class ForegroundService : Service() {
             val record = classifier.createAudioRecord()
             record.startRecording()
 
-            val handlerThread = HandlerThread("ServiceHandlerThread").apply { start() }
-            handler = Handler(handlerThread.looper)
+            val thread = HandlerThread("ServiceHandlerThread").apply { start() }
+            handler = Handler(thread.looper)
             audioClassifier = classifier
 
-            val classifyRunnable =
+            handler?.post(
                 object : Runnable {
                     override fun run() {
-                        classifyAudio(classifier, record)
-                        handler?.postDelayed(this, CLASSIFICATIONINTERVAL)
+                        classifySound(classifier, record)
+                        handler?.postDelayed(this, CLASSIFICATION_INTERVAL)
                     }
-                }
-            handler?.post(classifyRunnable)
+                },
+            )
         } catch (e: Exception) {
-            Log.e("ForegroundService", "Error in audio classification", e)
+            Log.e("ForegroundService", "Audio classification error", e)
             stopSelf()
         }
     }
@@ -159,107 +160,86 @@ class ForegroundService : Service() {
         handler = null
     }
 
-    private fun classifyAudio(
+    private fun classifySound(
         classifier: AudioClassifier,
         record: AudioRecord,
     ) {
         val audioTensor = classifier.createInputTensorAudio()
         audioTensor.load(record)
-        val output = classifier.classify(audioTensor)
+        val result = classifier.classify(audioTensor)
 
         val topCategory =
-            output[0]
+            result[0]
                 .categories
-                .filter { it.score > MINIMUM_DISPLAY_THRESHOLD }
-                .sortedByDescending { it.score }
-                .firstOrNull() ?: return
+                .filter { it.score > MIN_DISPLAY_THRESHOLD }
+                .maxByOrNull { it.score } ?: return
 
-        Log.d("ForegroundService", "category: ${topCategory.label} (${topCategory.score})")
-
-        handleSoundDetection(topCategory.label)
+        Log.d("ForegroundService", "Detected: ${topCategory.label} (${topCategory.score})")
+        processDetectedSound(topCategory.label)
     }
 
-    private fun handleSoundDetection(category: String) {
-        val sound = category.lowercase()
+    private fun processDetectedSound(label: String) {
+        val sound = label.lowercase()
+        val now = System.currentTimeMillis()
 
-        if (selectedTagsLower.contains(sound)) {
-            val currentTime = System.currentTimeMillis()
-            val timeSinceLastCall = currentTime - lastNoiseTimestamp
+        if (sensitiveSoundList.contains(sound)) {
+            val timeSinceLast = now - lastSensitiveSoundTime
             val isSpeaking = ttsManager.isSpeaking()
             val isWhiteNoisePlaying = WhiteNoiseManager.isPlaying()
 
             val shouldCallGemini =
-                (
-                    timeSinceLastCall >= GEMINICALLINTERVAL ||
-                        (timeSinceLastCall >= 60_000 && sound != lastNoise)
-                ) &&
+                (timeSinceLast >= GEMINI_CALL_INTERVAL || (timeSinceLast >= 60000 && sound != lastSensitiveSound)) &&
                     !isSpeaking &&
                     !isWhiteNoisePlaying
 
             if (shouldCallGemini) {
-                currentNoise = sound
-                val prompt =
-                    promptGenerator.generatePrompt(
-                        name,
-                        releasedMethod,
-                        currentNoise,
-                        sensitiveNoise,
-                    )
-                callGeminiAPI(prompt) {
-                    if (!ttsManager.isSpeaking() && !WhiteNoiseManager.isPlaying()) {
-                        selectedWhiteNoise?.let {
-                            ttsManager.speak(
-                                "I'll play you some white noise of $it",
-                            ) {
-                                WhiteNoiseManager.playWhiteNoise(it)
+                currentSensitiveSound = sound
+                val prompt = promptManager.generatePrompt(userName, relaxMethod, currentSensitiveSound, sensitiveSoundList)
+                callGemini(prompt) {
+                    if (!selectedWhiteNoise.isNullOrBlank()) {
+                        ttsManager.speak("I'll play you some white noise of $selectedWhiteNoise") {
+                            if (!WhiteNoiseManager.playWhiteNoise(selectedWhiteNoise!!)) {
+                                Log.e("TTS→WhiteNoise", "Playback failed: $selectedWhiteNoise")
                             }
                         }
-                            ?: ttsManager.speak("No white noise selected. Please set one in your settings.")
+                    } else {
+                        ttsManager.speak("No white noise selected. Please set one in your settings.")
                     }
                 }
 
-                if (currentNoise == lastNoise) noiseCount++ else noiseCount = 1
-                if (noiseCount == 10) sendEmergencyToMainActivity()
+                sensitiveSoundCount = if (sound == lastSensitiveSound) sensitiveSoundCount + 1 else 1
+                if (sensitiveSoundCount == 10) sendBroadcast(Intent("com.mutism.ACTION_EMERGENCY_CALL"))
 
-                lastNoise = sound
-                lastNoiseTimestamp = currentTime
+                lastSensitiveSound = sound
+                lastSensitiveSoundTime = now
             }
         }
 
-        if (sound != lastSound && sound != "silence") {
-            sendClassifiedResultToMainActivity(category)
-            lastSound = sound
+        if (sound != previousSound && sound != "silence") {
+            val intent = Intent("com.mutism.UPDATE_CURRENT_SOUND_LIST")
+            intent.putExtra("classifiedSound", label)
+            sendBroadcast(intent)
+            previousSound = sound
         }
 
-        val shouldNotify =
-            if (sound == lastNotifiedNoise) {
-                sameLabelRepeatCount++
-                sameLabelRepeatCount % 10 == 0
-            } else {
-                sameLabelRepeatCount = 0
-                true
-            }
-
-        if (selectedTagsLower.contains(sound) && shouldNotify) {
-            showSoundDetectedNotification(sound)
-            lastNotifiedNoise = sound
-            lastNotifyTime = System.currentTimeMillis()
+        // Notify every 10 seconds for same sound
+        val shouldNotify = (now - lastNotificationTime >= 10000)
+        if (sensitiveSoundList.contains(sound) && shouldNotify) {
+            showNotification(sound)
+            lastDetectedSound = sound
+            lastNotificationTime = now
         }
     }
-    // endregion
 
-    // Gemini API
-    private fun callGeminiAPI(
+    private fun callGemini(
         prompt: String,
         onComplete: (() -> Unit)? = null,
     ) {
-        val url =
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$API_KEY"
-        val bodyJson = """{"contents":[{"parts":[{"text":"$prompt"}]}]}"""
+        val url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=$API_KEY"
+        val json = """{"contents":[{"parts":[{"text":"$prompt"}]}]}"""
 
         val client = OkHttpClient()
-        val requestBody = bodyJson.toRequestBody("application/json".toMediaTypeOrNull())
-
+        val requestBody = json.toRequestBody("application/json".toMediaTypeOrNull())
         val request =
             Request
                 .Builder()
@@ -271,9 +251,8 @@ class ForegroundService : Service() {
             try {
                 client.newCall(request).execute().use { response ->
                     if (response.isSuccessful) {
-                        val responseBody = response.body?.string()
                         val text =
-                            JSONObject(responseBody)
+                            JSONObject(response.body?.string())
                                 .getJSONArray("candidates")
                                 .getJSONObject(0)
                                 .getJSONObject("content")
@@ -281,42 +260,22 @@ class ForegroundService : Service() {
                                 .getJSONObject(0)
                                 .getString("text")
 
-                        ttsManager.speak(text) {
-                            onComplete?.invoke()
-                        }
+                        ttsManager.speak(text) { onComplete?.invoke() }
                     } else {
-                        Log.e("GeminiAPI", "Unsuccessful response: ${response.code}")
+                        Log.e("GeminiAPI", "Response error: ${response.code}")
                     }
                 }
             } catch (e: Exception) {
-                Log.e("GeminiAPI", "Error calling Gemini API", e)
+                Log.e("GeminiAPI", "Request failed", e)
             }
         }.start()
     }
 
-    // Broadcasts & Notifications
-    private fun sendClassifiedResultToMainActivity(newText: String) {
-        val classifiedResultIntent = Intent("com.mutism.UPDATE_CURRENT_SOUND_LIST")
-        classifiedResultIntent.putExtra("classifiedSound", newText)
-        sendBroadcast(classifiedResultIntent)
-    }
-
-    private fun sendEmergencyToMainActivity() {
-        val emergencyIntent = Intent("com.mutism.ACTION_EMERGENCY_CALL")
-        sendBroadcast(emergencyIntent)
-    }
-
-    private fun sendForegroundStopMainActivity() {
-        val foregroundIntent = Intent("com.mutism.FOREGROUND_STOP")
-        sendBroadcast(foregroundIntent)
-    }
-
-    @Suppress("DEPRECATION")
-    private fun showSoundDetectedNotification(detectedLabel: String) {
-        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+    private fun showNotification(label: String) {
+        val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val intent =
             Intent(this, MainActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
 
         val pendingIntent =
@@ -326,37 +285,36 @@ class ForegroundService : Service() {
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
             )
-        val notification =
+
+        val builder =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val channel =
-                    NotificationChannel(
-                        SOUND_DETECTED_CHANNEL_ID,
-                        "Sound Detected Notification",
-                        NotificationManager.IMPORTANCE_HIGH,
-                    ).apply {
-                        description = "Alerts when selected sounds are detected"
-                    }
-                notificationManager.createNotificationChannel(channel)
                 Notification.Builder(this, SOUND_DETECTED_CHANNEL_ID)
             } else {
                 Notification.Builder(this)
-            }.setSmallIcon(android.R.drawable.ic_dialog_info)
+            }
+
+        val notification =
+            builder
+                .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setContentTitle("Sensitive Sound Detected")
-                .setContentText("Detected: $detectedLabel")
-                .setAutoCancel(true)
+                .setContentText("Detected: $label")
+                .setWhen(System.currentTimeMillis())
+                .setOnlyAlertOnce(false)
+                .setOngoing(true)
+                .setAutoCancel(false)
                 .setContentIntent(pendingIntent)
                 .build()
 
-        notificationManager.notify(1002, notification)
+        manager.notify(1002, notification)
     }
 
     companion object {
         private const val FOREGROUND_CHANNEL_ID = "ForegroundServiceChannel"
-        private const val SOUND_DETECTED_CHANNEL_ID = "sound_detected_channel"
+        private const val SOUND_DETECTED_CHANNEL_ID = "SoundDetectedChannel"
         private const val API_KEY = BuildConfig.GEMINI_API_KEY
         private const val MODEL_FILE = "yamnet.tflite"
-        private const val MINIMUM_DISPLAY_THRESHOLD = 0.3f
-        private const val CLASSIFICATIONINTERVAL = 500L
-        private const val GEMINICALLINTERVAL = 60 * 1000
+        private const val MIN_DISPLAY_THRESHOLD = 0.3f
+        private const val CLASSIFICATION_INTERVAL = 500L
+        private const val GEMINI_CALL_INTERVAL = 60000L
     }
 }

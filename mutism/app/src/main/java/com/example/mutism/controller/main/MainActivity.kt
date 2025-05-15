@@ -176,13 +176,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        if (WhiteNoiseManager.isPlaying()) {
+            binding.btnStopWhiteNoiseContainer.visibility = View.VISIBLE
+        } else {
+            binding.btnStopWhiteNoiseContainer.visibility = View.GONE
+        }
+    }
+
     override fun onStop() {
         super.onStop()
         unregisterReceiver(broadcastReceiver)
     }
 
     // Convert dp to pixels
-    fun Int.dpToPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
+    private fun Int.dpToPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
 
     // Update UI depending on recording state
     private fun updateRecordingUI() {

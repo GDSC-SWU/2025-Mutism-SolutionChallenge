@@ -45,35 +45,26 @@ object WhiteNoiseManager {
     }
 
     // Starts playing the selected white noise by name
-    fun playWhiteNoise(
-        name: String,
-        onStarted: (() -> Unit)? = null,
-    ) {
+    // WhiteNoiseManager.kt
+    fun playWhiteNoise(name: String): Boolean {
         val formattedKey = name.lowercase().replace("\n", "_").replace(" ", "_")
         val resId =
             WhiteNoiseSoundMap.map[formattedKey] ?: run {
-                Log.e("com.example.mutism.utils.WhiteNoiseManager", "Resource not found: $formattedKey")
-                return
+                Log.e("WhiteNoiseManager", "Resource not found: $formattedKey")
+                return false
             }
 
         stopWhiteNoise()
 
-        // Prepare and start MediaPlayer
-        whiteNoisePlayer =
-            MediaPlayer.create(appContext, resId)?.apply {
-                isLooping = true
-                setVolume(1.0f, 1.0f)
-                setOnErrorListener { _, what, extra ->
-                    Log.e("com.example.mutism.utils.WhiteNoiseManager", "MediaPlayer error: what=$what, extra=$extra")
-                    true
-                }
-                start()
-                Log.d("com.example.mutism.utils.WhiteNoiseManager", "White noise started: $formattedKey")
-            }
-        onStarted?.invoke() // Notify UI to show stop button
-        notifyShowStopButton() // Send broadcast to show stop button in UI
+        whiteNoisePlayer = MediaPlayer.create(appContext, resId)?.apply {
+            isLooping = true
+            setVolume(1.0f, 1.0f)
+            start()
+        } ?: return false
 
+        notifyShowStopButton()
         handler.postDelayed(reminderRunnable, 5 * 60 * 1000L)
+        return true
     }
 
     // Checks whether white noise is currently playing
