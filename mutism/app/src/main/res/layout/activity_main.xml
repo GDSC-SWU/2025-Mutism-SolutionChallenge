@@ -111,13 +111,13 @@
 
         <TextView
             android:id="@+id/btn_stop_white_noise"
-            android:layout_width="230dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:gravity="center"
             android:text="@string/text_main_turn_off_white_noise"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
     </FrameLayout>
 
     <TextView
