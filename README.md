@@ -21,9 +21,8 @@
 4. [Tech](#tech)
 5. [Screen](#screen)
 6. [Expected Effects](#expected-effects)
-7. [Future Development](#future-Development)
+7. [Future Development](#️-future-development)
 9. [Member](#member)
-
 
 ## 🧩 Overview
 
