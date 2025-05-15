@@ -7,13 +7,11 @@
     android:gravity="center"
     android:padding="10dp">
 
-    <!-- 프레임 구성: SVG + 아이콘 배경 -->
     <FrameLayout
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_margin="5dp">
 
-        <!-- 안쪽 내용 (배경 + 아이콘) -->
         <FrameLayout
             android:id="@+id/icon_container"
             android:layout_width="match_parent"
@@ -31,7 +29,6 @@
         </FrameLayout>
     </FrameLayout>
 
-    <!-- 라벨 -->
     <TextView
         android:id="@+id/label"
         android:layout_width="wrap_content"

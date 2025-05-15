@@ -28,63 +28,57 @@ class WhiteNoiseActivity : AppCompatActivity() {
         binding = ActivityWhiteNoiseBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initRecyclerView()
-        loadNoises()
+        setupRecyclerView() // Initialize RecyclerView and adapter
+        loadWhiteNoises() // Load noise list and restore previous selection
 
-        binding.btnSelect.setOnClickListener {
-            selectedNoiseName?.let {
-                saveSelection(it)
-                Toast.makeText(this, "Selected white noise : $it", Toast.LENGTH_SHORT).show()
-                finish()
-            } ?: Toast.makeText(this, "No noise selected.", Toast.LENGTH_SHORT).show()
-        }
-
+        binding.btnSelect.setOnClickListener { onSelectClicked() }
         binding.btnBack.setOnClickListener { finish() }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer?.release()
+        stopPlayback() // Release media player resources
     }
 
-    private fun initRecyclerView() {
-        adapter =
-            WhiteNoiseAdapter { selectedItem ->
-                val newSelectedName = selectedItem.name
-
-                if (newSelectedName == selectedNoiseName) {
-                    selectedNoiseName = null
-                    stopPlayback()
-                    updateSelection(null)
-                } else {
-                    selectedNoiseName = newSelectedName
-                    updateSelection(selectedNoiseName)
-                    playWhiteNoise(newSelectedName)
-                    saveSelection(newSelectedName)
-                }
-            }
-
+    // Initializes RecyclerView with 3-column grid layout and adapter
+    private fun setupRecyclerView() {
+        adapter = WhiteNoiseAdapter { onNoiseItemClicked(it) }
         binding.recyclerViewWhiteNoises.layoutManager = GridLayoutManager(this, 3)
         binding.recyclerViewWhiteNoises.adapter = adapter
     }
 
-    private fun loadNoises() {
-        whiteNoiseList = WhiteNoiseData.list.toMutableList()
-
+    // Loads the noise list, restores previously selected noise and plays it
+    private fun loadWhiteNoises() {
         val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
         val saved = prefs.getString(KEY_SELECTED_NOISE, null)
         selectedNoiseName = saved
 
         whiteNoiseList =
-            whiteNoiseList
-                .map {
-                    it.copy(isSelected = it.name == saved)
-                }.toMutableList()
+            WhiteNoiseData.list
+                .map { it.copy(isSelected = it.name == saved) }
+                .toMutableList()
+
         adapter.submitList(whiteNoiseList.toList())
 
         saved?.let { playWhiteNoise(it) }
 
         updateSelectButtonState()
+    }
+
+    // Handles click on a noise item
+    private fun onNoiseItemClicked(item: WhiteNoiseItem) {
+        val name = item.name
+
+        if (name == selectedNoiseName) {
+            selectedNoiseName = null
+            stopPlayback()
+            updateSelection(null)
+        } else {
+            selectedNoiseName = name
+            playWhiteNoise(name)
+            updateSelection(name)
+            saveSelection(name)
+        }
     }
 
     private fun updateSelection(name: String?) {
@@ -93,8 +87,8 @@ class WhiteNoiseActivity : AppCompatActivity() {
                 .map {
                     it.copy(isSelected = it.name == name)
                 }.toMutableList()
-        adapter.submitList(whiteNoiseList.toList())
 
+        adapter.submitList(whiteNoiseList.toList())
         updateSelectButtonState()
     }
 
@@ -105,14 +99,13 @@ class WhiteNoiseActivity : AppCompatActivity() {
         binding.btnSelect.apply {
             isEnabled = hasSelection
             background =
-                if (hasSelection) {
-                    getDrawable(R.drawable.btn_selected_noise)
-                } else {
-                    getDrawable(R.drawable.btn_unselect_noise)
-                }
+                getDrawable(
+                    if (hasSelection) R.drawable.btn_selected_noise else R.drawable.btn_unselect_noise,
+                )
         }
     }
 
+    // Starts playback of the selected white noise sound
     private fun playWhiteNoise(name: String) {
         val resId = WhiteNoiseSoundMap.map[name]
         if (resId == null) {
@@ -120,6 +113,7 @@ class WhiteNoiseActivity : AppCompatActivity() {
             return
         }
         stopPlayback()
+
         mediaPlayer =
             MediaPlayer.create(this, resId).apply {
                 isLooping = true
@@ -135,9 +129,19 @@ class WhiteNoiseActivity : AppCompatActivity() {
         mediaPlayer = null
     }
 
+    // Saves the selected white noise name into SharedPreferences
     private fun saveSelection(name: String) {
-        val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-        prefs.edit { putString(KEY_SELECTED_NOISE, name) }
+        getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit {
+            putString(KEY_SELECTED_NOISE, name)
+        }
+    }
+
+    private fun onSelectClicked() {
+        selectedNoiseName?.let {
+            saveSelection(it)
+            Toast.makeText(this, "Selected white noise: $it", Toast.LENGTH_SHORT).show()
+            finish()
+        } ?: Toast.makeText(this, "No noise selected.", Toast.LENGTH_SHORT).show()
     }
 
     companion object {

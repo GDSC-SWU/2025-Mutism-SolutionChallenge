@@ -1,36 +1,55 @@
 <resources>
     <string name="app_name">mutism</string>
-    <string name="noise_tv_question">What is the sound\nyour patient doesn\'t like?</string>
-    <string name="btn_select">Select</string>
-    <string name="car">car</string>
-    <string name="white_noise_tv_question">What sounds does your patient like?</string>
-    <string name="text_main_welcome">Let\'s start a safe\nday today :)</string>
+
+    <!-- question -->
+    <string name="text_noise_question">What is the sound&#10;your patient doesn’t like?</string>
+    <string name="text_white_noise_question">What sounds does your patient like?</string>
+
+    <!-- main -->
+    <string name="text_main_welcome">Let’s start a safe&#10;day today :)</string>
     <string name="text_main_recording">Measuring sound...</string>
     <string name="text_main_start">Press the button to start</string>
     <string name="text_main_stop">Press the button to stop</string>
     <string name="text_current_noise_label">Now you hear :</string>
-    <string name="button_sos">SOS</string>
+    <string name="btn_sos">SOS</string>
+
+    <!-- select noise -->
     <string name="text_noise_title">Noises</string>
-    <string name="text_noise_selected_tab_label">Selected :</string>
-    <string name="text_noise_empty_tag_message">Please select the sounds your patient dislikes.</string>
+    <string name="text_noise_selected_label">Selected :</string>
+    <string name="text_noise_empty_message">Please select the sounds your patient dislikes.</string>
+
+    <!-- white noise -->
+    <string name="text_white_noise_title">Feeling better?</string>
+    <string name="dialog_white_noise_subtext">You’ve been listening white noise&#10;for 5 minutes.&#10;Would you like to turn it off?</string>
+    <string name="btn_white_noise_turn_off">Turn off</string>
+    <string name="btn_white_noise_keep_playing">Keep playing</string>
+
+    <!-- my page -->
     <string name="text_my_page_noise">Selected Noises</string>
-    <string name="text_my_page_white_noises">Selected White Noises</string>
-    <string name="text_my_page_autism">Autism Spectrum Level</string>
+    <string name="text_my_page_white_noise">Selected White Noises</string>
+    <string name="text_my_page_autism_level">Autism Spectrum Level</string>
     <string name="text_my_page_gender">Gender of AI Voice</string>
     <string name="text_my_page_age">Age</string>
-    <string name="text_my_page_Method">Relaxation Method</string>
-    <string name="text_no_select_noise_dialog_title">No selected noise</string>
-    <string name="text_no_select_noise_dialog_subtext">We don\'t know which sounds\nyour patient dislikes yet.</string>
-    <string name="btn_no_select_noise_dialog_text">Go to select noises</string>
-    <string name="my_page_relax_method_text">EX) Take deep breaths,\nListen to calming music or white noise</string>
-    <string name="btn_my_page_save">Save</string>
+    <string name="text_my_page_relax_method">Relaxation Method</string>
     <string name="text_my_page_name">Name</string>
     <string name="text_my_page_emergency_contact">Emergency contact</string>
-    <string name="text_white_noise_title">Feeling better?</string>
-    <string name="text_white_noise_dialog_subtext">You’ve been listening white noise\nfor 5 minutes.\nWould you like to turn it off?</string>
-    <string name="btn_white_noise_dialog_btn_turn_off">Turn off</string>
-    <string name="btn_white_noise_dialog_btn_keep_playing">Keep playing</string>
-    <string name="text_no_user_info_dialog_title">Profile Required</string>
-    <string name="text_no_user_info_dialog_subtext">To start recording, please fill the required profile information.</string>
-    <string name="btn_go_to_profile">Go to My Page</string>
+    <string name="btn_my_page_save">Save</string>
+    <string name="edt_my_page_hint_name">name</string>
+    <string name="edt_my_page_hint_contact">+82)10-1234-5678</string>
+    <string name="text_my_page_relax_method_example">EX) Take deep breaths,&#10;Listen to calming music or white noise</string>
+
+    <!-- dialog -->
+    <string name="dialog_no_noise_title">No selected noise</string>
+    <string name="dialog_no_noise_subtext">We don’t know which sounds&#10;your patient dislikes yet.</string>
+    <string name="btn_dialog_go_to_select_noise">Go to select noises</string>
+
+    <string name="dialog_no_user_info_title">Profile Required</string>
+    <string name="dialog_no_user_info_subtext">To start recording, please fill the required&#10;profile information.</string>
+    <string name="btn_dialog_go_to_profile">Go to My Page</string>
+
+    <!-- etc -->
+    <string name="custom_chip_tag">tag</string>
+    <string name="btn_select">Select</string>
+    <string name="car">car</string>
+    <string name="chip_section_sub_category">subCategory</string>
 </resources>

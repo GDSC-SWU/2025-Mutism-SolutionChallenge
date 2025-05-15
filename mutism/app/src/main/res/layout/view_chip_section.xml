@@ -10,7 +10,7 @@
         android:id="@+id/categoryTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="중분류 이름"
+        android:text="@string/chip_section_sub_category"
         android:textSize="16sp"
         android:textColor="@android:color/white"
         android:layout_marginBottom="8dp"/>

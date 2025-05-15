@@ -74,7 +74,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/text_my_page_white_noises"
+                android:text="@string/text_my_page_white_noise"
                 android:textSize="15sp"
                 android:textColor="@color/color_primary_dark" />
 
@@ -115,33 +115,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.5"
-                android:hint="name"
+                android:hint="@string/edt_my_page_hint_name"
                 android:textSize="14sp"
                 android:textColor="@color/color_primary"
                 android:textColorHint="@color/color_primary_light3"
                 android:backgroundTint="@color/color_primary_light3"
                 android:padding="8dp" />
         </LinearLayout>
-
-<!--        <TextView-->
-<!--            android:id="@+id/tv_name"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/text_my_page_name"-->
-<!--            android:textSize="13sp"-->
-<!--            android:textColor="@color/color_primary_dark" />-->
-
-<!--        <EditText-->
-<!--            android:id="@+id/tv_name_value"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:hint="name"-->
-<!--            android:textSize="14sp"-->
-<!--            android:textColor="@color/color_primary"-->
-<!--            android:textColorHint="@color/color_primary_light3"-->
-<!--            android:backgroundTint="@color/color_primary_light3"-->
-<!--            android:layout_marginTop="5dp"-->
-<!--            android:padding="10dp" />-->
 
         <!-- 자폐 레벨 -->
     <LinearLayout
@@ -155,7 +135,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="4"
-            android:text="@string/text_my_page_autism"
+            android:text="@string/text_my_page_autism_level"
             android:textSize="13sp"
             android:textColor="@color/color_primary_dark" />
 
@@ -221,7 +201,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="5"
-            android:hint="+82)10-1234-5678"
+            android:hint="@string/edt_my_page_hint_contact"
             android:inputType="phone"
             android:maxLength="13"
             android:digits="0123456789"
@@ -238,7 +218,7 @@
             android:id="@+id/tv_opinion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/text_my_page_Method"
+            android:text="@string/text_my_page_relax_method"
             android:textSize="13sp"
             android:textColor="@color/color_primary_dark"
             android:layout_marginTop="25dp" />
@@ -257,7 +237,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:textSize="15sp"
-                android:hint="@string/my_page_relax_method_text"
+                android:hint="@string/text_my_page_relax_method_example"
                 android:textColorHint="@color/color_primary_light2"
                 android:textColor="@color/color_primary_dark"
                 android:background="@null" />

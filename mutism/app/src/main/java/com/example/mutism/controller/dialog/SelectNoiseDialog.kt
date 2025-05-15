@@ -18,13 +18,13 @@ class SelectNoiseDialog(
         setContentView(binding.root)
 
         window?.setLayout(
-            (context.resources.displayMetrics.widthPixels * 0.9).toInt(), // 전체 폭의 90%
+            (context.resources.displayMetrics.widthPixels * 0.9).toInt(),
             WindowManager.LayoutParams.WRAP_CONTENT,
         )
-        window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable()) // 배경 투명 처리
+        window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
 
         binding.cvBtnSelectNoise.setOnClickListener {
-            onSelectNoiseClicked.invoke() // 버튼 클릭 시 콜백 호출
+            onSelectNoiseClicked.invoke()
             dismiss()
         }
     }
