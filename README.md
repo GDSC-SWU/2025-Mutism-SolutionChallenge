@@ -5,18 +5,14 @@
 > Through real-time sound detection, **the Mutism app helps reduce anxiety from triggering noises and enhances users’ independence and safety.**
 
 
-
-
 ## 🌍 UN SDGs Aligned
 <img src="https://github.com/user-attachments/assets/c9850405-a80a-4cf7-91ec-af98818641fd" alt="sdg" style="width:30%;"/>
-
-
-
+https://github.com/GDSC-SWU/2025-Mutism-SolutionChallenge/edit/develop/README.md#%EF%B8%8F-tech
 
 ## 📑 Table of Contents
 
 1. [Overview](#-overview)
-2. [User Research & Validation Process](#-user-Research-&-Validation-Process)
+2. [User Research & Validation Process](#-user-research--validation-process)
 3. [MVP](#-mVP)
 4. [Tech](#-tech)
 5. [Screen](#-screen)
