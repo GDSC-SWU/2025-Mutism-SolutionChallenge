@@ -15,7 +15,10 @@ class NoiseViewPagerAdapter(
 
     override fun createFragment(position: Int): Fragment {
         val tabTitle = tabTitles[position]
-        val sections = tagContentMap[tabTitle] ?: emptyList()
+        val sections =
+            requireNotNull(tagContentMap[tabTitle]) {
+                "No TagSection list found for tab title: $tabTitle"
+            }
         return NoiseSelectTabFragment.newInstance(tabTitle, sections)
     }
 }

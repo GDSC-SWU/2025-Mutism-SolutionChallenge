@@ -26,7 +26,7 @@
             android:layout_width="85dp"
             android:layout_height="52dp"
             android:gravity="center"
-            android:text="@string/button_sos"
+            android:text="@string/btn_sos"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
