@@ -15,7 +15,7 @@
 
 ## 📑 Table of Contents
 
-1. [Overview](#🧩-Overview)
+1. [Overview](#overview)
 2. [User Research & Validation Process](#User-Research-&-Validation-Process)
 3. [MVP](#MVP)
 4. [Tech Stack](#tech-stack)
