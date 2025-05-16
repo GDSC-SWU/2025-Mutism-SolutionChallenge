@@ -274,7 +274,7 @@ If sensitive sounds are detected repeatedly over a certain threshold, the situat
     - The app will suggest nearby safe and quiet places tailored to the user's preferences and needs.
 
 ## 💙 Member
-|Member|[Eunsoo Kim](https://github.com/lyraa88)|[Jaewon Homg](https://github.com/jaewonderland)|[Sieun ko](https://github.com/withoutsummer)|[Hyojin Lim](https://github.com/hyojin425)|
+|Member|[Eunsoo Kim](https://github.com/lyraa88)|[Jaewon Hong](https://github.com/jaewonderland)|[Sieun ko](https://github.com/withoutsummer)|[Hyojin Lim](https://github.com/hyojin425)|
 | :--: | :--: | :--: | :--: | :--: |
 | Role | AI | Design | Android | Android/Server |
 | profile | <img src="https://github.com/user-attachments/assets/63b62f33-8039-40b0-818a-e73456e67129" width="100"/> | <img src="https://github.com/user-attachments/assets/dcf343b2-b55b-460a-914e-144a00330a0a" width="100"/> | <img src="https://github.com/user-attachments/assets/your-android-img-url" width="100"/> | <img src="https://github.com/user-attachments/assets/37312ae8-4991-4491-857e-d06b1d810891" width="100"/> |
