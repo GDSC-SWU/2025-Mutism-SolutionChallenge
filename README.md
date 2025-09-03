@@ -1,8 +1,12 @@
 # Mutism
 ![sfff](https://github.com/user-attachments/assets/01f20f72-d369-4031-9390-be9e80cba31c)
+### [🇰🇷 한국어 Read me](https://gdgoc-swu.notion.site/Mutism-2395c7e3435c807cbf6ee32303453ede)
+
+
 ### [🔗 Demo Video](https://www.youtube.com/watch?v=80FlMK-QaCs)
 > A mobile solution designed to protect the daily lives of individuals on the autism spectrum who experience difficulties due to sound sensitivity.  
 > Through real-time sound detection, **the Mutism app helps reduce anxiety from triggering noises and enhances users’ independence and safety.**
+
 
 
 ## 🌍 UN SDGs Aligned
